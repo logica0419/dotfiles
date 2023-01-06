@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ "$ENV" != "local" ] && [ "$ENV" != "server" ]; then
+if [ "$ENV" != "local" ] && [ "$ENV" != "remote" ] && [ "$ENV" != "wsl" ]; then
   return 1
 fi
 
