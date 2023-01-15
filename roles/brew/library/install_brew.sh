@@ -1,7 +1,7 @@
 #!/bin/sh -e
 
 if (type brew); then
-  echo "{\"changed\":false}"
+  echo "{}"
   exit 0
 fi
 
