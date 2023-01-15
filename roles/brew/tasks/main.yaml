@@ -1,0 +1,24 @@
+- name: Install Brew
+  install_brew:
+
+- name: Update Brew
+  community.general.homebrew:
+    path: /home/linuxbrew/.linuxbrew/bin
+    update_homebrew: true
+
+- name: Install Packages
+  community.general.homebrew:
+    state: latest
+    path: /home/linuxbrew/.linuxbrew/bin
+    name:
+      - python
+      - docker
+      - go
+      - ansible
+      - ansible-lint
+      - asdf
+      - git
+      - gh
+      - htop
+      - bufbuild/buf/buf
+      - shfmt
