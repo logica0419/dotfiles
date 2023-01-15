@@ -17,4 +17,4 @@ if ! (type ansible-playbook >/dev/null 2>&1); then
   ) &
 fi
 
-ansible-playbook -i inventory "$ENV".yaml
+ansible-playbook -v -i inventory "$ENV".yaml

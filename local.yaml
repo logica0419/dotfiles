@@ -1,4 +1,6 @@
-- hosts: local
+- name: Run Playbook for Server on localhost
+  hosts: local
   connection: local
   roles:
     - brew
+    - asdf
