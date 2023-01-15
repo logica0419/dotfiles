@@ -1,0 +1,6 @@
+- name: Add Node Plugin
+  add_node_plugin:
+
+- name: Install Node LTS
+  install_node:
+    version: lts
