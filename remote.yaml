@@ -1,3 +1,5 @@
-- hosts: server
+- name: Run Playbook for Server Remotely
+  hosts: server
   roles:
     - brew
+    - asdf
