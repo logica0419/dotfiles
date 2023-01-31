@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ "$ENV" != "local" ] && [ "$ENV" != "remote" ] && [ "$ENV" != "wsl" ]; then
   echo "ENV must be set to local, remote or wsl"
@@ -20,4 +20,7 @@ fi
 
 ansible-playbook -v -i inventory "$ENV".yaml
 
-bash ~/.bashrc
+if [ "$ENV" == "local" ] || [ "$ENV" == "wsl" ]; then
+  # shellcheck source=/dev/null
+  source ~/.bashrc
+fi
