@@ -1,6 +1,7 @@
 #!/bin/sh
 
 if [ "$ENV" != "local" ] && [ "$ENV" != "remote" ] && [ "$ENV" != "wsl" ]; then
+  echo "ENV must be set to local, remote or wsl"
   return 1
 fi
 
