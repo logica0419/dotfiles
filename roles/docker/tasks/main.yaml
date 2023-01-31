@@ -1,0 +1,49 @@
+- name: Install Docker
+  become: true
+  ansible.builtin.apt:
+    name:
+      - docker.io
+      - docker-compose
+    state: present
+
+- name: Export Current User Name
+  ansible.builtin.shell: echo $USER
+  register: user_name
+  changed_when: false
+- name: Create docker Group
+  become: true
+  ansible.builtin.group:
+    name: docker
+    state: present
+- name: Append Current User to docker Group
+  become: true
+  ansible.builtin.user:
+    name: '{{ user_name.stdout }}'
+    groups:
+      - docker
+    append: true
+
+- name: Install K8s-related Packages
+  community.general.homebrew:
+    state: latest
+    path: /home/linuxbrew/.linuxbrew/bin
+    name:
+      - minikube
+
+- name: Get Minikube Path
+  ansible.builtin.command: which minikube
+  register: minikube_path
+  changed_when: false
+- name: Copy Minikube Service File
+  become: true
+  ansible.builtin.template:
+    src: minikube.service.j2
+    dest: /etc/systemd/system/minikube.service
+    mode: 0644
+- name: Enable Minikube Service
+  become: true
+  ansible.builtin.systemd:
+    name: minikube
+    enabled: true
+    daemon_reload: true
+    state: started

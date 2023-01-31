@@ -1,0 +1,15 @@
+[Unit]
+Description=Minikube Service
+After=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/home/{{ user_name.stdout }}
+ExecStart={{ minikube_path.stdout }} start
+ExecStop={{ minikube_path.stdout }} stop
+User={{ user_name.stdout }}
+Group={{ user_name.stdout }}
+
+[Install]
+WantedBy=multi-user.target
