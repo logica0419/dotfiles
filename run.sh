@@ -19,3 +19,5 @@ if ! (type ansible-playbook >/dev/null 2>&1); then
 fi
 
 ansible-playbook -v -i inventory "$ENV".yaml
+
+bash ~/.bashrc
