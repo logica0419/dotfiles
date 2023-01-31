@@ -123,7 +123,7 @@ export PATH="$HOME/go/bin:$PATH"
 # Set PATH, MANPATH, etc., for Homebrew.
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
-bash /home/linuxbrew/.linuxbrew/opt/asdf/libexec/asdf.sh
+. /home/linuxbrew/.linuxbrew/opt/asdf/libexec/asdf.sh
 
 eval "$(direnv hook bash)"
 
