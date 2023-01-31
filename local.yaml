@@ -4,4 +4,5 @@
   roles:
     - rc
     - brew
+    - docker
     - asdf
