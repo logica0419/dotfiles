@@ -1,0 +1,11 @@
+- name: Copy .colorrc to home directory
+  ansible.builtin.copy:
+    src: .colorrc
+    dest: ~/.colorrc
+    mode: 0644
+
+- name: Copy .bashrc to home directory
+  ansible.builtin.copy:
+    src: .bashrc
+    dest: ~/.bashrc
+    mode: 0644

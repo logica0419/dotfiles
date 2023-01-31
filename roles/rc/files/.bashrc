@@ -123,8 +123,10 @@ export PATH="$HOME/go/bin:$PATH"
 # Set PATH, MANPATH, etc., for Homebrew.
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
-. /home/linuxbrew/.linuxbrew/opt/asdf/libexec/asdf.sh
+bash /home/linuxbrew/.linuxbrew/opt/asdf/libexec/asdf.sh
+
+eval "$(direnv hook bash)"
 
 export GPG_TTY=$(tty)
-LANG=C gpg-connect-agent updatestartuptty /bye
+LANG=C gpg-connect-agent updatestartuptty /bye >/dev/null
 export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
