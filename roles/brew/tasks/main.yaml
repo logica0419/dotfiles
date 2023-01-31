@@ -12,7 +12,7 @@
     path: /home/linuxbrew/.linuxbrew/bin
     name:
       - python
-      - docker
+      - rust
       - go
       - ansible
       - ansible-lint
@@ -22,3 +22,6 @@
       - htop
       - bufbuild/buf/buf
       - shfmt
+      - terraform
+      - datree
+      - direnv
