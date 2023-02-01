@@ -22,4 +22,3 @@ fi
 asdf install nodejs "$version"
 asdf global nodejs "$version"
 echo "{\"changed\":true}"
-exit 0
