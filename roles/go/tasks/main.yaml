@@ -3,3 +3,16 @@
     name: '{{ item }}'
   loop:
     - github.com/nao1215/gup
+    - github.com/cosmtrek/air
+    - github.com/go-bun/bun-starter-kit/cmd/bun
+    - github.com/spf13/cobra-cli
+    - github.com/matsuu/go-mysql-query-digest
+    - mvdan.cc/gofumpt
+    - github.com/praetorian-inc/gokart
+    - github.com/ryutoyasugi/gomod-tree
+    - github.com/projectdiscovery/httpx/cmd/httpx
+    - github.com/derailed/k9s
+    - github.com/magefile/mage
+    - github.com/golang/mock/mockgen
+    - github.com/gostaticanalysis/skeleton/v2
+    - github.com/google/wire/cmd/wire

@@ -6,6 +6,14 @@
     path: /home/linuxbrew/.linuxbrew/bin
     update_homebrew: true
 
+- name: Register Brew Packages
+  community.general.homebrew_tap:
+    path: /home/linuxbrew/.linuxbrew/bin
+    name:
+      - ycd/tap
+      - ktr0731/evans
+      - k1LoW/tap
+
 - name: Install Packages
   community.general.homebrew:
     state: latest
@@ -20,9 +28,14 @@
       - git
       - gh
       - htop
-      - bufbuild/buf/buf
+      - buf
       - shfmt
       - terraform
       - datree
       - direnv
       - helm
+      - kubeseal
+      - dstp
+      - evans
+      - grpcurl
+      - tbls
