@@ -1,0 +1,5 @@
+- name: Install Go Packages
+  go_get:
+    name: '{{ item }}'
+  loop:
+    - github.com/nao1215/gup
