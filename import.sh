@@ -1,8 +1,9 @@
 #!/bin/sh
 
-# Install Ansible
+# Install Git
 if ! (type git >/dev/null 2>&1); then
   echo "Installing git"
+  sudo apt-get update
   sudo apt-get install git -y >/dev/null
 fi
 
