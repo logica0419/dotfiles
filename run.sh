@@ -1,26 +1,51 @@
 #!/bin/bash
 
-if [ "$ENV" != "local" ] && [ "$ENV" != "remote" ] && [ "$ENV" != "wsl" ]; then
-  echo "ENV must be set to local, remote or wsl"
+if [ "$ENV" != "server" ] && [ "$ENV" != "wsl" ]; then
+  echo "ENV must be set to server or wsl"
   return 1
 fi
 
-# cd || return 1
+sudo apt-get update >/dev/null
+sudo apt-get install expect -y >/dev/null
 
 # Install Ansible
 if ! (type ansible-playbook >/dev/null 2>&1); then
   echo "Installing Ansible"
-  sudo apt-get install ansible -y >/dev/null
+  sudo apt-get install python3-pip -y >/dev/null
+  pip install ansible -y >/dev/null
+  export PATH=$PATH:/home/$USER/.local/bin
   (
-    sleep 0.1
-    sudo apt-get remove ansible -y >/dev/null
-    sudo apt autoremove -y >/dev/null
+    sleep 1
+    pip uninstall ansible -y
+    sudo apt-get purge python3-pip --auto-remove -y >/dev/null
   ) &
 fi
 
-ansible-playbook -v -i inventory "$ENV".yaml
+while :; do
+  unbuffer ansible-playbook -v -i inventory "$ENV".yaml | tee /tmp/ansible.log
+  RESULT=$(
+    grep -q "failed=0" </tmp/ansible.log
+    echo $?
+  )
 
-if [ "$ENV" == "local" ] || [ "$ENV" == "wsl" ]; then
   # shellcheck source=/dev/null
   source ~/.bashrc
-fi
+
+  if (type gh >/dev/null 2>&1) && ! (gh auth status >/dev/null 2>&1); then
+    gh auth login
+  fi
+
+  ssh-add -L >/dev/null 2>&1
+
+  if [ $? -eq 1 ]; then
+    ssh-add ~/.ssh/id_ed25519
+  fi
+
+  if [ "$ENV" == "wsl" ] && ! (sudo systemctl status); then
+    return 1
+  fi
+
+  if [ "$RESULT" == 0 ]; then
+    return 0
+  fi
+done
