@@ -1,10 +1,54 @@
+- name: Install "apt-transport-https ca-certificates curl software-properties-common" packages
+  ansible.builtin.apt:
+    name: '{{ packages }}'
+    state: present
+  vars:
+    packages:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - software-properties-common
+- name: Get docker's official GPG key
+  ansible.builtin.get_url:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    dest: /tmp/docker.gpg
+    mode: 0644
+    force: true
+  notify: Add docker's official GPG key
+- name: Add docker repository
+  become: true
+  ansible.builtin.apt_repository:
+    repo: deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu jammy stable
+    state: present
+- name: Update apt cache
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
 - name: Install Docker
   become: true
   ansible.builtin.apt:
     name:
-      - docker.io
-      - docker-compose
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-compose-plugin
     state: present
+- name: Enable cri Plugin
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/containerd/config.toml
+    regexp: ^disabled_plugins
+    line: 'disabled_plugins = ["io.containerd.grpc.v1.cri"]'
+    mode: 0644
+  notify: Restart containerd
+- name: Set Version to 2
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/containerd/config.toml
+    regexp: ^version
+    line: 'version = 2'
+    mode: 0644
+  notify: Restart containerd
 
 - name: Export Current User Name
   ansible.builtin.shell: echo $USER
