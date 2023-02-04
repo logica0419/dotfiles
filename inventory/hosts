@@ -1,5 +1,2 @@
 [local]
 localhost
-
-[server]
-100.96.34.107 ansible_ssh_user=logica
