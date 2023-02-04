@@ -2,7 +2,7 @@
   ansible.builtin.file:
     path: ~/.ssh
     state: directory
-    mode: 0644
+    mode: 0755
 - name: Move SSH Config
   ansible.builtin.copy:
     src: ssh_config
