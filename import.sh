@@ -12,4 +12,4 @@ if [ ! -d dotfiles ]; then
 fi
 
 cd dotfiles || return 1
-sh ./run.sh
+bash ./run.sh
