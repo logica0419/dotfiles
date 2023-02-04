@@ -1,0 +1,23 @@
+- name: Set gpg-agent Config
+  ansible.builtin.template:
+    src: gpg-agent.conf.j2
+    dest: ~/.gnupg/gpg-agent.conf
+    mode: 0644
+
+- name: Install gpg-agent
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
+    name:
+      - gpg-agent
+      - pinentry-curses
+    state: present
+  register: result
+- name: Stop gpg-agent
+  ansible.builtin.command: gpgconf --kill gpg-agent
+  changed_when: false
+  when: result.changed # noqa: no-handler
+- name: Stop Ansible Playbook
+  ansible.builtin.fail:
+    msg: Please run the playbook again after reloading .bashrc
+  when: result.changed # noqa: no-handler
