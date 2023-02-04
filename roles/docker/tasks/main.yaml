@@ -1,4 +1,5 @@
 - name: Install "apt-transport-https ca-certificates curl software-properties-common" packages
+  become: true
   ansible.builtin.apt:
     name: '{{ packages }}'
     state: present
