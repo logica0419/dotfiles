@@ -1,0 +1,25 @@
+- name: Move SSH Config
+  ansible.builtin.copy:
+    src: ssh_config
+    dest: ~/.ssh/config
+    mode: 0644
+
+- name: Enable sudo without Password
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers
+    regexp: ^\%sudo
+    line: '%sudo ALL=(ALL) NOPASSWD:ALL'
+    mode: 0440
+
+- name: Enable systemd on WSL
+  become: true
+  ansible.builtin.copy:
+    src: wsl.conf
+    dest: /etc/wsl.conf
+    mode: 0644
+  register: result
+- name: Stop Ansible Playbook
+  ansible.builtin.fail:
+    msg: Please restart WSL to enable systemd
+  when: result.changed # noqa: no-handler
