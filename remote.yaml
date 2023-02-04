@@ -1,7 +1,0 @@
-- name: Run Playbook for Server Remotely
-  hosts: server
-  roles:
-    - rc
-    - brew
-    - docker
-    - asdf
