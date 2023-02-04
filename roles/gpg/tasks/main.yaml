@@ -12,11 +12,10 @@
       - gpg-agent
       - pinentry-curses
     state: present
+  notify: Stop gpg-agent
   register: result
-- name: Stop gpg-agent
-  ansible.builtin.command: gpgconf --kill gpg-agent
-  changed_when: false
-  when: result.changed # noqa: no-handler
+- name: Flush Handlers
+  ansible.builtin.meta: flush_handlers
 - name: Stop Ansible Playbook
   ansible.builtin.fail:
     msg: Please run the playbook again after reloading .bashrc
