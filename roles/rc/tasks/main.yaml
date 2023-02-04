@@ -9,3 +9,8 @@
     src: .bashrc
     dest: ~/.bashrc
     mode: 0644
+  register: result
+- name: Stop Ansible Playbook
+  ansible.builtin.fail:
+    msg: Please run the playbook again after reloading .bashrc
+  when: result.changed # noqa: no-handler
