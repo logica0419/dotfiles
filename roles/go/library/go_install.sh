@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 
 # shellcheck source=/dev/null
 . "$1"
@@ -9,6 +9,11 @@ if [ -z "$name" ]; then
 fi
 
 if (type "$(basename "$name")"); then
+  echo "{}"
+  exit 0
+fi
+
+if [[ "$(basename "$name")" =~ ^v. ]] && (type "$(basename "$(dirname "$name")")"); then
   echo "{}"
   exit 0
 fi
