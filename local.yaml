@@ -1,8 +1,0 @@
-- name: Run Playbook for Server on localhost
-  hosts: local
-  connection: local
-  roles:
-    - rc
-    - brew
-    - docker
-    - asdf

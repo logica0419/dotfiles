@@ -1,8 +1,7 @@
-- name: Run Playbook for Local WSL Env
+- name: Run Playbook for Server on localhost
   hosts: local
   connection: local
   roles:
-    - wsl
     - brew
     - rc
     - pip
@@ -11,5 +10,5 @@
     - docker
     - role: gpg
       vars:
-        pinentry_program: '/mnt/c/Program Files (x86)/Gpg4win/bin/pinentry.exe'
+        pinentry_program: /usr/bin/pinentry-curses
     - git
