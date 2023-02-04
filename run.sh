@@ -12,7 +12,7 @@ sudo apt-get install expect -y >/dev/null
 if ! (type ansible-playbook >/dev/null 2>&1); then
   echo "Installing Ansible"
   sudo apt-get install python3-pip -y >/dev/null
-  pip install ansible -y >/dev/null
+  pip install ansible >/dev/null
   export PATH=$PATH:/home/$USER/.local/bin
 fi
 
