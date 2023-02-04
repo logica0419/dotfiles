@@ -128,5 +128,5 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 eval "$(direnv hook bash)" >/dev/null
 
 export GPG_TTY=$(tty)
-LANG=C gpg-connect-agent updatestartuptty /bye >/dev/null
+LANG=C gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
 export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
