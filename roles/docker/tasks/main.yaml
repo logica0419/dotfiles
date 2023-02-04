@@ -16,6 +16,8 @@
     mode: 0644
     force: true
   notify: Add docker's official GPG key
+- name: Flush Handlers
+  ansible.builtin.meta: flush_handlers
 - name: Add docker repository
   become: true
   ansible.builtin.apt_repository:
