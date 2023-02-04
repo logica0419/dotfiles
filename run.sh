@@ -14,11 +14,6 @@ if ! (type ansible-playbook >/dev/null 2>&1); then
   sudo apt-get install python3-pip -y >/dev/null
   pip install ansible -y >/dev/null
   export PATH=$PATH:/home/$USER/.local/bin
-  (
-    sleep 1
-    pip uninstall ansible -y
-    sudo apt-get purge python3-pip --auto-remove -y >/dev/null
-  ) &
 fi
 
 while :; do
