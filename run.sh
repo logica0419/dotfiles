@@ -11,8 +11,8 @@ sudo apt-get install expect -y >/dev/null
 # Install Ansible
 if ! (type ansible-playbook >/dev/null 2>&1); then
   echo "Installing Ansible"
-  sudo apt-get install python3-pip -y >/dev/null
-  pip install ansible >/dev/null
+  sudo apt-get install python3-pip -y >/dev/null 2>&1
+  pip install ansible >/dev/null 2>&1
   export PATH=$PATH:/home/$USER/.local/bin
 fi
 
@@ -36,11 +36,13 @@ while :; do
     ssh-add ~/.ssh/id_ed25519
   fi
 
-  if [ "$ENV" == "wsl" ] && ! (sudo systemctl status); then
+  if [ "$ENV" == "wsl" ] && ! (sudo systemctl status >/dev/null 2>&1); then
     return 1
   fi
 
   if [ "$RESULT" == 0 ]; then
-    return 0
+    break
   fi
 done
+
+sudo apt-get purge python3-pip --auto-remove -y >/dev/null
