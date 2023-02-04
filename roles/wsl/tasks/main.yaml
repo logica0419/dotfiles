@@ -18,8 +18,3 @@
     src: wsl.conf
     dest: /etc/wsl.conf
     mode: 0644
-  register: result
-- name: Stop Ansible Playbook
-  ansible.builtin.fail:
-    msg: Please restart WSL to enable systemd
-  when: result.changed # noqa: no-handler
