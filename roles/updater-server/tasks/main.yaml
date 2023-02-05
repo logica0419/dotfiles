@@ -1,0 +1,9 @@
+- name: Get Current Dir Path
+  ansible.builtin.command: pwd
+  register: dotfiles_dir
+  changed_when: false
+- name: Setup Updater for Server
+  ansible.builtin.cron:
+    name: update packages
+    hour: '4'
+    job: ansible-playbook -v -u {{ ansible_user }} -i inventory {{ dotfiles_dir.stdout }}/server-update.yaml

@@ -14,3 +14,4 @@
     - role: git
       vars:
         prj_dir: ~/Documents/prj
+    - updater-server
