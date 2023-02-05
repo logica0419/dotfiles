@@ -3,6 +3,7 @@
     src: gpg-agent.conf.j2
     dest: ~/.gnupg/gpg-agent.conf
     mode: 0644
+  notify: Stop gpg-agent
 
 - name: Install gpg-agent
   become: true
@@ -12,8 +13,8 @@
       - gpg-agent
       - pinentry-curses
     state: present
-  notify: Stop gpg-agent
   register: result
+
 - name: Flush Handlers
   ansible.builtin.meta: flush_handlers
 - name: Stop Ansible Playbook
