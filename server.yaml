@@ -11,4 +11,6 @@
     - role: gpg
       vars:
         pinentry_program: /usr/bin/pinentry-curses
-    - git
+    - role: git
+      vars:
+        prj_dir: ~/Documents/prj
