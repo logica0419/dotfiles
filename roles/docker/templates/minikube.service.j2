@@ -5,11 +5,11 @@ After=docker.service
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-WorkingDirectory=/home/{{ user_name.stdout }}
+WorkingDirectory=/home/{{ ansible_user }}
 ExecStart={{ minikube_path.stdout }} start --cni=bridge --enable-default-cni --container-runtime=containerd --bootstrapper=kubeadm
 ExecStop={{ minikube_path.stdout }} stop
-User={{ user_name.stdout }}
-Group={{ user_name.stdout }}
+User={{ ansible_user }}
+Group={{ ansible_user }}
 
 [Install]
 WantedBy=multi-user.target
