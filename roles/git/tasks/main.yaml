@@ -17,6 +17,15 @@
     - name: core.editor
       value: code --wait
 
+- name: Get Current Dir Path
+  ansible.builtin.command: pwd
+  register: dotfiles_dir
+  changed_when: false
+- name: Update dotfiles
+  ansible.builtin.git: # noqa: latest
+    repo: https://github.com/logica0419/dotfiles.git
+    dest: '{{ dotfiles_dir.stdout }}'
+
 - name: Clone GitHub Repositories
   ansible.builtin.git: # noqa: latest
     repo: '{{ item.repo }}'
