@@ -16,3 +16,11 @@
       value: ~/.ssh/id_ed25519.pub
     - name: core.editor
       value: code --wait
+
+- name: Clone GitHub Repositories
+  ansible.builtin.git: # noqa: latest
+    repo: '{{ item.repo }}'
+    dest: '{{ prj_dir }}/{{ item.dest }}'
+  with_items:
+    - repo: https://github.com/traPtitech/traQ.git
+      dest: traP/SysAd/traQ
