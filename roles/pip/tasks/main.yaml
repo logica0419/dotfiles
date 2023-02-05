@@ -1,6 +1,8 @@
 - name: Install pip Packages
-  ansible.builtin.pip:
+  ansible.builtin.pip: # noqa: package-latest
+    state: latest
     name:
+      - pip
       - ansible
       - ansible-lint
       - black
