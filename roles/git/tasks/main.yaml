@@ -14,3 +14,5 @@
       value: true
     - name: user.signingkey
       value: ~/.ssh/id_ed25519.pub
+    - name: core.editor
+      value: code --wait
