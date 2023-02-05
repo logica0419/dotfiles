@@ -12,5 +12,7 @@
     upgrade: dist
 
 - name: Update Go Packages
-  ansible.builtin.command: gup update
+  ansible.builtin.shell: |
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    /home/{{ ansible_user }}/go/bin/gup update
   changed_when: false
