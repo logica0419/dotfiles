@@ -1,0 +1,9 @@
+- name: Update Packages for Server
+  hosts: local
+  connection: local
+  roles:
+    - update
+    - pip
+    - role: git
+      vars:
+        prj_dir: ~/Documents/prj
