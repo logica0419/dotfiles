@@ -3,3 +3,6 @@
     name:
       - ansible
       - ansible-lint
+      - black
+      - flake8
+      - mypy
