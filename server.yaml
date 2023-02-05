@@ -1,4 +1,4 @@
-- name: Run Playbook for Server on localhost
+- name: Run Playbook for Server
   hosts: local
   connection: local
   roles:
