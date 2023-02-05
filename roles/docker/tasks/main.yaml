@@ -55,10 +55,6 @@
 - name: Flush Handlers
   ansible.builtin.meta: flush_handlers
 
-- name: Export Current User Name
-  ansible.builtin.shell: echo $USER
-  register: user_name
-  changed_when: false
 - name: Create docker Group
   become: true
   ansible.builtin.group:
@@ -67,7 +63,7 @@
 - name: Append Current User to docker Group
   become: true
   ansible.builtin.user:
-    name: '{{ user_name.stdout }}'
+    name: '{{ ansible_user }}'
     groups:
       - docker
     append: true

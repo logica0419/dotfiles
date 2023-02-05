@@ -18,7 +18,7 @@ if ! (type ansible-playbook >/dev/null 2>&1); then
 fi
 
 while :; do
-  unbuffer ansible-playbook -v -i inventory "$ENV".yaml | tee /tmp/ansible.log
+  unbuffer ansible-playbook -v -u "$(whoami)" -i inventory "$ENV".yaml | tee /tmp/ansible.log
   RESULT=$(
     grep -q "failed=0" </tmp/ansible.log
     echo $?
