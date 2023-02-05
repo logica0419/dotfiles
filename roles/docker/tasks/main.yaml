@@ -52,6 +52,8 @@
     line: 'version = 2'
     mode: 0644
   notify: Restart containerd
+- name: Flush Handlers
+  ansible.builtin.meta: flush_handlers
 
 - name: Export Current User Name
   ansible.builtin.shell: echo $USER
