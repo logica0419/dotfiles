@@ -9,11 +9,12 @@ sudo apt-get update >/dev/null
 sudo apt-get install expect -y >/dev/null
 
 # Install Ansible
-if ! (type ansible-playbook >/dev/null 2>&1); then
+if ! (type ansible-playbook >/dev/null); then
   echo "Installing Ansible"
-  sudo apt-get install python3-pip -y >/dev/null 2>&1
-  pip install ansible >/dev/null 2>&1
+  sudo apt-get install python3-pip -y >/dev/null
   export PATH=$PATH:/home/$USER/.local/bin
+  pip install ansible >/dev/null 2>&1
+  sudo apt-get purge python3-pip --auto-remove -y >/dev/null
 fi
 
 while :; do
@@ -44,5 +45,3 @@ while :; do
     break
   fi
 done
-
-sudo apt-get purge python3-pip --auto-remove -y >/dev/null
