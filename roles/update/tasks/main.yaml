@@ -3,14 +3,6 @@
     update_homebrew: true
     upgrade_all: true
 
-- name: Update apt Packages
-  become: true
-  ansible.builtin.apt:
-    autoclean: true
-    autoremove: true
-    update_cache: true
-    upgrade: dist
-
 - name: Update Go Packages
   ansible.builtin.shell: |
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
