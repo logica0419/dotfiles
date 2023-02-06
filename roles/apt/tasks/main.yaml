@@ -1,0 +1,7 @@
+- name: Update apt Packages
+  become: true
+  ansible.builtin.apt:
+    autoclean: true
+    autoremove: true
+    update_cache: true
+    upgrade: dist

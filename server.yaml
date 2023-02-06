@@ -2,6 +2,7 @@
   hosts: local
   connection: local
   roles:
+    - apt
     - brew
     - rc
     - pip

@@ -3,6 +3,7 @@
   connection: local
   roles:
     - wsl
+    - apt
     - brew
     - rc
     - pip
