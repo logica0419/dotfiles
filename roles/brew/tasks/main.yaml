@@ -13,6 +13,7 @@
       - ycd/tap
       - ktr0731/evans
       - k1LoW/tap
+      - derailed/k9s
 
 - name: Install Packages
   community.general.homebrew:
@@ -34,6 +35,7 @@
       - direnv
       - helm
       - kubeseal
+      - k9s
       - dstp
       - evans
       - grpcurl
