@@ -12,11 +12,13 @@
   ansible.builtin.git: # noqa: latest
     repo: https://github.com/logica0419/dotfiles.git
     dest: '{{ dotfiles_dir.stdout }}'
+  failed_when: false
 
 - name: Clone GitHub Repositories
   ansible.builtin.git: # noqa: latest
     repo: '{{ item.repo }}'
     dest: '{{ prj_dir }}/{{ item.dest }}'
+  failed_when: false
   with_items:
     - repo: https://github.com/traPtitech/traQ.git
       dest: traP/SysAd/traQ
