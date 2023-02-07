@@ -9,6 +9,7 @@
     - asdf
     - go
     - docker
+    - db
     - role: gpg
       vars:
         pinentry_program:
