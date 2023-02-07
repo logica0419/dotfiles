@@ -12,7 +12,6 @@
     update_cache: true
     name:
       - gpg-agent
-      - pinentry-curses
     state: present
 
 - name: Flush Handlers

@@ -11,7 +11,7 @@
     - docker
     - role: gpg
       vars:
-        pinentry_program: /usr/bin/pinentry-curses
+        pinentry_program:
     - role: git
       vars:
         prj_dir: ~/Documents/prj
