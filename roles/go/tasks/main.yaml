@@ -19,7 +19,6 @@
     - github.com/praetorian-inc/gokart
     - github.com/ryutoyasugi/gomod-tree
     - github.com/projectdiscovery/httpx/cmd/httpx
-    - github.com/derailed/k9s
     - github.com/magefile/mage
     - github.com/golang/mock/mockgen
     - github.com/gostaticanalysis/skeleton/v2
