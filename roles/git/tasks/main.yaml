@@ -1,21 +1,8 @@
 - name: Setup Git Config
-  community.general.git_config:
-    scope: global
-    name: '{{ item.name }}'
-    value: '{{ item.value }}'
-  with_items:
-    - name: user.name
-      value: logica0419
-    - name: user.email
-      value: 84759675+logica0419@users.noreply.github.com
-    - name: gpg.format
-      value: ssh
-    - name: commit.gpgsign
-      value: true
-    - name: user.signingkey
-      value: ~/.ssh/id_ed25519.pub
-    - name: core.editor
-      value: code --wait
+  ansible.builtin.copy:
+    src: gitconfig
+    dest: ~/.gitconfig
+    mode: 0664
 
 - name: Get Current Dir Path
   ansible.builtin.command: pwd
