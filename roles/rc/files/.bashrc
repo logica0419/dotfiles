@@ -125,7 +125,7 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 . /home/linuxbrew/.linuxbrew/opt/asdf/libexec/asdf.sh
 
-eval "$(direnv hook bash)" >/dev/null
+eval "$(direnv hook bash)"
 
 export GPG_TTY=$(tty)
 LANG=C gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
