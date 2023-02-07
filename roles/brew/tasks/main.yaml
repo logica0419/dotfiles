@@ -37,3 +37,4 @@
       - evans
       - grpcurl
       - tbls
+      - hadolint
