@@ -8,3 +8,21 @@
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
     /home/{{ ansible_user }}/go/bin/gup update
   changed_when: false
+
+- name: Get Current Dir Path
+  ansible.builtin.command: pwd
+  register: dotfiles_dir
+  changed_when: false
+- name: Check Latest Images
+  ansible.builtin.shell:
+    executable: /bin/bash
+    cmd: |
+      set -o pipefail
+      docker compose pull | grep "Downloaded newer image"
+  environment:
+    COMPOSE_PROJECT_NAME: local_db
+    COMPOSE_FILE: '{{ dotfiles_dir.stdout }}/roles/db/files/docker-compose.yaml'
+  register: docker_compose_pull
+  changed_when: docker_compose_pull.rc == 0
+  failed_when: false
+  notify: Restart Local DB
