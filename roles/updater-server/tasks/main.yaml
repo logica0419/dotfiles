@@ -2,8 +2,12 @@
   ansible.builtin.command: pwd
   register: dotfiles_dir
   changed_when: false
+- name: Get ansible-playbook Path
+  ansible.builtin.command: which ansible-playbook
+  register: ansible_playbook_path
+  changed_when: false
 - name: Setup Updater for Server
   ansible.builtin.cron:
     name: update packages
     hour: '4'
-    job: ansible-playbook -v -u {{ ansible_user }} -i {{ dotfiles_dir.stdout }}/inventory {{ dotfiles_dir.stdout }}/server-update.yaml
+    job: '{{ ansible_playbook_path.stdout }} -v -u {{ ansible_user }} -i {{ dotfiles_dir.stdout }}/inventory {{ dotfiles_dir.stdout }}/server-update.yaml'
