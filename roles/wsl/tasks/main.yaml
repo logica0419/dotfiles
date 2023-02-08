@@ -23,3 +23,14 @@
     src: wsl.conf
     dest: /etc/wsl.conf
     mode: 0644
+
+- name: Copy Font Setting
+  become: true
+  ansible.builtin.copy:
+    src: local.conf
+    dest: /etc/fonts/local.conf
+    mode: 0644
+- name: Enable Font Setting
+  become: true
+  ansible.builtin.command: fc-cache -fv
+  changed_when: false
