@@ -1,3 +1,9 @@
+- name: Install Chromium
+  become: true
+  ansible.builtin.apt:
+    name: chromium-browser
+    state: present
+
 - name: Create .ssh Directory
   ansible.builtin.file:
     path: ~/.ssh
