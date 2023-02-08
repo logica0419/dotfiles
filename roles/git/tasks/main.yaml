@@ -37,3 +37,9 @@
 
     - repo: https://github.com/Q-n-A/Q-n-A.git
       dest: personal/Q-n-A
+    - repo: https://github.com/logica0419/zenn-article.git
+      dest: personal/zenn-article
+    - repo: https://github.com/logica0419/knowledge.git
+      dest: personal/knowledge
+    - repo: https://github.com/logica0419/slides
+      dest: personal/slides
