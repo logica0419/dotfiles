@@ -2,6 +2,9 @@
   community.general.homebrew:
     update_homebrew: true
     upgrade_all: true
+- name: Run brew autoremove
+  ansible.builtin.command: brew autoremove
+  changed_when: false
 
 - name: Update Go Packages
   ansible.builtin.shell: |
