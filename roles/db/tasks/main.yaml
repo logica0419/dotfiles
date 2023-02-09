@@ -8,3 +8,8 @@
     COMPOSE_PROJECT_NAME: local_db
     COMPOSE_FILE: '{{ dotfiles_dir.stdout }}/roles/db/files/docker-compose.yaml'
   changed_when: false
+
+- name: Install MySQL Client
+  ansible.builtin.apt:
+    name: mysql-client-core-8.0
+    state: present
