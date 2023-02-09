@@ -13,3 +13,8 @@
   ansible.builtin.apt:
     name: mysql-client-core-8.0
     state: present
+- name: Copy MySQL Client Config
+  ansible.builtin.copy:
+    src: my.cnf
+    dest: ~/.my.cnf
+    mode: 0644
