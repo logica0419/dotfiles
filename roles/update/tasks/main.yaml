@@ -26,3 +26,11 @@
   changed_when: docker_compose_pull.rc == 0
   failed_when: false
   notify: Restart Local DB
+
+- name: Prune Docker Components
+  ansible.builtin.shell: |
+    docker container prune -f
+    docker image prune -a -f
+    docker volume prune -f
+    docker network prune -f
+  changed_when: false
