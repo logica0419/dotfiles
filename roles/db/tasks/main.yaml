@@ -10,6 +10,7 @@
   changed_when: false
 
 - name: Install MySQL Client
+  become: true
   ansible.builtin.apt:
     name: mysql-client-core-8.0
     state: present
