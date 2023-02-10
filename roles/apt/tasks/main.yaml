@@ -1,3 +1,8 @@
+- name: Audit dpkg Configuration
+  become: true
+  ansible.builtin.command: dpkg --configure -a
+  changed_when: false
+
 - name: Update apt Packages
   become: true
   ansible.builtin.apt:
