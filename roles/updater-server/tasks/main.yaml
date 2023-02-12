@@ -24,4 +24,4 @@
     minute: 30
     hour: 4
     user: root
-    job: '{{ reboot.stdout }} 0'
+    job: '{{ reboot_path.stdout }} 0'
