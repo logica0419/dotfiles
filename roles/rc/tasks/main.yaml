@@ -1,3 +1,11 @@
+- name: Create .hashlogin
+  ansible.builtin.file:
+    path: ~/.hashlogin
+    state: touch
+    access_time: preserve
+    modification_time: preserve
+    mode: 0644
+
 - name: Copy .colorrc to home directory
   ansible.builtin.copy:
     src: .colorrc
