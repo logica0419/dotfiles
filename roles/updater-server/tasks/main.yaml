@@ -24,4 +24,4 @@
     minute: 30
     hour: 4
     user: root
-    job: '{{ reboot_path.stdout }} 0'
+    job: '[ -e /var/run/reboot-required ] && {{ reboot_path.stdout }} 0'
