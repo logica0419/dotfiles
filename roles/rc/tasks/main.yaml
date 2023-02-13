@@ -1,6 +1,6 @@
 - name: Create .hashlogin
   ansible.builtin.file:
-    path: ~/.hashlogin
+    path: ~/.hushlogin
     state: touch
     access_time: preserve
     modification_time: preserve
