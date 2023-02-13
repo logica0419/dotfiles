@@ -1,9 +1,10 @@
 - name: Update Brew & Brew Packages
   community.general.homebrew:
+    path: /home/linuxbrew/.linuxbrew/bin
     update_homebrew: true
     upgrade_all: true
 - name: Run brew autoremove
-  ansible.builtin.command: brew autoremove
+  ansible.builtin.command: /home/linuxbrew/.linuxbrew/bin/brew autoremove
   changed_when: false
 
 - name: Update Go Packages
