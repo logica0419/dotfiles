@@ -2,7 +2,7 @@
   ansible.builtin.template:
     src: gpg-agent.conf.j2
     dest: ~/.gnupg/gpg-agent.conf
-    mode: 0644
+    mode: '0644'
   notify: Stop gpg-agent
   register: result
 
