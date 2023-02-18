@@ -8,12 +8,12 @@
   ansible.builtin.file:
     path: ~/.ssh
     state: directory
-    mode: 0755
+    mode: '0755'
 - name: Move SSH Config
   ansible.builtin.copy:
     src: ssh_config
     dest: ~/.ssh/config
-    mode: 0644
+    mode: '0644'
 
 - name: Enable sudo without Password
   become: true
@@ -21,21 +21,21 @@
     path: /etc/sudoers
     regexp: ^\%sudo
     line: '%sudo ALL=(ALL) NOPASSWD:ALL'
-    mode: 0440
+    mode: '0440'
 
 - name: Enable systemd on WSL
   become: true
   ansible.builtin.copy:
     src: wsl.conf
     dest: /etc/wsl.conf
-    mode: 0644
+    mode: '0644'
 
 - name: Copy Font Setting
   become: true
   ansible.builtin.copy:
     src: local.conf
     dest: /etc/fonts/local.conf
-    mode: 0644
+    mode: '0644'
 - name: Enable Font Setting
   become: true
   ansible.builtin.command: fc-cache -fv

@@ -4,19 +4,19 @@
     state: touch
     access_time: preserve
     modification_time: preserve
-    mode: 0644
+    mode: '0644'
 
 - name: Copy .colorrc to home directory
   ansible.builtin.copy:
     src: .colorrc
     dest: ~/.colorrc
-    mode: 0644
+    mode: '0644'
 
 - name: Copy .bashrc to home directory
   ansible.builtin.copy:
     src: .bashrc
     dest: ~/.bashrc
-    mode: 0644
+    mode: '0644'
   register: result
 - name: Stop Ansible Playbook
   ansible.builtin.fail:
