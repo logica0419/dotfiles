@@ -9,8 +9,8 @@
 [gpg]
 	format = ssh
 [commit]
-	gpgsign = True
+	gpgsign = true
 [core]
 	editor = code --wait
 [pull]
-  rebase = true
+	rebase = true
