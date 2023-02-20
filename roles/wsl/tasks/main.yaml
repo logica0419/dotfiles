@@ -1,7 +1,9 @@
 - name: Install Chromium
   become: true
   ansible.builtin.apt:
-    name: chromium-browser
+    name:
+      - chromium-browser
+      - fontconfig
     state: present
 
 - name: Create .ssh Directory
