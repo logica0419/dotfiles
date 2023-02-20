@@ -6,13 +6,15 @@ if [ "$ENV" != "server" ] && [ "$ENV" != "wsl" ]; then
 fi
 
 sudo apt-get update >/dev/null
-sudo apt-get install expect python3-pip -y >/dev/null
+sudo apt-get install expect -y >/dev/null
 
 # Install Ansible
 if ! (type ansible-playbook >/dev/null 2>&1); then
+  sudo apt-get install python3-pip -y >/dev/null
   echo "Installing Ansible"
   export PATH=$PATH:/home/$USER/.local/bin
   pip install ansible >/dev/null 2>&1
+  sudo apt-get remove python3-pip -y >/dev/null &
 fi
 
 while :; do
