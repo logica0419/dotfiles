@@ -38,6 +38,8 @@
       dest: ICTSC/ictsc-k8s-cluster
     - repo: https://github.com/logica0419/ictsc2023.git
       dest: ICTSC/ictsc2023
+    - repo: https://github.com/ictsc/infra-ictsc2022.git
+      dest: ICTSC/infra-ictsc2022
 
     - repo: https://github.com/Q-n-A/Q-n-A.git
       dest: personal/Q-n-A
