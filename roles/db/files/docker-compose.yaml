@@ -1,8 +1,8 @@
 version: "3"
 
 services:
-  mariadb:
-    container_name: local-db_mariadb
+  mysql:
+    container_name: local-db_mysql
     image: mysql:latest
     restart: always
     environment:
@@ -19,13 +19,13 @@ services:
     restart: always
     environment:
       - PMA_ARBITRARY=1
-      - PMA_HOST=mariadb
+      - PMA_HOST=mysql
       - PMA_USER=root
       - PMA_PASSWORD=password
     ports:
       - 3307:80
     depends_on:
-      - mariadb
+      - mysql
 
 volumes:
   db: null
