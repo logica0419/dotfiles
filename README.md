@@ -30,7 +30,7 @@ sudo visudo
 ## 実行
 
 ```bash
-curl -sS https://raw.githubusercontent.com/logica0419/dotfiles/main/import.sh | ENV={environment} bash
+curl -L https://raw.githubusercontent.com/logica0419/dotfiles/main/import.sh -o /tmp/import.sh && ENV={environment} source /tmp/import.sh
 ```
 
 - {environment} について

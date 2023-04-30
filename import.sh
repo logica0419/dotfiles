@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Install Git
 if ! (type git >/dev/null 2>&1); then
@@ -12,4 +12,5 @@ if [ ! -d dotfiles ]; then
 fi
 
 cd dotfiles || return 1
-bash ./run.sh
+# shellcheck source=/dev/null
+source ./run.sh
