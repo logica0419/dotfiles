@@ -13,7 +13,5 @@
     - role: gpg
       vars:
         pinentry_program:
-    - role: git
-      vars:
-        prj_dir: ~/Documents/prj
+    - git
     - updater-server
