@@ -55,26 +55,12 @@
 - name: Flush Handlers
   ansible.builtin.meta: flush_handlers
 
-- name: Create docker Group
-  become: true
-  ansible.builtin.group:
-    name: docker
-    state: present
-- name: Append Current User to docker Group
-  become: true
-  ansible.builtin.user:
-    name: '{{ ansible_user }}'
-    groups:
-      - docker
-    append: true
-
 - name: Install K8s-related Packages
   community.general.homebrew:
     state: latest
     path: /home/linuxbrew/.linuxbrew/bin
     name:
       - minikube
-
 - name: Get Minikube Path
   ansible.builtin.command: which minikube
   register: minikube_path
@@ -91,3 +77,21 @@
     name: minikube
     enabled: true
     daemon_reload: true
+
+- name: Create docker Group
+  become: true
+  ansible.builtin.group:
+    name: docker
+    state: present
+- name: Append Current User to docker Group
+  become: true
+  ansible.builtin.user:
+    name: '{{ ansible_user }}'
+    groups:
+      - docker
+    append: true
+  register: result
+- name: Stop Ansible Playbook
+  ansible.builtin.fail:
+    msg: Please restart PC to apply docker group privilege
+  when: result.changed # noqa: no-handler
