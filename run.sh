@@ -40,6 +40,10 @@ while :; do
     return 1
   fi
 
+  if (type docker >/dev/null 2>&1) && ! (docker ps >/dev/null 2>&1); then
+    return 1
+  fi
+
   if [ "$RESULT" == 0 ]; then
     break
   fi
