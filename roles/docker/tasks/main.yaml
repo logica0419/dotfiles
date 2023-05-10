@@ -91,4 +91,3 @@
     name: minikube
     enabled: true
     daemon_reload: true
-    state: started
