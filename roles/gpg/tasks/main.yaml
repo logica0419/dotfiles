@@ -4,7 +4,7 @@
     dest: ~/.gnupg/gpg-agent.conf
     mode: '0644'
   notify: Stop gpg-agent
-  register: result
+  register: gpg_result
 
 - name: Install gpg-agent
   become: true
@@ -19,4 +19,4 @@
 - name: Stop Ansible Playbook
   ansible.builtin.fail:
     msg: Please run the playbook again after reloading .bashrc
-  when: result.changed # noqa: no-handler
+  when: gpg_result.changed # noqa: no-handler
