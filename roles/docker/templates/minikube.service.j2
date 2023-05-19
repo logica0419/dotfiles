@@ -6,8 +6,8 @@ After=docker.service
 Type=oneshot
 RemainAfterExit=yes
 WorkingDirectory=/home/{{ ansible_user }}
-ExecStart={{ minikube_path.stdout }} start --cni=bridge --enable-default-cni --container-runtime=containerd --bootstrapper=kubeadm
-ExecStop={{ minikube_path.stdout }} stop
+ExecStart={{ docker_minikube_path.stdout }} start --cni=bridge --enable-default-cni --container-runtime=containerd --bootstrapper=kubeadm
+ExecStop={{ docker_minikube_path.stdout }} stop
 User={{ ansible_user }}
 Group={{ ansible_user }}
 

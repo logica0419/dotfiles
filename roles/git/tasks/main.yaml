@@ -6,12 +6,12 @@
 
 - name: Get Current Dir Path
   ansible.builtin.command: pwd
-  register: dotfiles_dir
+  register: git_dotfiles_dir
   changed_when: false
 - name: Update dotfiles
   ansible.builtin.git: # noqa: latest
     repo: https://github.com/logica0419/dotfiles.git
-    dest: '{{ dotfiles_dir.stdout }}'
+    dest: '{{ git_dotfiles_dir.stdout }}'
   failed_when: false
 
 - name: Clone GitHub Repositories

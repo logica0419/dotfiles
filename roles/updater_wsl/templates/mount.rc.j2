@@ -1,0 +1,3 @@
+#!/bin/bash
+
+sudo -u {{ ansible_user }} {{ updater_wsl_ansible_path.stdout }} -v -u {{ ansible_user }} -i {{ updater_wsl_dotfiles_dir.stdout }}/inventory {{ updater_wsl_dotfiles_dir.stdout }}/wsl-update.yaml &

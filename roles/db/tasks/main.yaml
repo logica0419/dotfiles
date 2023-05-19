@@ -1,12 +1,12 @@
 - name: Get Current Dir Path
   ansible.builtin.command: pwd
-  register: dotfiles_dir
+  register: db_dotfiles_dir
   changed_when: false
 - name: Run Local DB
   ansible.builtin.command: docker compose up -d
   environment:
     COMPOSE_PROJECT_NAME: local_db
-    COMPOSE_FILE: '{{ dotfiles_dir.stdout }}/roles/db/files/docker-compose.yaml'
+    COMPOSE_FILE: '{{ db_dotfiles_dir.stdout }}/roles/db/files/docker-compose.yaml'
   changed_when: false
 
 - name: Install MySQL Client

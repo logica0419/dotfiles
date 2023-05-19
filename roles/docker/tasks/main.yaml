@@ -1,14 +1,8 @@
 - name: Install "apt-transport-https ca-certificates curl software-properties-common" packages
   become: true
   ansible.builtin.apt:
-    name: '{{ packages }}'
+    name: apt-transport-https, ca-certificates, curl, software-properties-common
     state: present
-  vars:
-    packages:
-      - apt-transport-https
-      - ca-certificates
-      - curl
-      - software-properties-common
 - name: Get docker's official GPG key
   ansible.builtin.get_url:
     url: https://download.docker.com/linux/ubuntu/gpg
@@ -63,7 +57,7 @@
       - minikube
 - name: Get Minikube Path
   ansible.builtin.command: which minikube
-  register: minikube_path
+  register: docker_minikube_path
   changed_when: false
 - name: Copy Minikube Service File
   become: true
@@ -90,8 +84,8 @@
     groups:
       - docker
     append: true
-  register: result
+  register: docker_result
 - name: Stop Ansible Playbook
   ansible.builtin.fail:
     msg: Please restart PC to apply docker group privilege
-  when: result.changed # noqa: no-handler
+  when: docker_result.changed # noqa: no-handler

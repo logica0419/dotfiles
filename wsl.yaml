@@ -15,4 +15,4 @@
       vars:
         pinentry_program: '/mnt/c/Program Files (x86)/Gpg4win/bin/pinentry.exe'
     - git
-    - updater-wsl
+    - updater_wsl

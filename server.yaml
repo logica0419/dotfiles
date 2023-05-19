@@ -14,4 +14,4 @@
       vars:
         pinentry_program:
     - git
-    - updater-server
+    - updater_server
