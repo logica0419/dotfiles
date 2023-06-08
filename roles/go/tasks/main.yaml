@@ -24,3 +24,8 @@
     - github.com/gostaticanalysis/skeleton/v2
     - github.com/google/wire/cmd/wire
     - github.com/traefik/mocktail
+    - golang.org/dl/go1.14.1 # for AtCoder
+
+- name: Install Go 1.14.1
+  ansible.builtin.command: go1.14.1 download
+  changed_when: false
