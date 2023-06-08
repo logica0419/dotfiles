@@ -1,0 +1,8 @@
+- name: Update Packages
+  hosts: local
+  connection: local
+  roles:
+    - apt
+    - update
+    - pip
+    - git
