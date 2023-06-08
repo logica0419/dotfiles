@@ -15,7 +15,7 @@
 
 - name: Get Current Dir Path
   ansible.builtin.command: pwd
-  register: dotfiles_dir
+  register: update_dotfiles_dir
   changed_when: false
 - name: Check Latest Images
   ansible.builtin.shell:
@@ -25,9 +25,9 @@
       docker compose pull | grep "Downloaded newer image"
   environment:
     COMPOSE_PROJECT_NAME: local_db
-    COMPOSE_FILE: '{{ dotfiles_dir.stdout }}/roles/db/files/docker-compose.yaml'
-  register: docker_compose_pull
-  changed_when: docker_compose_pull.rc == 0
+    COMPOSE_FILE: '{{ update_dotfiles_dir.stdout }}/roles/db/files/docker-compose.yaml'
+  register: update_docker_compose_pull
+  changed_when: update_docker_compose_pull.rc == 0
   failed_when: false
   notify: Restart Local DB
 

@@ -13,7 +13,7 @@
     hour: 4
     job: >-
       {{ updater_server_ansible_playbook_path.stdout }} -v -u {{ ansible_user }}
-      -i {{ updater_server_dotfiles_dir.stdout }}/inventory {{ updater_server_dotfiles_dir.stdout }}/server-update.yaml
+      -i {{ updater_server_dotfiles_dir.stdout }}/inventory {{ updater_server_dotfiles_dir.stdout }}/update.yaml
 
 - name: Get reboot Path
   ansible.builtin.command: which reboot
