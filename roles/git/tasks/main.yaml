@@ -38,10 +38,10 @@
 
     - repo: https://github.com/ictsc/ictsc-k8s-cluster.git
       dest: ICTSC/ictsc-k8s-cluster
-    - repo: https://github.com/logica0419/ictsc2022.git
-      dest: ICTSC/ictsc2022
-    - repo: https://github.com/ictsc/infra-ictsc2022.git
-      dest: ICTSC/infra-ictsc2022
+    - repo: https://github.com/ictsc/ictsc-rikka.git
+      dest: ICTSC/ictsc-rikka
+    - repo: https://github.com/ictsc/ictsc-sachiko-v3.git
+      dest: ICTSC/ictsc-sachiko-v3
 
     - repo: https://github.com/y7amura/sc.y3.2022.git
       dest: seccamp/2022-y3
