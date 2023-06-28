@@ -33,9 +33,6 @@
       - terraform
       - datree
       - direnv
-      - helm
-      - kubeseal
-      - k9s
       - dstp
       - evans
       - grpcurl

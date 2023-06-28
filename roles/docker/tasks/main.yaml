@@ -55,6 +55,12 @@
     path: /home/linuxbrew/.linuxbrew/bin
     name:
       - minikube
+      - krew
+      - helm
+      - kubeseal
+      - kube-linter
+      - kubeconform
+      - k9s
 - name: Get Minikube Path
   ansible.builtin.command: which minikube
   register: docker_minikube_path
@@ -71,6 +77,9 @@
     name: minikube
     enabled: true
     daemon_reload: true
+- name: Install kubectl Plugins
+  ansible.builtin.command: kubectl krew install stern iexec view-allocations tree resource-capacity
+  changed_when: false
 
 - name: Create docker Group
   become: true
