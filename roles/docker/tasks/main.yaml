@@ -78,7 +78,7 @@
     enabled: true
     daemon_reload: true
 - name: Install kubectl Plugins
-  ansible.builtin.command: kubectl krew install stern iexec view-allocations tree resource-capacity
+  ansible.builtin.command: kubectl krew install stern iexec view-allocations tree resource-capacity neat
   changed_when: false
 
 - name: Create docker Group
