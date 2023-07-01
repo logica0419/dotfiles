@@ -61,6 +61,7 @@
       - kube-linter
       - kubeconform
       - k9s
+      - viddy
 - name: Get Minikube Path
   ansible.builtin.command: which minikube
   register: docker_minikube_path
