@@ -42,6 +42,8 @@
       dest: ICTSC/k8s-manifest
     - repo: https://github.com/ictsc/ictsc-outlands.git
       dest: ICTSC/ictsc-outlands
+    - repo: https://github.com/ictsc/ictsc-drove.git
+      dest: ICTSC/ictsc-drove
 
     - repo: https://github.com/y7amura/sc.y3.2022.git
       dest: seccamp/2022-y3
