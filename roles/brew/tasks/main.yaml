@@ -31,7 +31,6 @@
       - buf
       - shfmt
       - terraform
-      - datree
       - direnv
       - dstp
       - evans
