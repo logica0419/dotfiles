@@ -3,8 +3,8 @@
   ansible.builtin.lineinfile:
     path: /etc/fstab
     regexp: ^none
-    line: 'none none rc defaults 0 0'
-    mode: '0644'
+    line: none none rc defaults 0 0
+    mode: "0644"
 
 - name: Get Current Dir Path
   ansible.builtin.command: pwd
@@ -19,4 +19,4 @@
   ansible.builtin.template:
     src: mount.rc.j2
     dest: /sbin/mount.rc
-    mode: '0755'
+    mode: "0755"

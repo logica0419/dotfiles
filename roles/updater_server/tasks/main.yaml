@@ -26,4 +26,4 @@
     minute: 30
     hour: 4
     user: root
-    job: '[ -e /var/run/reboot-required ] && {{ updater_server_reboot_path.stdout }} 0'
+    job: "[ -e /var/run/reboot-required ] && {{ updater_server_reboot_path.stdout }} 0"

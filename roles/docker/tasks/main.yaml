@@ -7,7 +7,7 @@
   ansible.builtin.get_url:
     url: https://download.docker.com/linux/ubuntu/gpg
     dest: /tmp/docker.gpg
-    mode: '0644'
+    mode: "0644"
     force: true
   notify: Add docker's official GPG key
 - name: Flush Handlers
@@ -35,16 +35,16 @@
   ansible.builtin.lineinfile:
     path: /etc/containerd/config.toml
     regexp: ^disabled_plugins
-    line: 'disabled_plugins = ["io.containerd.grpc.v1.cri"]'
-    mode: '0644'
+    line: disabled_plugins = ["io.containerd.grpc.v1.cri"]
+    mode: "0644"
   notify: Restart containerd
 - name: Set Version to 2
   become: true
   ansible.builtin.lineinfile:
     path: /etc/containerd/config.toml
     regexp: ^version
-    line: 'version = 2'
-    mode: '0644'
+    line: version = 2
+    mode: "0644"
   notify: Restart containerd
 - name: Flush Handlers
   ansible.builtin.meta: flush_handlers
@@ -71,7 +71,7 @@
   ansible.builtin.template:
     src: minikube.service.j2
     dest: /etc/systemd/system/minikube.service
-    mode: '0644'
+    mode: "0644"
 - name: Enable Minikube Service
   become: true
   ansible.builtin.systemd:
@@ -90,7 +90,7 @@
 - name: Append Current User to docker Group
   become: true
   ansible.builtin.user:
-    name: '{{ ansible_user }}'
+    name: "{{ ansible_user }}"
     groups:
       - docker
     append: true
