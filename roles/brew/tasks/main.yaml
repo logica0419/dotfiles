@@ -30,7 +30,7 @@
       - jq
       - buf
       - shfmt
-      - terraform
+      - hashicorp/tap/terraform
       - direnv
       - dstp
       - evans
