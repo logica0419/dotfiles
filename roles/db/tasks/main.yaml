@@ -6,7 +6,7 @@
   ansible.builtin.command: docker compose up -d
   environment:
     COMPOSE_PROJECT_NAME: local_db
-    COMPOSE_FILE: '{{ db_dotfiles_dir.stdout }}/roles/db/files/docker-compose.yaml'
+    COMPOSE_FILE: "{{ db_dotfiles_dir.stdout }}/roles/db/files/docker-compose.yaml"
   changed_when: false
 
 - name: Install MySQL Client
@@ -18,4 +18,4 @@
   ansible.builtin.copy:
     src: my.cnf
     dest: ~/.my.cnf
-    mode: '0644'
+    mode: "0644"

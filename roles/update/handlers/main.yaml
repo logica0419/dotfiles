@@ -2,6 +2,6 @@
   ansible.builtin.shell: docker compose down && docker compose up -d
   environment:
     COMPOSE_PROJECT_NAME: local_db
-    COMPOSE_FILE: '{{ dotfiles_dir.stdout }}/roles/db/files/docker-compose.yaml'
+    COMPOSE_FILE: "{{ dotfiles_dir.stdout }}/roles/db/files/docker-compose.yaml"
   changed_when: false
   failed_when: false
