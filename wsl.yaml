@@ -13,6 +13,6 @@
     - db
     - role: gpg
       vars:
-        pinentry_program: "/mnt/c/Program Files (x86)/Gpg4win/bin/pinentry.exe"
+        gpg_pinentry_program: "/mnt/c/Program Files (x86)/Gpg4win/bin/pinentry.exe"
     - git
     - updater_wsl

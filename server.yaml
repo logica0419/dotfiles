@@ -12,6 +12,6 @@
     - db
     - role: gpg
       vars:
-        pinentry_program:
+        gpg_pinentry_program:
     - git
     - updater_server
