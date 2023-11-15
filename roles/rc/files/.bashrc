@@ -124,6 +124,7 @@ export PATH="$PATH:$HOME/.local/bin"
 
 # Set PATH, MANPATH, etc., for Homebrew.
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+export PATH="/home/linuxbrew/.linuxbrew/opt/clang-format/bin:$PATH"
 
 . /home/linuxbrew/.linuxbrew/opt/asdf/libexec/asdf.sh
 
