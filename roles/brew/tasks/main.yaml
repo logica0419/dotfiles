@@ -38,4 +38,4 @@
       - tbls
       - hadolint
       - ko
-      - clang-format
+      - go-task
