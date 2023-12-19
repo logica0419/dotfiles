@@ -24,8 +24,10 @@
     - github.com/gostaticanalysis/skeleton/v2
     - github.com/google/wire/cmd/wire
     - github.com/traefik/mocktail
-    - golang.org/dl/go1.14.1 # for AtCoder
+    - google.golang.org/protobuf/cmd/protoc-gen-go
+    - connectrpc.com/connect/cmd/protoc-gen-connect-go
+    - golang.org/dl/go1.20.6 # for AtCoder
 
-- name: Install Go 1.14.1
-  ansible.builtin.command: go1.14.1 download
+- name: Install Go go1.20.6
+  ansible.builtin.command: go1.20.6 download
   changed_when: false
