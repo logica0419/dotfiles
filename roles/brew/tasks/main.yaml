@@ -21,7 +21,6 @@
     path: /home/linuxbrew/.linuxbrew/bin
     name:
       - python
-      - rust
       - go
       - asdf
       - git
@@ -31,6 +30,7 @@
       - buf
       - shfmt
       - hashicorp/tap/terraform
+      - tflint
       - direnv
       - dstp
       - evans
