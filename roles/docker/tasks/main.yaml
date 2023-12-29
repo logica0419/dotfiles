@@ -57,6 +57,7 @@
       - minikube
       - krew
       - helm
+      - helmfile
       - kubeseal
       - kube-linter
       - kubeconform
