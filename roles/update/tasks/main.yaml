@@ -38,6 +38,6 @@
   ansible.builtin.shell: |
     docker container prune -f
     docker image prune -a -f
-    docker volume prune -f
+    docker volume prune -a -f
     docker network prune -f
   changed_when: false
