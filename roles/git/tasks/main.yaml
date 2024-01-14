@@ -35,21 +35,14 @@
       dest: ISUCON/remote-bmi
     - repo: https://github.com/logica0419/helpisu.git
       dest: ISUCON/helpisu
+    - repo: https://github.com/logica0419/isugata.git
+      dest: ISUCON/isugata
 
-    - repo: https://github.com/ictsc/ictsc-k8s-cluster.git
-      dest: ICTSC/ictsc-k8s-cluster
-    - repo: https://github.com/ictsc/k8s-manifest.git
-      dest: ICTSC/k8s-manifest
     - repo: https://github.com/ictsc/ictsc-outlands.git
       dest: ICTSC/ictsc-outlands
     - repo: https://github.com/ictsc/ictsc-drove.git
       dest: ICTSC/ictsc-drove
 
-    - repo: https://github.com/y7amura/sc.y3.2022.git
-      dest: seccamp/2022-y3
-
-    - repo: https://github.com/Q-n-A/Q-n-A.git
-      dest: personal/Q-n-A
     - repo: https://github.com/logica0419/zenn-article.git
       dest: personal/zenn-article
     - repo: https://github.com/logica0419/knowledge.git
@@ -58,3 +51,5 @@
       dest: personal/slides
     - repo: https://github.com/logica0419/con-pro.git
       dest: personal/con-pro
+    - repo: https://github.com/logica0419/compiler.git
+      dest: personal/compiler
