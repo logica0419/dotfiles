@@ -1,22 +1,13 @@
-- name: Set rc File System to be Mounted on Startup
-  become: true
-  ansible.builtin.lineinfile:
-    path: /etc/fstab
-    regexp: ^none
-    line: none none rc defaults 0 0
-    mode: "0644"
-
-- name: Get Current Dir Path
-  ansible.builtin.command: pwd
-  register: updater_wsl_dotfiles_dir
-  changed_when: false
-- name: Get Ansible Path
-  ansible.builtin.command: which ansible-playbook
-  register: updater_wsl_ansible_path
-  changed_when: false
-- name: Copy mount.rc
+- name: Copy Updater Service Template
   become: true
   ansible.builtin.template:
-    src: mount.rc.j2
-    dest: /sbin/mount.rc
-    mode: "0755"
+    src: updater.service.j2
+    dest: /etc/systemd/system/updater.service
+    mode: "0644"
+- name: Enable Updater Service
+  become: true
+  ansible.builtin.systemd:
+    name: updater.service
+    enabled: true
+    daemon_reload: true
+    state: restarted
