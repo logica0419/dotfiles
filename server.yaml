@@ -14,4 +14,4 @@
       vars:
         gpg_pinentry_program:
     - git
-    - updater
+    - updater_server
