@@ -120,7 +120,6 @@ eval "$(dircolors -b ~/.colorrc)"
 
 export PATH="$PATH:$HOME/go/bin"
 export PATH="$PATH:$HOME/.krew/bin"
-export PATH="$PATH:$HOME/.local/bin"
 
 # Set PATH, MANPATH, etc., for Homebrew.
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
