@@ -13,7 +13,7 @@
     /home/{{ ansible_user }}/go/bin/gup update
   changed_when: false
 - name: Update Krew Packages
-  ansible.builtin.command: /home/linuxbrew/.linuxbrew/bin/kubectl krew upgrade
+  ansible.builtin.command: /home/linuxbrew/.linuxbrew/bin/kubectl-krew upgrade
   changed_when: false
 
 - name: Get Current Dir Path
