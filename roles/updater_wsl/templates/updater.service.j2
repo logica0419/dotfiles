@@ -3,7 +3,9 @@ Description=WSL Updater
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/sudo -u {{ ansible_user }} {{ wsl_ansible_path.stdout }} -v -u {{ ansible_user }} -i {{ wsl_dotfiles_dir.stdout }}/inventory {{ wsl_dotfiles_dir.stdout }}/update.yaml
+User={{ ansible_user }}
+Group={{ ansible_user }}
+ExecStart={{ wsl_ansible_path.stdout }} -v -u {{ ansible_user }} -i {{ wsl_dotfiles_dir.stdout }}/inventory {{ wsl_dotfiles_dir.stdout }}/update.yaml
 
 [Install]
 WantedBy=multi-user.target
