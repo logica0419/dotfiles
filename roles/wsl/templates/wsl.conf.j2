@@ -1,3 +1,2 @@
 [boot]
 systemd=true
-comand=sudo -u {{ ansible_user }} {{ wsl_ansible_path.stdout }} -v -u {{ ansible_user }} -i {{ wsl_dotfiles_dir.stdout }}/inventory {{ wsl_dotfiles_dir.stdout }}/update.yaml &
