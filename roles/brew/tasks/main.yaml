@@ -21,8 +21,6 @@
     path: /home/linuxbrew/.linuxbrew/bin
     name:
       - python
-      - go
-      - asdf
       - git
       - gh
       - htop
@@ -39,3 +37,4 @@
       - hadolint
       - ko
       - go-task
+      - mise

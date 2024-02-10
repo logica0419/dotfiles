@@ -6,7 +6,7 @@
     - brew
     - rc
     - pip
-    - asdf
+    - mise
     - go
     - docker
     - db
