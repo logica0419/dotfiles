@@ -1,3 +1,43 @@
+- name: Check current Go version
+  ansible.builtin.shell:
+    executable: /bin/bash
+    cmd: |
+      set -o pipefail
+      go version | cut -f 3 -d " "
+  register: current
+  changed_when: false
+  failed_when: false
+
+- name: Check latest go version
+  ansible.builtin.shell:
+    executable: /bin/bash
+    cmd: |
+      set -o pipefail
+      curl -s https://go.dev/dl/?mode=json | jq -r .[0].version
+  changed_when: false
+  register: latest
+
+- name: Install latest Go
+  become: true
+  when: current.stdout != latest.stdout
+  block:
+    - name: Remove old installation
+      ansible.builtin.command: rm -rf /usr/local/go
+      changed_when: false
+    - name: Download latest Go
+      ansible.builtin.uri:
+        url: https://go.dev/dl/{{ latest.stdout }}.linux-amd64.tar.gz
+        dest: /tmp/go-latest.tar.gz
+        status_code:
+          - 200
+          - 304
+    - name: Extract latest Go
+      ansible.builtin.unarchive:
+        src: /tmp/go-latest.tar.gz
+        remote_src: true
+        dest: /usr/local
+      changed_when: false
+
 - name: Install Go Packages
   go_install:
     name: "{{ item }}"
