@@ -3,6 +3,7 @@
   connection: local
   roles:
     - apt
-    - update
+    - go
     - pip
+    - update
     - git
