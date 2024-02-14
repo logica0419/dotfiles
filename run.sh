@@ -32,7 +32,7 @@ while :; do
 
   ssh-add -L >/dev/null 2>&1
 
-  if [ $? -eq 1 ]; then
+  if [ $? -eq 1 ] && [ -e ~/.gnupg/gpg-agent.conf ]; then
     ssh-add ~/.ssh/id_ed25519
   fi
 
