@@ -36,7 +36,6 @@
         src: /tmp/go-latest.tar.gz
         remote_src: true
         dest: /usr/local
-      changed_when: false
 
 - name: Install Go Packages
   go_install:
