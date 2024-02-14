@@ -18,6 +18,33 @@
     dest: /etc/wsl.conf
     mode: "0644"
 
+# https://github.com/microsoft/WSL/issues/8843#issuecomment-1837264576
+- name: binfmt Service Settings
+  become: true
+  block:
+    - name: Copy binfmt Service File
+      ansible.builtin.copy:
+        src: binfmt.service
+        dest: /etc/systemd/system/binfmt.service
+        mode: "0644"
+    - name: Copy binfmt Path Unit File
+      ansible.builtin.copy:
+        src: binfmt.path
+        dest: /etc/systemd/system/binfmt.path
+        mode: "0644"
+    - name: Enable binfmt Service
+      ansible.builtin.systemd:
+        name: binfmt.service
+        enabled: true
+        daemon_reload: true
+        state: restarted
+    - name: Enable binfmt Path Unit
+      ansible.builtin.systemd:
+        name: binfmt.path
+        enabled: true
+        daemon_reload: true
+        state: restarted
+
 - name: Font Settings
   become: true
   block:
