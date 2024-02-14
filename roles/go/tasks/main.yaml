@@ -1,4 +1,4 @@
-- name: Check current Go version
+- name: Check Current Go Version
   ansible.builtin.shell:
     executable: /bin/bash
     cmd: |
@@ -8,7 +8,7 @@
   changed_when: false
   failed_when: false
 
-- name: Check latest go version
+- name: Check Latest Go Version
   ansible.builtin.shell:
     executable: /bin/bash
     cmd: |
@@ -17,21 +17,21 @@
   changed_when: false
   register: latest
 
-- name: Install latest Go
+- name: Install Latest Go
   become: true
   when: current.stdout != latest.stdout
   block:
-    - name: Remove old installation
+    - name: Remove Old Installation
       ansible.builtin.command: rm -rf /usr/local/go
       changed_when: false
-    - name: Download latest Go
+    - name: Download Latest Go
       ansible.builtin.uri:
         url: https://go.dev/dl/{{ latest.stdout }}.linux-amd64.tar.gz
         dest: /tmp/go-latest.tar.gz
         status_code:
           - 200
           - 304
-    - name: Extract latest Go
+    - name: Extract Latest Go
       ansible.builtin.unarchive:
         src: /tmp/go-latest.tar.gz
         remote_src: true
@@ -68,6 +68,6 @@
     - connectrpc.com/connect/cmd/protoc-gen-connect-go
     - golang.org/dl/go1.20.6 # for AtCoder
 
-- name: Install Go go1.20.6
+- name: Install go1.20.6
   ansible.builtin.command: go1.20.6 download
   changed_when: false
