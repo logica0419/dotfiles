@@ -6,7 +6,7 @@
     path: /home/linuxbrew/.linuxbrew/bin
     update_homebrew: true
 
-- name: Register Brew Packages
+- name: Register Brew Tap
   community.general.homebrew_tap:
     path: /home/linuxbrew/.linuxbrew/bin
     name:
@@ -14,6 +14,7 @@
       - ktr0731/evans
       - k1LoW/tap
       - derailed/k9s
+      - hashicorp/tap
 
 - name: Install Packages
   community.general.homebrew:
