@@ -19,7 +19,7 @@
     mode: "0644"
 
 # https://github.com/microsoft/WSL/issues/8843#issuecomment-1837264576
-- name: binfmt Service Settings
+- name: Setup binfmt Service
   become: true
   block:
     - name: Copy binfmt Service File
