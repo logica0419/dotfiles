@@ -129,5 +129,5 @@ export PATH="/home/linuxbrew/.linuxbrew/opt/clang-format/bin:$PATH"
 eval "$(direnv hook bash)"
 
 export GPG_TTY=$(tty)
-LANG=C gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
+gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
 export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
