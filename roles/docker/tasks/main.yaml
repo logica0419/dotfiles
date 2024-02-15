@@ -59,37 +59,3 @@
       ansible.builtin.fail:
         msg: Please restart PC to apply docker group privilege
       when: docker_result.changed # noqa: no-handler
-
-- name: Install K8s-related Packages
-  community.general.homebrew:
-    state: latest
-    path: /home/linuxbrew/.linuxbrew/bin
-    name:
-      - minikube
-      - krew
-      - helm
-      - helmfile
-      - kubeseal
-      - kube-linter
-      - kubeconform
-      - k9s
-      - viddy
-- name: Get Minikube Path
-  ansible.builtin.command: which minikube
-  register: docker_minikube_path
-  changed_when: false
-- name: Copy Minikube Service File
-  become: true
-  ansible.builtin.template:
-    src: minikube.service.j2
-    dest: /etc/systemd/system/minikube.service
-    mode: "0644"
-- name: Enable Minikube Service
-  become: true
-  ansible.builtin.systemd:
-    name: minikube
-    enabled: true
-    daemon_reload: true
-- name: Install kubectl Plugins
-  ansible.builtin.command: kubectl krew install stern iexec view-allocations tree resource-capacity neat
-  changed_when: false

@@ -1,0 +1,30 @@
+- name: Install K8s-related Packages
+  community.general.homebrew:
+    state: latest
+    path: /home/linuxbrew/.linuxbrew/bin
+    name:
+      - kind
+      - krew
+      - helm
+      - helmfile
+      - kubeseal
+      - kube-linter
+      - kubeconform
+      - k9s
+      - viddy
+
+- name: Setup Kind Cluster
+  become: true
+  block:
+    - name: Get Current Dir Path
+      ansible.builtin.command: pwd
+      register: k8s_dotfiles_dir
+      changed_when: false
+    - name: Create kind cluster
+      ansible.builtin.command: kind create cluster --config {{ k8s_dotfiles_dir.stdout }}/roles/k8s/files/cluster-config.yaml
+      changed_when: false
+      failed_when: false
+
+- name: Install kubectl Plugins
+  ansible.builtin.command: kubectl krew install stern iexec view-allocations tree resource-capacity neat
+  changed_when: false
