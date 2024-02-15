@@ -1,5 +1,4 @@
 - name: Setup Kind Cluster
-  become: true
   block:
     - name: Install Kind
       community.general.homebrew:
