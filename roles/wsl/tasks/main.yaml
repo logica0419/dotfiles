@@ -47,6 +47,7 @@
 
 # https://github.com/puppeteer/puppeteer/blob/main/docs/troubleshooting.md#running-puppeteer-on-wsl-windows-subsystem-for-linux
 - name: Install Chromium-related Packages
+  become: true
   ansible.builtin.apt:
     name:
       - libgtk-3-dev
