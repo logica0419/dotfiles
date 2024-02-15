@@ -1,12 +1,12 @@
-- name: Audit dpkg Configuration
-  become: true
-  ansible.builtin.command: dpkg --configure -a
-  changed_when: false
-
 - name: Update apt Packages
   become: true
-  ansible.builtin.apt:
-    autoclean: true
-    autoremove: true
-    update_cache: true
-    upgrade: dist
+  block:
+    - name: Audit dpkg Configuration
+      ansible.builtin.command: dpkg --configure -a
+      changed_when: false
+    - name: Update apt Packages
+      ansible.builtin.apt:
+        autoclean: true
+        autoremove: true
+        update_cache: true
+        upgrade: dist

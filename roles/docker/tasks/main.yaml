@@ -1,53 +1,64 @@
-- name: Install "apt-transport-https ca-certificates curl software-properties-common" packages
-  become: true
-  ansible.builtin.apt:
-    name: apt-transport-https, ca-certificates, curl, software-properties-common
-    state: present
-- name: Get docker's official GPG key
-  ansible.builtin.get_url:
-    url: https://download.docker.com/linux/ubuntu/gpg
-    dest: /tmp/docker.gpg
-    mode: "0644"
-    force: true
-  notify: Add docker's official GPG key
-- name: Flush Handlers
-  ansible.builtin.meta: flush_handlers
-- name: Add docker repository
-  become: true
-  ansible.builtin.apt_repository:
-    repo: deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu jammy stable
-    state: present
-- name: Update apt cache
-  become: true
-  ansible.builtin.apt:
-    update_cache: true
 - name: Install Docker
   become: true
-  ansible.builtin.apt:
-    name:
-      - docker-ce
-      - docker-ce-cli
-      - containerd.io
-      - docker-compose-plugin
-    state: present
-- name: Enable cri Plugin
+  block:
+    - name: Add gpg key
+      ansible.builtin.apt_key:
+        url: https://download.docker.com/linux/debian/gpg
+    - name: Add Docker Repository
+      ansible.builtin.apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu jammy stable
+        state: present
+    - name: Update apt Cache
+      ansible.builtin.apt:
+        update_cache: true
+    - name: Install Docker
+      ansible.builtin.apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-compose-plugin
+        state: present
+
+- name: Apply Containerd Settings
   become: true
-  ansible.builtin.lineinfile:
-    path: /etc/containerd/config.toml
-    regexp: ^disabled_plugins
-    line: disabled_plugins = ["io.containerd.grpc.v1.cri"]
-    mode: "0644"
-  notify: Restart containerd
-- name: Set Version to 2
+  block:
+    - name: Enable cri Plugin
+      become: true
+      ansible.builtin.lineinfile:
+        path: /etc/containerd/config.toml
+        regexp: ^disabled_plugins
+        line: disabled_plugins = ["io.containerd.grpc.v1.cri"]
+        mode: "0644"
+      notify: Restart containerd
+    - name: Set Version to 2
+      ansible.builtin.lineinfile:
+        path: /etc/containerd/config.toml
+        regexp: ^version
+        line: version = 2
+        mode: "0644"
+      notify: Restart containerd
+    - name: Flush Handlers
+      ansible.builtin.meta: flush_handlers
+
+- name: Setup docker Group
   become: true
-  ansible.builtin.lineinfile:
-    path: /etc/containerd/config.toml
-    regexp: ^version
-    line: version = 2
-    mode: "0644"
-  notify: Restart containerd
-- name: Flush Handlers
-  ansible.builtin.meta: flush_handlers
+  block:
+    - name: Create docker Group
+      ansible.builtin.group:
+        name: docker
+        state: present
+    - name: Append Current User to docker Group
+      ansible.builtin.user:
+        name: "{{ ansible_user }}"
+        groups:
+          - docker
+        append: true
+      register: docker_result
+    - name: Stop Ansible Playbook
+      ansible.builtin.fail:
+        msg: Please restart PC to apply docker group privilege
+      when: docker_result.changed # noqa: no-handler
 
 - name: Install K8s-related Packages
   community.general.homebrew:
@@ -82,21 +93,3 @@
 - name: Install kubectl Plugins
   ansible.builtin.command: kubectl krew install stern iexec view-allocations tree resource-capacity neat
   changed_when: false
-
-- name: Create docker Group
-  become: true
-  ansible.builtin.group:
-    name: docker
-    state: present
-- name: Append Current User to docker Group
-  become: true
-  ansible.builtin.user:
-    name: "{{ ansible_user }}"
-    groups:
-      - docker
-    append: true
-  register: docker_result
-- name: Stop Ansible Playbook
-  ansible.builtin.fail:
-    msg: Please restart PC to apply docker group privilege
-  when: docker_result.changed # noqa: no-handler

@@ -1,13 +1,14 @@
-- name: Copy Updater Service Template
+- name: Setup Updater Service
   become: true
-  ansible.builtin.template:
-    src: updater.service.j2
-    dest: /etc/systemd/system/updater.service
-    mode: "0644"
-- name: Enable Updater Service
-  become: true
-  ansible.builtin.systemd:
-    name: updater.service
-    enabled: true
-    daemon_reload: true
-    state: restarted
+  block:
+    - name: Copy Updater Service Template
+      ansible.builtin.template:
+        src: updater.service.j2
+        dest: /etc/systemd/system/updater.service
+        mode: "0644"
+    - name: Enable Updater Service
+      ansible.builtin.systemd:
+        name: updater.service
+        enabled: true
+        daemon_reload: true
+        state: restarted

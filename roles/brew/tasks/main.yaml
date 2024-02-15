@@ -6,36 +6,37 @@
     path: /home/linuxbrew/.linuxbrew/bin
     update_homebrew: true
 
-- name: Register Brew Tap
-  community.general.homebrew_tap:
-    path: /home/linuxbrew/.linuxbrew/bin
-    name:
-      - ycd/tap
-      - ktr0731/evans
-      - k1LoW/tap
-      - derailed/k9s
-      - hashicorp/tap
-
 - name: Install Packages
-  community.general.homebrew:
-    state: latest
-    path: /home/linuxbrew/.linuxbrew/bin
-    name:
-      - python
-      - git
-      - gh
-      - htop
-      - jq
-      - buf
-      - shfmt
-      - hashicorp/tap/terraform
-      - tflint
-      - direnv
-      - dstp
-      - evans
-      - grpcurl
-      - tbls
-      - hadolint
-      - ko
-      - go-task
-      - mise
+  block:
+    - name: Register Brew Tap
+      community.general.homebrew_tap:
+        path: /home/linuxbrew/.linuxbrew/bin
+        name:
+          - ycd/tap
+          - ktr0731/evans
+          - k1LoW/tap
+          - derailed/k9s
+          - hashicorp/tap
+    - name: Install Packages
+      community.general.homebrew:
+        state: latest
+        path: /home/linuxbrew/.linuxbrew/bin
+        name:
+          - python
+          - git
+          - gh
+          - htop
+          - jq
+          - buf
+          - shfmt
+          - hashicorp/tap/terraform
+          - tflint
+          - direnv
+          - dstp
+          - evans
+          - grpcurl
+          - tbls
+          - hadolint
+          - ko
+          - go-task
+          - mise
