@@ -9,6 +9,7 @@
     - mise
     - go
     - docker
+    - k8s
     - db
     - role: gpg
       vars:
