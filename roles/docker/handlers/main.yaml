@@ -1,8 +1,3 @@
-- name: Add docker's official GPG key
-  become: true
-  ansible.builtin.shell: gpg --dearmor --batch --yes -o /etc/apt/keyrings/docker.gpg < /tmp/docker.gpg
-  changed_when: false
-
 - name: Restart containerd
   become: true
   ansible.builtin.service:

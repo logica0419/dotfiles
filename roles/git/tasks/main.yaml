@@ -1,18 +1,20 @@
-- name: Setup Git Config
+- name: Copy Git Config
   ansible.builtin.copy:
     src: gitconfig
     dest: ~/.gitconfig
     mode: "0664"
 
-- name: Get Current Dir Path
-  ansible.builtin.command: pwd
-  register: git_dotfiles_dir
-  changed_when: false
 - name: Update dotfiles
-  ansible.builtin.git: # noqa: latest
-    repo: https://github.com/logica0419/dotfiles.git
-    dest: "{{ git_dotfiles_dir.stdout }}"
-  failed_when: false
+  block:
+    - name: Get Current Dir Path
+      ansible.builtin.command: pwd
+      register: git_dotfiles_dir
+      changed_when: false
+    - name: Update dotfiles
+      ansible.builtin.git: # noqa: latest
+        repo: https://github.com/logica0419/dotfiles.git
+        dest: "{{ git_dotfiles_dir.stdout }}"
+      failed_when: false
 
 - name: Clone GitHub Repositories
   ansible.builtin.git: # noqa: latest
