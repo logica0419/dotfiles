@@ -55,3 +55,5 @@
       dest: personal/con-pro
     - repo: https://github.com/logica0419/compiler.git
       dest: personal/compiler
+    - repo: https://github.com/logica0419/proposals.git
+      dest: personal/proposals
