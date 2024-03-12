@@ -1,6 +1,7 @@
 - name: Install pip Packages
   ansible.builtin.pip: # noqa: package-latest
     executable: /home/linuxbrew/.linuxbrew/bin/pip3
+    extra_args: --break-system-packages
     state: latest
     name:
       - pip
