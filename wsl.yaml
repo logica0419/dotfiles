@@ -7,7 +7,6 @@
     - brew
     - rc
     - pip
-    - mise
     - go
     - docker
     - k8s
