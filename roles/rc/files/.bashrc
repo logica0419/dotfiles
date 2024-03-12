@@ -119,7 +119,6 @@ fi
 eval "$(dircolors -b ~/.colorrc)"
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-eval "$(/home/linuxbrew/.linuxbrew/bin/mise activate bash)"
 
 export PATH=$PATH:/usr/local/go/bin
 export PATH="$PATH:$HOME/go/bin"
