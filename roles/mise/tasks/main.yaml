@@ -1,5 +1,0 @@
-- name: Install Node LTS
-  ansible.builtin.shell: |
-    mise install node@lts
-    mise use -g node@lts
-  changed_when: false
