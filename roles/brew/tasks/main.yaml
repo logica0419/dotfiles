@@ -39,4 +39,4 @@
           - hadolint
           - ko
           - go-task
-          - mise
+          - oven-sh/bun/bun
