@@ -9,9 +9,47 @@
       ansible.builtin.command: /home/linuxbrew/.linuxbrew/bin/brew autoremove
       changed_when: false
 
+- name: Update Go
+  block:
+    - name: Check Current Go Version
+      ansible.builtin.shell:
+        executable: /bin/bash
+        cmd: |
+          set -o pipefail
+          /usr/local/go/bin/go version | cut -f 3 -d " "
+      register: current
+      changed_when: false
+      failed_when: false
+    - name: Check Latest Go Version
+      ansible.builtin.shell:
+        executable: /bin/bash
+        cmd: |
+          set -o pipefail
+          curl -s https://go.dev/dl/?mode=json | jq -r .[0].version
+      register: latest
+      changed_when: false
+    - name: Install Latest Go
+      become: true
+      when: current.stdout != latest.stdout
+      block:
+        - name: Remove Old Installation
+          ansible.builtin.command: rm -rf /usr/local/go
+          changed_when: false
+        - name: Download Latest Go
+          ansible.builtin.uri:
+            url: https://go.dev/dl/{{ latest.stdout }}.linux-amd64.tar.gz
+            dest: /tmp/go-latest.tar.gz
+            status_code:
+              - 200
+              - 304
+        - name: Extract Latest Go
+          ansible.builtin.unarchive:
+            src: /tmp/go-latest.tar.gz
+            remote_src: true
+            dest: /usr/local
 - name: Update Go Packages
   ansible.builtin.shell: |
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    export PATH=$PATH:/usr/local/go/bin
     /home/{{ ansible_user }}/go/bin/gup update
   changed_when: false
 
