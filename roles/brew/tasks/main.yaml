@@ -27,7 +27,6 @@
           - git
           - gh
           - htop
-          - jq
           - buf
           - shfmt
           - hashicorp/tap/terraform
