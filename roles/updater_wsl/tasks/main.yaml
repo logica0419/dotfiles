@@ -12,10 +12,6 @@
 - name: Setup Updater Service
   become: true
   block:
-    - name: Install jq
-      ansible.builtin.apt:
-        name: jq
-        state: present
     - name: Copy Updater Service Template
       ansible.builtin.template:
         src: updater.service.j2
