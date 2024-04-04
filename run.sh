@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [ "$ENV" != "server" ] && [ "$ENV" != "wsl" ]; then
-  echo "ENV must be set to server or wsl"
+if [ "$ENV" != "server" ] && [ "$ENV" != "wsl" ] && [ "$ENV" != "pixiv" ]; then
+  echo "ENV must be set to server, wsl or pixiv"
   return 1
 fi
 

@@ -1,0 +1,52 @@
+- name: Put WSL Config
+  become: true
+  ansible.builtin.copy:
+    src: wsl.conf
+    dest: /etc/wsl.conf
+    mode: "0644"
+
+# https://github.com/microsoft/WSL/issues/8843#issuecomment-1837264576
+- name: Setup binfmt Service
+  become: true
+  block:
+    - name: Copy binfmt Service File
+      ansible.builtin.copy:
+        src: binfmt.service
+        dest: /etc/systemd/system/binfmt.service
+        mode: "0644"
+    - name: Copy binfmt Path Unit File
+      ansible.builtin.copy:
+        src: binfmt.path
+        dest: /etc/systemd/system/binfmt.path
+        mode: "0644"
+    - name: Enable binfmt Service
+      ansible.builtin.systemd:
+        name: binfmt.service
+        enabled: true
+        daemon_reload: true
+        state: restarted
+    - name: Enable binfmt Path Unit
+      ansible.builtin.systemd:
+        name: binfmt.path
+        enabled: true
+        daemon_reload: true
+        state: restarted
+
+- name: Install gcloud
+  become: true
+  block:
+    - name: Add gpg key
+      ansible.builtin.apt_key:
+        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    - name: Add gcloud Repository
+      ansible.builtin.apt_repository:
+        repo: deb https://packages.cloud.google.com/apt cloud-sdk main
+        state: present
+    - name: Update apt Cache
+      ansible.builtin.apt:
+        update_cache: true
+    - name: Install gcloud
+      ansible.builtin.apt:
+        name:
+          - google-cloud-cli
+        state: present
