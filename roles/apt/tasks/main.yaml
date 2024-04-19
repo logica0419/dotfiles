@@ -11,8 +11,10 @@
         update_cache: true
         upgrade: dist
 
-- name: Install jq
+- name: Install Packages
   become: true
   ansible.builtin.apt:
-    name: jq
+    name:
+      - jq
+      - lldb
     state: present
