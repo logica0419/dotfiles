@@ -122,6 +122,7 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 export PATH=$PATH:/usr/local/go/bin
 export PATH="$PATH:$HOME/go/bin"
+export PATH="$PATH:$HOME/.bun/bin"
 export PATH="$PATH:$HOME/.krew/bin"
 export PATH="/home/linuxbrew/.linuxbrew/opt/clang-format/bin:$PATH"
 
