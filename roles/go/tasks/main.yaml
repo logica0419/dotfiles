@@ -38,7 +38,7 @@
     - golang.org/x/tools/gopls
     - golang.org/x/tools/cmd/goimports
     - github.com/nao1215/gup
-    - github.com/cosmtrek/air
+    - github.com/air-verse/air
     - github.com/spf13/cobra-cli
     - github.com/matsuu/go-mysql-query-digest
     - mvdan.cc/gofumpt
