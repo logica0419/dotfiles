@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/sh
 
 if (type brew); then
   echo "{}"

@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 
 # shellcheck source=/dev/null
 . "$1"
