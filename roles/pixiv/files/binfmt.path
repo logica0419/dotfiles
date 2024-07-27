@@ -1,8 +1,0 @@
-[Unit]
-Description=WSL binfmt restore
-
-[Path]
-PathChanged=/proc/sys/fs/binfmt_misc
-
-[Install]
-WantedBy=multi-user.target
