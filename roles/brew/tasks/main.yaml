@@ -17,7 +17,6 @@
           - k1LoW/tap
           - derailed/k9s
           - hashicorp/tap
-          - oven-sh/bun
     - name: Install Packages
       community.general.homebrew:
         state: latest
@@ -39,4 +38,3 @@
           - hadolint
           - ko
           - go-task
-          - oven-sh/bun/bun
