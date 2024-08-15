@@ -22,11 +22,6 @@
     dest: "~/prj/{{ item.dest }}"
   failed_when: false
   with_items:
-    - repo: https://github.com/traPtitech/traQ.git
-      dest: traP/SysAd/traQ
-    - repo: https://github.com/traPtitech/traQ_S-UI.git
-      dest: traP/SysAd/traQ_S-UI
-
     - repo: https://github.com/logica0419/p-isucon2022.git
       dest: ISUCON/p-isucon2022
     - repo: https://github.com/logica0419/gasshuku-isucon.git
@@ -37,11 +32,9 @@
       dest: ISUCON/remote-bmi
     - repo: https://github.com/logica0419/helpisu.git
       dest: ISUCON/helpisu
-    - repo: https://github.com/logica0419/isugata.git
-      dest: ISUCON/isugata
 
-    - repo: https://github.com/ictsc/ictsc-outlands.git
-      dest: ICTSC/ictsc-outlands
+    - repo: https://github.com/ictsc/ictsc-regalia.git
+      dest: ICTSC/ictsc-regalia
     - repo: https://github.com/ictsc/ictsc-drove.git
       dest: ICTSC/ictsc-drove
 
@@ -51,9 +44,10 @@
       dest: personal/knowledge
     - repo: https://github.com/logica0419/slides.git
       dest: personal/slides
+    - repo: https://github.com/logica0419/proposals.git
+      dest: personal/proposals
+
     - repo: https://github.com/logica0419/con-pro.git
       dest: personal/con-pro
     - repo: https://github.com/logica0419/compiler.git
       dest: personal/compiler
-    - repo: https://github.com/logica0419/proposals.git
-      dest: personal/proposals
