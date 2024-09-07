@@ -38,6 +38,9 @@
     - repo: https://github.com/ictsc/ictsc-drove.git
       dest: ICTSC/ictsc-drove
 
+    - repo: https://github.com/nekko-lab/kakko
+      dest: nekko-lab/kakko
+
     - repo: https://github.com/logica0419/zenn-article.git
       dest: personal/zenn-article
     - repo: https://github.com/logica0419/knowledge.git
