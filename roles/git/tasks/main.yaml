@@ -26,12 +26,6 @@
       dest: ISUCON/p-isucon2022
     - repo: https://github.com/logica0419/gasshuku-isucon.git
       dest: ISUCON/gasshuku-isucon
-    - repo: https://github.com/logica0419/gasshuku-isucon-solve.git
-      dest: ISUCON/gasshuku-isucon-solve
-    - repo: https://github.com/logica0419/remote-bmi.git
-      dest: ISUCON/remote-bmi
-    - repo: https://github.com/logica0419/helpisu.git
-      dest: ISUCON/helpisu
 
     - repo: https://github.com/ictsc/ictsc-regalia.git
       dest: ICTSC/ictsc-regalia
@@ -54,3 +48,6 @@
       dest: personal/con-pro
     - repo: https://github.com/logica0419/compiler.git
       dest: personal/compiler
+
+    - repo: https://go.googlesource.com/go
+      dest: oss/go
