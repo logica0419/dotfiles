@@ -44,6 +44,10 @@ while :; do
     return 1
   fi
 
+  if [ ! -e ~/.gitcookies ]; then
+    return 1
+  fi
+
   if [ "$RESULT" == 0 ]; then
     break
   fi
