@@ -1,16 +1,18 @@
 [credential "https://github.com"]
-	helper = !/home/linuxbrew/.linuxbrew/bin/gh auth git-credential
+helper = !/home/linuxbrew/.linuxbrew/bin/gh auth git-credential
 [credential "https://gist.github.com"]
-	helper = !/home/linuxbrew/.linuxbrew/bin/gh auth git-credential
+helper = !/home/linuxbrew/.linuxbrew/bin/gh auth git-credential
 [user]
-	name = logica0419
-	email = logica0419@gmail.com
-	signingkey = ~/.ssh/id_ed25519.pub
+name = logica0419
+email = logica0419@gmail.com
+signingkey = ~/.ssh/id_ed25519.pub
 [gpg]
-	format = ssh
+format = ssh
 [commit]
-	gpgsign = true
+gpgsign = true
 [core]
-	editor = code --wait
+editor = code --wait
 [pull]
-	rebase = true
+rebase = true
+[http]
+cookiefile = /home/logica/.gitcookies
