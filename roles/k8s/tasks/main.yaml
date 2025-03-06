@@ -31,5 +31,5 @@
           - k9s
           - viddy
     - name: Install kubectl Plugins
-      ansible.builtin.command: kubectl krew install stern iexec view-allocations tree resource-capacity neat
+      ansible.builtin.command: kubectl krew install stern iexec oidc-login view-allocations tree resource-capacity neat
       changed_when: false
