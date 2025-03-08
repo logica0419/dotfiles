@@ -23,6 +23,7 @@
         path: /home/linuxbrew/.linuxbrew/bin
         name:
           - krew
+          - kustomize
           - helm
           - helmfile
           - kubeseal
