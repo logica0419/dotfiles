@@ -131,3 +131,7 @@ eval "$(direnv hook bash)"
 export GPG_TTY=$(tty)
 gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
 export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+
+{% if rc_wsl == true %}
+export BROWSER="/usr/bin/chrome"
+{% endif %}
