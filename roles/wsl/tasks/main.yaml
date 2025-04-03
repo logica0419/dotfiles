@@ -54,6 +54,7 @@
       - libnotify-dev
       - libnss3
       - libxss1
+      - libasound2t64
     state: present
 
 - name: Add Chrome File to /usr/bin
