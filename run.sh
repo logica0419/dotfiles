@@ -13,7 +13,7 @@ if ! (type ansible-playbook >/dev/null 2>&1); then
   sudo apt-get install python3-pip -y >/dev/null
   echo "Installing Ansible"
   export PATH=$PATH:$HOME/.local/bin
-  pip install ansible >/dev/null 2>&1
+  pip install --break-system-packages ansible >/dev/null 2>&1
 fi
 
 while :; do
@@ -27,13 +27,8 @@ while :; do
   source ~/.bashrc
 
   if (type gh >/dev/null 2>&1) && ! (gh auth status >/dev/null 2>&1); then
-    gh auth login
-  fi
-
-  ssh-add -L >/dev/null 2>&1
-
-  if [ $? -eq 1 ] && [ -e ~/.gnupg/gpg-agent.conf ]; then
-    ssh-add ~/.ssh/id_ed25519
+    gh auth login -p https -w
+    continue
   fi
 
   if [ "$ENV" == "wsl" ] && ! (sudo systemctl status >/dev/null 2>&1); then
