@@ -14,5 +14,4 @@
       - black
       - flake8
       - mypy
-      - cfn-lint
       - pydot
