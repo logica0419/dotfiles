@@ -10,8 +10,5 @@
     - docker
     - k8s
     - db
-    - role: gpg
-      vars:
-        gpg_pinentry_program:
     - git
     - updater_server
