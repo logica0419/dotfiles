@@ -36,15 +36,11 @@
     - github.com/haya14busa/goplay/cmd/goplay
     - github.com/go-delve/delve/cmd/dlv
     - github.com/golangci/golangci-lint/v2/cmd/golangci-lint
-    - golang.org/x/tools/cmd/goimports
+
     - github.com/nao1215/gup
-    - github.com/air-verse/air
     - github.com/spf13/cobra-cli
-    - github.com/matsuu/go-mysql-query-digest
-    - mvdan.cc/gofumpt
-    - github.com/gostaticanalysis/skeleton/v2
-    - golang.org/dl/go1.20.6 # for AtCoder
     - golang.org/x/review/git-codereview
+    - golang.org/dl/go1.20.6 # for AtCoder
 
 - name: Download go1.20.6
   ansible.builtin.command: go1.20.6 download

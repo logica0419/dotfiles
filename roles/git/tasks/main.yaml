@@ -18,7 +18,7 @@
 
 - name: Check Credentials for Go Git Repositories
   block:
-    - name: Check that the somefile.conf exists
+    - name: Check that the .gitcookies exists
       ansible.builtin.stat:
         path: ~/.gitcookies
       register: stat_result
@@ -33,11 +33,6 @@
     dest: "~/prj/{{ item.dest }}"
   failed_when: false
   with_items:
-    - repo: https://github.com/logica0419/p-isucon2022.git
-      dest: ISUCON/p-isucon2022
-    - repo: https://github.com/logica0419/gasshuku-isucon.git
-      dest: ISUCON/gasshuku-isucon
-
     - repo: https://github.com/ictsc/ictsc-regalia.git
       dest: ICTSC/ictsc-regalia
     - repo: https://github.com/ictsc/ictsc-drove.git
@@ -48,13 +43,10 @@
 
     - repo: https://github.com/logica0419/zenn-article.git
       dest: personal/zenn-article
-    - repo: https://github.com/logica0419/knowledge.git
-      dest: personal/knowledge
     - repo: https://github.com/logica0419/slides.git
       dest: personal/slides
     - repo: https://github.com/logica0419/proposals.git
       dest: personal/proposals
-
     - repo: https://github.com/logica0419/con-pro.git
       dest: personal/con-pro
     - repo: https://github.com/logica0419/compiler.git
@@ -62,3 +54,5 @@
 
     - repo: https://go.googlesource.com/go
       dest: oss/go
+    - repo: https://go.googlesource.com/vscode-go
+      dest: oss/vscode-go
