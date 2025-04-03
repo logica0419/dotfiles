@@ -5,7 +5,9 @@
     - apt
     - wsl
     - brew
-    - rc
+    - role: rc
+      vars:
+        rc_wsl: true
     - pip
     - go
     - docker

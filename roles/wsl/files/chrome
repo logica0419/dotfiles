@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if [ -e "$1" ]; then
+  file_path=$(wslpath -w "$1")
+  "/mnt/c/Program Files/Google/Chrome/Application/chrome.exe" "$file_path"
+else
+  "/mnt/c/Program Files/Google/Chrome/Application/chrome.exe" "$1"
+fi

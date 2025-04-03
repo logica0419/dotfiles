@@ -13,8 +13,8 @@
     mode: "0644"
 
 - name: Copy .bashrc to home directory
-  ansible.builtin.copy:
-    src: .bashrc
+  ansible.builtin.template:
+    src: .bashrc.j2
     dest: ~/.bashrc
     mode: "0644"
   register: rc_result
