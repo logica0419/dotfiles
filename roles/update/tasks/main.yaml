@@ -57,6 +57,10 @@
   ansible.builtin.command: /home/linuxbrew/.linuxbrew/bin/kubectl-krew upgrade
   changed_when: false
 
+- name: Update mise Packages
+  ansible.builtin.command: /home/linuxbrew/.linuxbrew/bin/mise upgrade --bump
+  changed_when: false
+
 - name: Update Local DB
   block:
     - name: Get Current Dir Path
