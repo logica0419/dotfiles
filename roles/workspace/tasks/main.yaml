@@ -1,0 +1,57 @@
+- name: Clone GitHub Repositories
+  ansible.builtin.git: # noqa: latest
+    repo: "{{ item.repo }}"
+    dest: "~/prj/{{ item.dest }}"
+  failed_when: false
+  with_items:
+    - repo: https://github.com/ictsc/ictsc-regalia.git
+      dest: ICTSC/ictsc-regalia
+    - repo: https://github.com/ictsc/ictsc-drove.git
+      dest: ICTSC/ictsc-drove
+
+    - repo: https://github.com/nekko-lab/kakko
+      dest: nekko-lab/kakko
+
+    - repo: https://github.com/logica0419/zenn-article.git
+      dest: personal/zenn-article
+    - repo: https://github.com/logica0419/slides.git
+      dest: personal/slides
+    - repo: https://github.com/logica0419/proposals.git
+      dest: personal/proposals
+    - repo: https://github.com/logica0419/con-pro.git
+      dest: personal/con-pro
+    - repo: https://github.com/logica0419/compiler.git
+      dest: personal/compiler
+
+    - repo: https://go.googlesource.com/go
+      dest: oss/go
+    - repo: https://go.googlesource.com/vscode-go
+      dest: oss/vscode-go
+
+- name: Setup Go Repository
+  block:
+    - name: Copy .envrc file
+      ansible.builtin.copy:
+        src: .envrc
+        dest: ~/prj/oss/go/.envrc
+        mode: "0664"
+    - name: Copy exclude file
+      ansible.builtin.copy:
+        src: exclude
+        dest: ~/prj/oss/go/.git/info/exclude
+        mode: "0664"
+    - name: Allow direnv
+      ansible.builtin.command: direnv allow
+      args:
+        chdir: ~/prj/oss/go
+      changed_when: false
+    - name: Check if Go is already built
+      ansible.builtin.stat:
+        path: ~/prj/oss/go/bin/go
+      register: go_stat
+    - name: Build Go from source
+      ansible.builtin.command: ./all.bash
+      args:
+        chdir: ~/prj/oss/go/src
+      changed_when: false
+      when: not go_stat.stat.exists

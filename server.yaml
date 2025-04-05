@@ -12,4 +12,5 @@
     - k8s
     - db
     - git
+    - workspace
     - updater_server
