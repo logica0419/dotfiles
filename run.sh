@@ -27,7 +27,7 @@ while :; do
   source ~/.bashrc
 
   if [ "$ENV" == "server" ] && (type tailscale >/dev/null 2>&1); then
-    sudo tailscale up
+    sudo tailscale up --advertise-exit-node
   fi
 
   if [ "$ENV" == "server" ] && (type code >/dev/null 2>&1); then
