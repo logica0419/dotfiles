@@ -5,9 +5,7 @@
     - apt
     - wsl
     - brew
-    - role: rc
-      vars:
-        rc_wsl: true
+    - rc
     - pip
     - go
     - mise

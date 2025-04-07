@@ -128,6 +128,6 @@ export PATH="$PATH:$HOME/.bun/bin"
 export PATH="$PATH:$HOME/.krew/bin"
 export PATH="$PATH:/home/linuxbrew/.linuxbrew/opt/clang-format/bin"
 
-{% if rc_wsl == true %}
+{% if lookup("env", "ENV") == "wsl" %}
 export BROWSER="/usr/bin/chrome"
 {% endif %}
