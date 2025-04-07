@@ -43,7 +43,11 @@ while :; do
   fi
 
   if (type docker >/dev/null 2>&1) && ! (docker ps >/dev/null 2>&1); then
-    return 1
+    if [ "$ENV" == "wsl" ]; then
+      return 1
+    else
+      sudo reboot
+    fi
   fi
 
   if [ -e ~/.gitcookies ] && [ ! -s ~/.gitcookies ]; then
