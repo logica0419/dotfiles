@@ -26,7 +26,7 @@ while :; do
   # shellcheck source=/dev/null
   source ~/.bashrc
 
-  if [ "$ENV" == "server" ] && (type tailscale >/dev/null 2>&1); then
+  if [ "$ENV" == "server" ] && (type tailscale >/dev/null 2>&1) && ! (tailscale status 2>&1); then
     sudo tailscale up --advertise-exit-node
   fi
 
