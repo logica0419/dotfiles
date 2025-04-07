@@ -1,5 +1,4 @@
 - name: Setup Tailscale
-  become: true
   block:
     - name: Get Tailscale install script
       ansible.builtin.get_url:
@@ -8,6 +7,16 @@
         mode: "0755"
     - name: Install Tailscale
       ansible.builtin.command: /tmp/install.sh
+      changed_when: false
+
+- name: Setup VS Code server
+  block:
+    - name: Install VS Code server
+      become: true
+      ansible.builtin.apt:
+        deb: https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64
+    - name: Start VS Code tunnel
+      ansible.builtin.command: code tunnel service install
       changed_when: false
 
 - name: Setup Updater
