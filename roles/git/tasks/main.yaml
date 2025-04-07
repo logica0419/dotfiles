@@ -10,7 +10,13 @@
       ansible.builtin.stat:
         path: ~/.gitcookies
       register: stat_result
+    - name: Create empty .gitcookies
+      ansible.builtin.file:
+        path: ~/.gitcookies
+        state: touch
+        mode: "0664"
+      when: not stat_result.stat.exists
     - name: Stop Ansible Playbook
       ansible.builtin.fail:
         msg: Please setup credentials for Go Git repositories
-      when: not stat_result.stat.exists
+      when: not stat_result.stat.exists or stat_result.stat.size == 0
