@@ -3,6 +3,7 @@
   connection: local
   roles:
     - apt
+    - server
     - brew
     - rc
     - pip
@@ -13,4 +14,3 @@
     - db
     - git
     - workspace
-    - updater_server
