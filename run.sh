@@ -30,6 +30,10 @@ while :; do
     sudo tailscale up
   fi
 
+  if [ "$ENV" == "server" ] && (type code >/dev/null 2>&1); then
+    code tunnel service install
+  fi
+
   if [ "$ENV" == "wsl" ] && ! (sudo systemctl status >/dev/null 2>&1); then
     return 1
   fi
