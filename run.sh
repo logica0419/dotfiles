@@ -26,11 +26,11 @@ while :; do
   # shellcheck source=/dev/null
   source ~/.bashrc
 
-  if [ "$ENV" == "server" ] && (type tailscale >/dev/null 2>&1) && ! (tailscale status 2>&1); then
+  if [ "$ENV" == "server" ] && (type tailscale >/dev/null 2>&1) && ! (tailscale status >/dev/null 2>&1); then
     sudo tailscale up --advertise-exit-node
   fi
 
-  if [ "$ENV" == "server" ] && (type code >/dev/null 2>&1) && ! (systemctl --user status code-tunnel 2>&1); then
+  if [ "$ENV" == "server" ] && (type code >/dev/null 2>&1) && ! (systemctl --user status code-tunnel >/dev/null 2>&1); then
     code tunnel service install
   fi
 
