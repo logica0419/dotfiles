@@ -9,15 +9,10 @@
       ansible.builtin.command: /tmp/install.sh
       changed_when: false
 
-- name: Setup VS Code server
-  block:
-    - name: Install VS Code server
-      become: true
-      ansible.builtin.command: snap install --classic code
-      changed_when: false
-    - name: Start VS Code tunnel
-      ansible.builtin.command: code tunnel service install
-      changed_when: false
+- name: Install VS Code server
+  become: true
+  ansible.builtin.command: snap install --classic code
+  changed_when: false
 
 - name: Setup Updater
   block:
