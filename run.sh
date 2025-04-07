@@ -40,7 +40,6 @@ while :; do
 
   if (type gh >/dev/null 2>&1) && ! (gh auth status >/dev/null 2>&1); then
     gh auth login -p https -w
-    continue
   fi
 
   if (type docker >/dev/null 2>&1) && ! (docker ps >/dev/null 2>&1); then

@@ -1,6 +1,7 @@
 - name: Setup Tailscale
   block:
     - name: Enable UP forwarding
+      become: true
       ansible.posix.sysctl:
         name: "{{ item.key }}"
         value: "{{ item.value }}"
