@@ -46,7 +46,7 @@ while :; do
     return 1
   fi
 
-  if [ -e ~/.gitconfig ] && [ ! -e ~/.gitcookies ]; then
+  if [ -e ~/.gitcookies ] && [ ! -s ~/.gitcookies ]; then
     return 1
   fi
 
