@@ -30,7 +30,7 @@ while :; do
     sudo tailscale up --advertise-exit-node
   fi
 
-  if [ "$ENV" == "server" ] && (type code >/dev/null 2>&1); then
+  if [ "$ENV" == "server" ] && (type code >/dev/null 2>&1) && ! (systemctl --user status code-tunnel 2>&1); then
     code tunnel service install
   fi
 
