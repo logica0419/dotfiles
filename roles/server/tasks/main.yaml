@@ -13,8 +13,8 @@
   block:
     - name: Install VS Code server
       become: true
-      ansible.builtin.apt:
-        deb: https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64
+      ansible.builtin.command: snap remove --classic code
+      changed_when: false
     - name: Start VS Code tunnel
       ansible.builtin.command: code tunnel service install
       changed_when: false
