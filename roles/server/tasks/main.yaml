@@ -1,3 +1,8 @@
+- name: Set timezone to Asia/Tokyo
+  become: true
+  community.general.timezone:
+    name: Asia/Tokyo
+
 - name: Setup Tailscale
   block:
     - name: Enable UP forwarding
