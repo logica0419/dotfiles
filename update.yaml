@@ -5,5 +5,4 @@
     - apt
     - pip
     - update
-    - git
     - workspace
