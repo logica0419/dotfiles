@@ -5,16 +5,6 @@
 
 - name: Setup Tailscale
   block:
-    - name: Enable UP forwarding
-      become: true
-      ansible.posix.sysctl:
-        name: "{{ item.key }}"
-        value: "{{ item.value }}"
-        sysctl_set: true
-        state: present
-        reload: true
-        ignoreerrors: true
-      with_dict: "{{ server_sysctl_config }}"
     - name: Get Tailscale install script
       ansible.builtin.get_url:
         url: https://tailscale.com/install.sh
