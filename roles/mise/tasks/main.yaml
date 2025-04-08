@@ -3,3 +3,7 @@
     mise install node@latest
     mise use -g node@latest
   changed_when: false
+
+- name: Update npm to latest
+  ansible.builtin.command: npm install -g npm@latest
+  changed_when: false
