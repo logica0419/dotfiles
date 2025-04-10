@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Install Git
-if ! (type git >/dev/null 2>&1); then
+if ! (type git &>/dev/null); then
   echo "Installing git"
   sudo apt-get update
   sudo apt-get install git -y >/dev/null

@@ -9,11 +9,11 @@ sudo apt-get update >/dev/null
 sudo apt-get install expect -y >/dev/null
 
 # Install Ansible
-if ! (type ansible-playbook >/dev/null 2>&1); then
+if ! (type ansible-playbook &>/dev/null); then
   sudo apt-get install python3-pip -y >/dev/null
   echo "Installing Ansible"
   export PATH=$PATH:$HOME/.local/bin
-  pip install --break-system-packages ansible >/dev/null 2>&1
+  pip install --break-system-packages ansible &>/dev/null
 fi
 
 while :; do
@@ -26,23 +26,23 @@ while :; do
   # shellcheck source=/dev/null
   source ~/.bashrc
 
-  if [ "$ENV" == "server" ] && (type tailscale >/dev/null 2>&1) && ! (tailscale status >/dev/null 2>&1); then
+  if [ "$ENV" == "server" ] && (type tailscale &>/dev/null) && ! (tailscale status &>/dev/null); then
     sudo tailscale up
   fi
 
-  if [ "$ENV" == "server" ] && (type code >/dev/null 2>&1) && ! (systemctl --user status code-tunnel >/dev/null 2>&1); then
+  if [ "$ENV" == "server" ] && (type code &>/dev/null) && ! (systemctl --user status code-tunnel &>/dev/null); then
     code tunnel service install
   fi
 
-  if [ "$ENV" == "wsl" ] && ! (sudo systemctl status >/dev/null 2>&1); then
+  if [ "$ENV" == "wsl" ] && ! (sudo systemctl status &>/dev/null); then
     return 1
   fi
 
-  if (type gh >/dev/null 2>&1) && ! (gh auth status >/dev/null 2>&1); then
+  if (type gh &>/dev/null) && ! (gh auth status &>/dev/null); then
     gh auth login -p https -w
   fi
 
-  if (type docker >/dev/null 2>&1) && ! (docker ps >/dev/null 2>&1); then
+  if (type docker &>/dev/null) && ! (docker ps &>/dev/null); then
     if [ "$ENV" == "wsl" ]; then
       return 1
     else
@@ -59,4 +59,4 @@ while :; do
   fi
 done
 
-rm -rf "$HOME"/.local/bin "$HOME"/.local/lib >/dev/null 2>&1
+rm -rf "$HOME"/.local/bin "$HOME"/.local/lib &>/dev/null
