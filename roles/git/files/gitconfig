@@ -16,3 +16,5 @@ editor = code --wait
 rebase = true
 [http]
 cookiefile = /home/logica/.gitcookies
+[init]
+defaultBranch = main
