@@ -33,11 +33,11 @@
           - tflint
           - direnv
           - dstp
-          - evans
-          - grpcurl
           - tbls
           - hadolint
           - ko
           - go-task
           - mise
           - oven-sh/bun/bun
+          - jq
+          - yq
