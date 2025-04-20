@@ -39,5 +39,6 @@
           - go-task
           - mise
           - oven-sh/bun/bun
+          - biome
           - jq
           - yq
