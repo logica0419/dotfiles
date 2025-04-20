@@ -15,5 +15,7 @@
   become: true
   ansible.builtin.apt:
     name:
+      - jq
+      - yq
       - lldb
     state: present
