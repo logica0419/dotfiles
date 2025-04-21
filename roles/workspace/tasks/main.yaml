@@ -40,6 +40,12 @@
     - repo: https://go.googlesource.com/vscode-go
       dest: oss/vscode-go
 
+- name: Setup Biome config
+  ansible.builtin.copy:
+    src: biome.json
+    dest: ~/biome.json
+    mode: "0664"
+
 - name: Setup Go Repository
   block:
     - name: Copy .envrc file
