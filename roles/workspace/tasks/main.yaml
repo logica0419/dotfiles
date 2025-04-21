@@ -53,7 +53,7 @@
         dest: ~/prj/oss/go/.git/info/exclude
         mode: "0664"
     - name: Allow direnv
-      ansible.builtin.command: direnv allow
+      ansible.builtin.command: /home/linuxbrew/.linuxbrew/bin/direnv allow
       args:
         chdir: ~/prj/oss/go
       changed_when: false
