@@ -34,6 +34,8 @@
       dest: personal/con-pro
     - repo: https://github.com/logica0419/compiler.git
       dest: personal/compiler
+    - repo: https://github.com/logica0419/logica0419.dev.git
+      dest: personal/logica0419.dev
 
     - repo: https://go.googlesource.com/go
       dest: oss/go
