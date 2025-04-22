@@ -50,11 +50,15 @@
       ansible.builtin.command: which reboot
       register: updater_server_reboot_path
       changed_when: false
-    - name: Setup Periodical Reboot for Server
-      become: true
+    - name: Setup periodical reboot (update detection)
       ansible.builtin.cron:
-        name: reboot server
+        name: reboot server (update detection)
         minute: 30
         hour: 4
         user: root
         job: "[ -e /var/run/reboot-required ] && {{ updater_server_reboot_path.stdout }} 0"
+    - name: Setup periodical reboot (connectivity)
+      ansible.builtin.cron:
+        name: reboot server (connectivity)
+        user: root
+        job: "curl -m 2 -sL google.com >/dev/null || {{ updater_server_reboot_path.stdout }} 0"
