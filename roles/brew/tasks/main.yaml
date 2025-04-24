@@ -40,3 +40,4 @@
           - mise
           - oven-sh/bun/bun
           - biome
+          - stylelint
