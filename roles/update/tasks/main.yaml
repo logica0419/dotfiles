@@ -33,8 +33,9 @@
       when: current.stdout != latest.stdout
       block:
         - name: Remove Old Installation
-          ansible.builtin.command: rm -rf /usr/local/go
-          changed_when: false
+          ansible.builtin.file:
+            path: /usr/local/go
+            state: absent
         - name: Download Latest Go
           ansible.builtin.uri:
             url: https://go.dev/dl/{{ latest.stdout }}.linux-amd64.tar.gz

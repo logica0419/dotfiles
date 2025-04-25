@@ -2,8 +2,9 @@
   become: true
   block:
     - name: Remove Old Installation
-      ansible.builtin.command: rm -rf /usr/local/go
-      changed_when: false
+      ansible.builtin.file:
+        path: /usr/local/go
+        state: absent
     - name: Check Latest Go Version
       ansible.builtin.shell:
         executable: /bin/bash
