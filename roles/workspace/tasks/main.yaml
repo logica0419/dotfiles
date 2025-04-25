@@ -75,3 +75,16 @@
         chdir: ~/prj/oss/go/src
       changed_when: false
       when: not go_stat.stat.exists
+
+- name: Setup vscode-go repository
+  block:
+    - name: Copy exclude file
+      ansible.builtin.copy:
+        src: exclude
+        dest: ~/prj/oss/vscode-go/.git/info/exclude
+        mode: "0664"
+    - name: Copy settings.json file
+      ansible.builtin.copy:
+        src: settings.json
+        dest: ~/prj/oss/vscode-go/.vscode/settings.json
+        mode: "0664"
