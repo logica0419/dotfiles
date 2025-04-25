@@ -39,5 +39,7 @@
           - go-task
           - mise
           - oven-sh/bun/bun
+          - eslint
+          - prettier
           - biome
           - stylelint
