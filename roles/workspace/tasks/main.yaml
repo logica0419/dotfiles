@@ -61,8 +61,8 @@
         dest: ~/prj/oss/go/.git/info/exclude
         mode: "0664"
     - name: Allow direnv
-      ansible.builtin.command: /home/linuxbrew/.linuxbrew/bin/direnv allow
-      args:
+      ansible.builtin.command:
+        cmd: /home/linuxbrew/.linuxbrew/bin/direnv allow
         chdir: ~/prj/oss/go
       changed_when: false
     - name: Check if Go is already built
@@ -70,19 +70,19 @@
         path: ~/prj/oss/go/bin/go
       register: go_stat
     - name: Build Go from source
-      ansible.builtin.command: ./all.bash
-      args:
+      ansible.builtin.command:
+        cmd: ./all.bash
         chdir: ~/prj/oss/go/src
       changed_when: false
       when: not go_stat.stat.exists
 
 - name: Setup vscode-go repository
   block:
-    - name: Copy exclude file
-      ansible.builtin.copy:
-        src: exclude
-        dest: ~/prj/oss/vscode-go/.git/info/exclude
-        mode: "0664"
+    - name: Put .vscode to skip-worktree # noqa: command-instead-of-module
+      ansible.builtin.shell:
+        cmd: /home/linuxbrew/.linuxbrew/bin/git update-index --skip-worktree .vscode/*
+        chdir: ~/prj/oss/vscode-go
+      changed_when: false
     - name: Copy settings.json file
       ansible.builtin.copy:
         src: settings.json
