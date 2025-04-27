@@ -4,7 +4,7 @@ helper = !/home/linuxbrew/.linuxbrew/bin/gh auth git-credential
 helper = !/home/linuxbrew/.linuxbrew/bin/gh auth git-credential
 [user]
 name = logica0419
-email = logica0419@gmail.com
+email = contact@logica0419.dev
 signingkey = ~/.ssh/id_ed25519.pub
 [gpg]
 format = ssh
