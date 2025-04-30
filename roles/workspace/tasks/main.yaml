@@ -41,6 +41,10 @@
       dest: oss/go
     - repo: https://go.googlesource.com/vscode-go
       dest: oss/vscode-go
+    - repo: https://github.com/logica0419/kubernetes.git
+      dest: oss/kubernetes
+    - repo: https://github.com/logica0419/website.git
+      dest: oss/k8s-website
 
 - name: Setup Biome config
   ansible.builtin.copy:
