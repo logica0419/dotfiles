@@ -24,6 +24,7 @@
         path: /home/linuxbrew/.linuxbrew/bin
         name:
           - python
+          - pipenv
           - git
           - gh
           - htop
