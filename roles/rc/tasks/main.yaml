@@ -15,7 +15,7 @@
 - name: Copy .bashrc to root home directory
   become: true
   ansible.builtin.template:
-    src: .bashrc.j2
+    src: .bashrc-root.j2
     dest: /root/.bashrc
     mode: "0644"
 
