@@ -23,7 +23,6 @@
     - name: Extract Latest Go
       ansible.builtin.unarchive:
         src: /tmp/go-latest.tar.gz
-        remote_src: true
         dest: /usr/local
 
 - name: Install Go Packages
