@@ -24,7 +24,6 @@
   become: true
   block:
     - name: Enable cri Plugin
-      become: true
       ansible.builtin.lineinfile:
         path: /etc/containerd/config.toml
         regexp: ^disabled_plugins
