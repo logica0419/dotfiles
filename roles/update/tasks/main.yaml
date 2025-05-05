@@ -47,6 +47,10 @@
           ansible.builtin.unarchive:
             src: /tmp/go-latest.tar.gz
             dest: /usr/local
+        - name: Remove archive
+          ansible.builtin.file:
+            path: /tmp/go-latest.tar.gz
+            state: absent
 - name: Update Go Packages
   ansible.builtin.shell: |
     export PATH=$PATH:/usr/local/go/bin
