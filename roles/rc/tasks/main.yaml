@@ -18,6 +18,11 @@
     dest: ~/.bashrc
     mode: "0644"
   register: rc_result
+- name: Copy .bashrc to root home directory
+  ansible.builtin.template:
+    src: .bashrc.j2
+    dest: /root/.bashrc
+    mode: "0644"
 - name: Stop Ansible Playbook
   ansible.builtin.fail:
     msg: Please run the playbook again after reloading .bashrc
