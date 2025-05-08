@@ -36,6 +36,8 @@
       dest: personal/compiler
     - repo: https://github.com/logica0419/logica0419.dev.git
       dest: personal/logica0419.dev
+    - repo: https://github.com/logica0419/coding-kubernetes.git
+      dest: personal/coding-kubernetes
 
     - repo: https://github.com/hatahatack/score_plorer_v2.git
       dest: ajy/score_plorer_v2
