@@ -23,7 +23,7 @@
 - name: Apply Containerd Settings
   become: true
   block:
-    - name: Enable cri Plugin
+    - name: Disable cri Plugin
       ansible.builtin.lineinfile:
         path: /etc/containerd/config.toml
         regexp: ^disabled_plugins
