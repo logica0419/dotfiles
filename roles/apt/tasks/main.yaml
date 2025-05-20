@@ -18,4 +18,11 @@
       - jq
       - yq
       - lldb
+      - clangd
     state: present
+
+- name: Copy config.yaml file for clangd
+  ansible.builtin.copy:
+    src: config.yaml
+    dest: ~/.config/clangd/config.yaml
+    mode: "0664"
