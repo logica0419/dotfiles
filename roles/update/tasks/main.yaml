@@ -37,20 +37,10 @@
             path: /usr/local/go
             state: absent
         - name: Download Latest Go
-          ansible.builtin.uri:
-            url: https://go.dev/dl/{{ latest.stdout }}.linux-amd64.tar.gz
-            dest: /tmp/go-latest.tar.gz
-            status_code:
-              - 200
-              - 304
-        - name: Extract Latest Go
           ansible.builtin.unarchive:
-            src: /tmp/go-latest.tar.gz
+            src: https://go.dev/dl/{{ latest.stdout }}.linux-amd64.tar.gz
             dest: /usr/local
-        - name: Remove archive
-          ansible.builtin.file:
-            path: /tmp/go-latest.tar.gz
-            state: absent
+            remote_src: true
 - name: Update Go Packages
   ansible.builtin.shell: |
     export PATH=$PATH:/usr/local/go/bin
