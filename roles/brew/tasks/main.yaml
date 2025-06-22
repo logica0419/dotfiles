@@ -23,7 +23,7 @@
         state: latest
         path: /home/linuxbrew/.linuxbrew/bin
         name:
-          - python
+          - python3
           - pipenv
           - git
           - gh
