@@ -85,11 +85,11 @@
   block:
     - name: Get Current Dir Path
       ansible.builtin.command: pwd
-      register: updater_wsl_dotfiles_dir
+      register: wsl_dotfiles_dir
       changed_when: false
     - name: Get Ansible Path
       ansible.builtin.command: which ansible-playbook
-      register: updater_wsl_ansible_path
+      register: wsl_ansible_path
       changed_when: false
 
 - name: Setup Updater Service

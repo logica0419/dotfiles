@@ -17,7 +17,7 @@
         cmd: |
           set -o pipefail
           /usr/local/go/bin/go version | cut -f 3 -d " "
-      register: current
+      register: update_current
       changed_when: false
       failed_when: false
     - name: Check Latest Go Version
@@ -26,11 +26,11 @@
         cmd: |
           set -o pipefail
           curl -s https://go.dev/dl/?mode=json | jq -r .[0].version
-      register: latest
+      register: update_latest
       changed_when: false
     - name: Install Latest Go
       become: true
-      when: current.stdout != latest.stdout
+      when: update_current.stdout != update_latest.stdout
       block:
         - name: Remove Old Installation
           ansible.builtin.file:

@@ -28,11 +28,11 @@
   block:
     - name: Get Current Dir Path
       ansible.builtin.command: pwd
-      register: updater_server_dotfiles_dir
+      register: server_dotfiles_dir
       changed_when: false
     - name: Get ansible-playbook Path
       ansible.builtin.command: which ansible-playbook
-      register: updater_server_ansible_playbook_path
+      register: server_ansible_playbook_path
       changed_when: false
     - name: Setup Updater for Server
       ansible.builtin.cron:
@@ -40,15 +40,15 @@
         minute: 0
         hour: 4
         job: >-
-          {{ updater_server_ansible_playbook_path.stdout }} -v -u {{ ansible_user }}
-          -i {{ updater_server_dotfiles_dir.stdout }}/inventory {{ updater_server_dotfiles_dir.stdout }}/update.yaml
+          {{ server_ansible_playbook_path.stdout }} -v -u {{ ansible_user }}
+          -i {{ server_dotfiles_dir.stdout }}/inventory {{ server_dotfiles_dir.stdout }}/update.yaml
 
 - name: Setup Reboot
   become: true
   block:
     - name: Get reboot Path
       ansible.builtin.command: which reboot
-      register: updater_server_reboot_path
+      register: server_reboot_path
       changed_when: false
     - name: Setup periodical reboot (update detection)
       ansible.builtin.cron:
@@ -56,9 +56,9 @@
         minute: 30
         hour: 4
         user: root
-        job: "[ -e /var/run/reboot-required ] && {{ updater_server_reboot_path.stdout }} 0"
+        job: "[ -e /var/run/reboot-required ] && {{ server_reboot_path.stdout }} 0"
     - name: Setup periodical reboot (connectivity)
       ansible.builtin.cron:
         name: reboot server (connectivity)
         user: root
-        job: "curl -m 2 -sL google.com >/dev/null || {{ updater_server_reboot_path.stdout }} 0"
+        job: "curl -m 2 -sL google.com >/dev/null || {{ server_reboot_path.stdout }} 0"

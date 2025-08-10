@@ -11,11 +11,11 @@
         cmd: |
           set -o pipefail
           curl -s https://go.dev/dl/?mode=json | jq -r .[0].version
-      register: latest
+      register: go_latest
       changed_when: false
     - name: Download Latest Go
       ansible.builtin.unarchive:
-        src: https://go.dev/dl/{{ latest.stdout }}.linux-amd64.tar.gz
+        src: https://go.dev/dl/{{ go_latest.stdout }}.linux-amd64.tar.gz
         dest: /usr/local
         remote_src: true
 

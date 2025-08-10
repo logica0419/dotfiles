@@ -2,12 +2,12 @@
   block:
     - name: Get Current Dir Path
       ansible.builtin.command: pwd
-      register: git_dotfiles_dir
+      register: workspace_dotfiles_dir
       changed_when: false
     - name: Update dotfiles
       ansible.builtin.git: # noqa: latest
         repo: https://github.com/logica0419/dotfiles.git
-        dest: "{{ git_dotfiles_dir.stdout }}"
+        dest: "{{ workspace_dotfiles_dir.stdout }}"
       failed_when: false
 
 - name: Clone GitHub Repositories
@@ -38,6 +38,8 @@
       dest: personal/logica0419.dev
     - repo: https://github.com/logica0419/coding-kubernetes.git
       dest: personal/coding-kubernetes
+    - repo: https://github.com/logica0419/etsecd.git
+      dest: personal/etsecd
 
     - repo: https://github.com/hatahatack/score_plorer_v2.git
       dest: ajy/score_plorer_v2
@@ -77,13 +79,13 @@
     - name: Check if Go is already built
       ansible.builtin.stat:
         path: ~/prj/oss/go/bin/go
-      register: go_stat
+      register: workspace_go_stat
     - name: Build Go from source
       ansible.builtin.command:
         cmd: ./all.bash
         chdir: ~/prj/oss/go/src
       changed_when: false
-      when: not go_stat.stat.exists
+      when: not workspace_go_stat.stat.exists
 
 - name: Setup vscode-go repository
   block:
