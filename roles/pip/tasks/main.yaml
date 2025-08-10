@@ -8,7 +8,6 @@
     extra_args: --break-system-packages
     state: latest
     name:
-      - pip
       - ansible
       - ansible-lint
       - black
