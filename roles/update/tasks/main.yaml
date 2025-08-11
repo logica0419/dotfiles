@@ -77,7 +77,6 @@
 
 - name: Prune Docker Components
   ansible.builtin.shell: |
-    docker container prune -f
     docker image prune -a -f
     docker volume prune -a -f
     docker network prune -f
