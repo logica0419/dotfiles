@@ -9,38 +9,6 @@
       ansible.builtin.command: /home/linuxbrew/.linuxbrew/bin/brew autoremove
       changed_when: false
 
-- name: Update Go
-  block:
-    - name: Check Current Go Version
-      ansible.builtin.shell:
-        executable: /bin/bash
-        cmd: |
-          set -o pipefail
-          /usr/local/go/bin/go version | cut -f 3 -d " "
-      register: update_current
-      changed_when: false
-      failed_when: false
-    - name: Check Latest Go Version
-      ansible.builtin.shell:
-        executable: /bin/bash
-        cmd: |
-          set -o pipefail
-          curl -s https://go.dev/dl/?mode=json | jq -r .[0].version
-      register: update_latest
-      changed_when: false
-    - name: Install Latest Go
-      become: true
-      when: update_current.stdout != update_latest.stdout
-      block:
-        - name: Remove Old Installation
-          ansible.builtin.file:
-            path: /usr/local/go
-            state: absent
-        - name: Download Latest Go
-          ansible.builtin.unarchive:
-            src: https://go.dev/dl/{{ latest.stdout }}.linux-amd64.tar.gz
-            dest: /usr/local
-            remote_src: true
 - name: Update Go Packages
   ansible.builtin.shell: |
     export PATH=$PATH:/usr/local/go/bin
@@ -70,8 +38,8 @@
       environment:
         COMPOSE_PROJECT_NAME: local_db
         COMPOSE_FILE: "{{ update_dotfiles_dir.stdout }}/roles/db/files/docker-compose.yaml"
-      register: update_docker_compose_pull
-      changed_when: update_docker_compose_pull.rc == 0
+      register: update_docker_compose
+      changed_when: update_docker_compose.rc == 0
       failed_when: false
       notify: Restart Local DB
 

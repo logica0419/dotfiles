@@ -1,10 +1,14 @@
-- name: Install Latest Go
-  become: true
+- name: Install the latest Go
   block:
-    - name: Remove Old Installation
-      ansible.builtin.file:
-        path: /usr/local/go
-        state: absent
+    - name: Check Current Go Version
+      ansible.builtin.shell:
+        executable: /bin/bash
+        cmd: |
+          set -o pipefail
+          /usr/local/go/bin/go version | cut -f 3 -d " "
+      register: go_current
+      changed_when: false
+      failed_when: false
     - name: Check Latest Go Version
       ansible.builtin.shell:
         executable: /bin/bash
@@ -13,11 +17,19 @@
           curl -s https://go.dev/dl/?mode=json | jq -r .[0].version
       register: go_latest
       changed_when: false
-    - name: Download Latest Go
-      ansible.builtin.unarchive:
-        src: https://go.dev/dl/{{ go_latest.stdout }}.linux-amd64.tar.gz
-        dest: /usr/local
-        remote_src: true
+    - name: Install Latest Go
+      become: true
+      when: go_current.stdout != go_latest.stdout
+      block:
+        - name: Remove Old Installation
+          ansible.builtin.file:
+            path: /usr/local/go
+            state: absent
+        - name: Download Latest Go
+          ansible.builtin.unarchive:
+            src: https://go.dev/dl/{{ go_latest.stdout }}.linux-amd64.tar.gz
+            dest: /usr/local
+            remote_src: true
 
 - name: Install Go Packages
   go_install:
@@ -34,8 +46,3 @@
     - github.com/nao1215/gup
     - github.com/spf13/cobra-cli
     - golang.org/x/review/git-codereview
-    - golang.org/dl/go1.20.6 # for AtCoder
-
-- name: Download go1.20.6
-  ansible.builtin.command: go1.20.6 download
-  changed_when: false

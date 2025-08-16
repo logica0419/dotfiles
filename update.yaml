@@ -4,5 +4,6 @@
   roles:
     - apt
     - pip
+    - go
     - update
     - workspace
