@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   mysql:
     container_name: local-db_mysql
@@ -15,7 +13,7 @@ services:
 
   phpmyadmin:
     container_name: local-db_phpmyadmin
-    image: phpmyadmin/phpmyadmin:latest
+    image: phpmyadmin:fpm-alpine
     restart: always
     environment:
       - PMA_ARBITRARY=1
