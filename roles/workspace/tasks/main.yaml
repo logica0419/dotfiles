@@ -66,26 +66,50 @@
         src: .envrc
         dest: ~/prj/oss/go/.envrc
         mode: "0664"
-    - name: Copy exclude file
-      ansible.builtin.copy:
-        src: exclude
-        dest: ~/prj/oss/go/.git/info/exclude
-        mode: "0664"
     - name: Allow direnv
       ansible.builtin.command:
         cmd: /home/linuxbrew/.linuxbrew/bin/direnv allow
         chdir: ~/prj/oss/go
       changed_when: false
-    - name: Check if Go is already built
-      ansible.builtin.stat:
-        path: ~/prj/oss/go/bin/go
-      register: workspace_go_stat
+    - name: Copy exclude file
+      ansible.builtin.copy:
+        src: exclude
+        dest: ~/prj/oss/go/.git/info/exclude
+        mode: "0664"
+    - name: Create .vscode directory
+      ansible.builtin.file:
+        path: ~/prj/oss/go/.vscode
+        state: directory
+        mode: "0755"
+    - name: Copy settings.json file
+      ansible.builtin.copy:
+        src: go-settings.jsonc
+        dest: ~/prj/oss/go/.vscode/settings.json
+        mode: "0664"
+    - name: Check built Go version
+      ansible.builtin.shell:
+        executable: /bin/bash
+        cmd: |
+          set -o pipefail
+          ~/prj/oss/go/bin/go version | cut -d " " -f 3 | cut -c 3-6
+      register: workspace_go_built
+      changed_when: false
+      failed_when: false
+    - name: Check required Go version
+      ansible.builtin.shell:
+        executable: /bin/bash
+        cmd: |
+          set -o pipefail
+          cat ~/prj/oss/go/src/go.mod | grep 1. | cut -d " " -f 2
+      register: workspace_go_required
+      changed_when: false
+      failed_when: false
     - name: Build Go from source
       ansible.builtin.command:
-        cmd: ./all.bash
+        cmd: ./make.bash
         chdir: ~/prj/oss/go/src
       changed_when: false
-      when: not workspace_go_stat.stat.exists
+      when: workspace_go_built.stdout != workspace_go_required.stdout
 
 - name: Setup vscode-go repository
   block:
@@ -96,6 +120,6 @@
       changed_when: false
     - name: Copy settings.json file
       ansible.builtin.copy:
-        src: settings.json
+        src: vscode-go-settings.jsonc
         dest: ~/prj/oss/vscode-go/.vscode/settings.json
         mode: "0664"
