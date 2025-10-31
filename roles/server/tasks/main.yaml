@@ -57,8 +57,3 @@
         hour: 4
         user: root
         job: "[ -e /var/run/reboot-required ] && {{ server_reboot_path.stdout }} 0"
-    - name: Setup periodical reboot (connectivity)
-      ansible.builtin.cron:
-        name: reboot server (connectivity)
-        user: root
-        job: "curl -m 2 -sL google.com >/dev/null || {{ server_reboot_path.stdout }} 0"
