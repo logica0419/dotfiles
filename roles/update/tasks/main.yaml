@@ -34,7 +34,7 @@
         executable: /bin/bash
         cmd: |
           set -o pipefail
-          docker compose pull | grep "Downloaded newer image"
+          docker compose pull | grep "Pull complete"
       environment:
         COMPOSE_PROJECT_NAME: local_db
         COMPOSE_FILE: "{{ update_dotfiles_dir.stdout }}/roles/db/files/docker-compose.yaml"
