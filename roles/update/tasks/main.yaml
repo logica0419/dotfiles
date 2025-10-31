@@ -38,7 +38,8 @@
       environment:
         COMPOSE_PROJECT_NAME: local_db
         COMPOSE_FILE: "{{ update_dotfiles_dir.stdout }}/roles/db/files/docker-compose.yaml"
-      changed_when: false
+      register: update_docker_compose
+      changed_when: update_docker_compose.rc == 0
       failed_when: false
       notify: Restart Local DB
     - name: Flush Handlers
