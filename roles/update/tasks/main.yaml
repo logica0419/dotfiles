@@ -39,11 +39,16 @@
         COMPOSE_PROJECT_NAME: local_db
         COMPOSE_FILE: "{{ update_dotfiles_dir.stdout }}/roles/db/files/docker-compose.yaml"
       register: update_docker_compose
-      changed_when: update_docker_compose.rc == 0
+      changed_when: false
       failed_when: false
-      notify: Restart Local DB
-    - name: Flush Handlers
-      ansible.builtin.meta: flush_handlers
+    - name: Restart Local DB
+      ansible.builtin.shell: docker compose down && docker compose up -d
+      environment:
+        COMPOSE_PROJECT_NAME: local_db
+        COMPOSE_FILE: "{{ update_dotfiles_dir.stdout }}/roles/db/files/docker-compose.yaml"
+      changed_when: false
+      failed_when: false
+      when: update_docker_compose.rc == 0
 
 - name: Prune Docker Components
   ansible.builtin.shell: |
