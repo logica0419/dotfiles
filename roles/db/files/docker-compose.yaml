@@ -1,7 +1,7 @@
 services:
   mysql:
     container_name: local-db_mysql
-    image: mysql:latest
+    image: mysql:9.5.0
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: password
@@ -13,7 +13,7 @@ services:
 
   phpmyadmin:
     container_name: local-db_phpmyadmin
-    image: phpmyadmin:fpm-alpine
+    image: phpmyadmin:5.2.3-fpm-alpine
     restart: always
     environment:
       - PMA_ARBITRARY=1
