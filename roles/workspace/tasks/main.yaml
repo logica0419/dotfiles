@@ -104,7 +104,7 @@
         executable: /bin/bash
         cmd: |
           set -o pipefail
-          cat ~/prj/oss/go/src/go.mod | grep 1. | cut -d " " -f 2
+          cat ~/prj/oss/go/src/go.mod | grep "go 1." | cut -d " " -f 2
       register: workspace_go_required
       changed_when: false
       failed_when: false
