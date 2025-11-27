@@ -33,4 +33,4 @@
       ansible.builtin.copy:
         src: config.yaml
         dest: ~/.config/clangd/config.yaml
-        mode: "0664"
+        mode: "0644"
