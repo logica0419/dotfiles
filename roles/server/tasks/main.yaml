@@ -24,7 +24,7 @@
       ansible.builtin.command: loginctl enable-linger {{ ansible_user }}
       changed_when: false
 
-- name: Setup Updater
+- name: Setup updater
   block:
     - name: Get Current Dir Path
       ansible.builtin.command: pwd
@@ -43,7 +43,7 @@
           {{ server_ansible_playbook_path.stdout }} -v -u {{ ansible_user }}
           -i {{ server_dotfiles_dir.stdout }}/inventory {{ server_dotfiles_dir.stdout }}/update.yaml
 
-- name: Setup Reboot
+- name: Setup reboot
   become: true
   block:
     - name: Get reboot Path
@@ -57,3 +57,20 @@
         hour: 4
         user: root
         job: "[ -e /var/run/reboot-required ] && {{ server_reboot_path.stdout }} 0"
+
+- name: Disable sleep mode
+  become: true
+  block:
+    - name: Mask sleep-related targets
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        masked: true
+      loop:
+        - sleep.target
+        - suspend.target
+        - hibernate.target
+        - hybrid-sleep.target
+    - name: Restart systemd-logind
+      ansible.builtin.systemd:
+        name: systemd-logind
+        state: restarted
