@@ -45,3 +45,7 @@
           - prettier
           - biome
           - stylelint
+
+- name: Install Rust components
+  ansible.builtin.command: /home/linuxbrew/.linuxbrew/bin/rustup-init -y
+  changed_when: false
