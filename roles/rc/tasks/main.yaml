@@ -25,7 +25,6 @@
     dest: ~/.bashrc
     mode: "0644"
   register: rc_result
-
 - name: Stop ansible-playbook
   ansible.builtin.fail:
     msg: Please run the playbook again after reloading .bashrc
