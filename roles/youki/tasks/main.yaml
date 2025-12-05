@@ -1,0 +1,33 @@
+- name: Check current youki version
+  ansible.builtin.shell:
+    executable: /bin/bash
+    cmd: |
+      set -o pipefail
+      /usr/bin/youki -v | grep "youki version" | cut -f 3 -d " "
+  register: youki_current
+  changed_when: false
+  failed_when: false
+
+- name: Check latest youki version
+  ansible.builtin.shell:
+    executable: /bin/bash
+    cmd: |
+      set -o pipefail
+      gh release view -R youki-dev/youki --json name -q .name | cut -b 2-
+  register: youki_latest
+  changed_when: false
+
+- name: Install latest youki
+  become: true
+  when: youki_current.stdout != youki_latest.stdout
+  block:
+    - name: Remove old installation
+      ansible.builtin.file:
+        path: /usr/bin/youki
+        state: absent
+    - name: Download latest youki
+      ansible.builtin.unarchive:
+        src: "https://github.com/youki-dev/youki/releases/download/\
+          v{{ youki_latest.stdout }}/youki-{{ youki_latest.stdout }}-x86_64-musl.tar.gz"
+        dest: /usr/bin
+        remote_src: true

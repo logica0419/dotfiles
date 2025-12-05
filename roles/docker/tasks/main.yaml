@@ -25,12 +25,15 @@
           - docker-buildx-plugin
           - docker-compose-plugin
         state: present
-
-- name: Apply containerd settings
-  become: true
-  block:
-    - name: Flush handlers
-      ansible.builtin.meta: flush_handlers
+    - name: Copy daemon settings
+      ansible.builtin.copy:
+        src: daemon.json
+        dest: /etc/docker/daemon.json
+        mode: "0644"
+    - name: Restart Docker
+      ansible.builtin.service:
+        name: docker
+        state: restarted
 
 - name: Setup docker group
   become: true
@@ -45,8 +48,8 @@
         groups:
           - docker
         append: true
-      register: container_result
+      register: docker_result
     - name: Stop ansible-playbook
       ansible.builtin.fail:
         msg: Please restart PC to apply docker group privilege
-      when: container_result is changed # noqa: no-handler
+      when: docker_result is changed # noqa: no-handler
