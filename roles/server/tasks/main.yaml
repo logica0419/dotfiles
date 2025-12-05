@@ -3,6 +3,16 @@
   community.general.timezone:
     name: Asia/Tokyo
 
+- name: Copy SSH keys to root home
+  become: true
+  ansible.builtin.copy:
+    src: ~/.ssh/
+    dest: /root/.ssh/
+    mode: "0700"
+    owner: root
+    group: root
+    recurse: true
+
 - name: Setup Tailscale
   become: true
   block:
@@ -62,13 +72,13 @@
           -i {{ server_dotfiles_dir.stdout }}/inventory {{ server_dotfiles_dir.stdout }}/update.yaml
 
 - name: Setup reboot (update detection)
+  become: true
   block:
     - name: Get reboot path
       ansible.builtin.command: which reboot
       register: server_reboot_path
       changed_when: false
     - name: Setup periodical reboot (update detection)
-      become: true
       ansible.builtin.cron:
         name: reboot server (update detection)
         minute: 30
@@ -83,7 +93,7 @@
     - name: Setup periodical reboot (connectivity check)
       ansible.builtin.cron:
         name: reboot server (connectivity check)
-        user: "{{ ansible_user }}"
+        user: root
         job: >-
           ssh -o StrictHostKeyChecking=no logica-server.tailccba4.ts.net
           curl -m 2 -sL log.tailscale.com >/dev/null || {{ server_reboot_path.stdout }} 0
