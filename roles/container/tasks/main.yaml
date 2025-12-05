@@ -45,8 +45,8 @@
         groups:
           - docker
         append: true
-      register: docker_result
+      register: container_result
     - name: Stop ansible-playbook
       ansible.builtin.fail:
         msg: Please restart PC to apply docker group privilege
-      when: docker_result.changed # noqa: no-handler
+      when: container_result.changed # noqa: no-handler
