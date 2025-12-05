@@ -1,6 +1,6 @@
 - name: Create .hushlogin
   ansible.builtin.file:
-    path: ~/.hushlogin
+    path: /home/{{ ansible_user }}/.hushlogin
     state: touch
     access_time: preserve
     modification_time: preserve
@@ -9,7 +9,7 @@
 - name: Copy .colorrc to home directory
   ansible.builtin.copy:
     src: .colorrc
-    dest: ~/.colorrc
+    dest: /home/{{ ansible_user }}/.colorrc
     mode: "0644"
 
 - name: Copy .bashrc to root home directory
@@ -22,7 +22,7 @@
 - name: Copy .bashrc to home directory
   ansible.builtin.template:
     src: .bashrc.j2
-    dest: ~/.bashrc
+    dest: /home/{{ ansible_user }}/.bashrc
     mode: "0644"
   register: rc_result
 - name: Stop ansible-playbook

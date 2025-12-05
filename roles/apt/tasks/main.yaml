@@ -25,12 +25,12 @@
   block:
     - name: Create clangd config directory
       ansible.builtin.file:
-        path: ~/.config/clangd
+        path: /home/{{ ansible_user }}/.config/clangd
         state: directory
         mode: "0755"
         recurse: true
     - name: Copy config.yaml
       ansible.builtin.copy:
         src: config.yaml
-        dest: ~/.config/clangd/config.yaml
+        dest: /home/{{ ansible_user }}/.config/clangd/config.yaml
         mode: "0644"

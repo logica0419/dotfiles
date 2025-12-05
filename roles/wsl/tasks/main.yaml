@@ -2,13 +2,13 @@
   block:
     - name: Create .ssh directory
       ansible.builtin.file:
-        path: ~/.ssh
+        path: /home/{{ ansible_user }}/.ssh
         state: directory
         mode: "0755"
     - name: Move SSH config
       ansible.builtin.copy:
         src: ssh_config
-        dest: ~/.ssh/config
+        dest: /home/{{ ansible_user }}/.ssh/config
         mode: "0644"
 
 - name: Put WSL config

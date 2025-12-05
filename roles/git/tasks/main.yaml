@@ -1,18 +1,18 @@
 - name: Copy gitconfig
   ansible.builtin.copy:
     src: gitconfig
-    dest: ~/.gitconfig
+    dest: /home/{{ ansible_user }}/.gitconfig
     mode: "0664"
 
 - name: Check credentials for Go repositories
   block:
     - name: Check that the .gitcookies exists
       ansible.builtin.stat:
-        path: ~/.gitcookies
+        path: /home/{{ ansible_user }}/.gitcookies
       register: git_stat_result
     - name: Create empty .gitcookies
       ansible.builtin.file:
-        path: ~/.gitcookies
+        path: /home/{{ ansible_user }}/.gitcookies
         state: touch
         mode: "0664"
       when: not git_stat_result.stat.exists
