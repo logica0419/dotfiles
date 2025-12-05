@@ -8,10 +8,10 @@
   ansible.builtin.copy:
     src: ~/.ssh/
     dest: /root/.ssh/
-    mode: "0700"
+    mode: "0755"
     owner: root
     group: root
-    recurse: true
+    remote_src: true
 
 - name: Setup Tailscale
   become: true
