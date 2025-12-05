@@ -4,6 +4,7 @@
     name: Asia/Tokyo
 
 - name: Setup Tailscale
+  become: true
   block:
     - name: Get Tailscale install script
       ansible.builtin.get_url:
@@ -60,20 +61,25 @@
           {{ server_ansible_playbook_path.stdout }} -v -u {{ ansible_user }}
           -i {{ server_dotfiles_dir.stdout }}/inventory {{ server_dotfiles_dir.stdout }}/update.yaml
 
-- name: Setup reboot
-  become: true
+- name: Setup reboot (update detection)
   block:
     - name: Get reboot path
       ansible.builtin.command: which reboot
       register: server_reboot_path
       changed_when: false
     - name: Setup periodical reboot (update detection)
+      become: true
       ansible.builtin.cron:
         name: reboot server (update detection)
         minute: 30
         hour: 4
         user: root
         job: "[ -e /var/run/reboot-required ] && {{ server_reboot_path.stdout }} 0"
+    - name: Check if tailscale is up
+      ansible.builtin.command: ping -c 1 logica-server.tailccba4.ts.net
+      register: server_tailscale_check
+      changed_when: false
+      ignore_errors: true
     - name: Setup periodical reboot (connectivity check)
       ansible.builtin.cron:
         name: reboot server (connectivity check)
@@ -81,6 +87,7 @@
         job: >-
           ssh -o StrictHostKeyChecking=no logica-server.tailccba4.ts.net
           curl -m 2 -sL log.tailscale.com >/dev/null || {{ server_reboot_path.stdout }} 0
+      when: server_tailscale_check is failed
 
 - name: Disable sleep mode
   become: true
