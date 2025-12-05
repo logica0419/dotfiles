@@ -1,14 +1,14 @@
-- name: Install Brew
+- name: Install Homebrew
   install_brew:
 
-- name: Update Brew
+- name: Update Homebrew
   community.general.homebrew:
     path: /home/linuxbrew/.linuxbrew/bin
     update_homebrew: true
 
-- name: Install Packages
+- name: Install packages
   block:
-    - name: Register Brew Tap
+    - name: Register Homebrew tap
       community.general.homebrew_tap:
         path: /home/linuxbrew/.linuxbrew/bin
         name:
@@ -18,7 +18,7 @@
           - derailed/k9s
           - hashicorp/tap
           - oven-sh/bun
-    - name: Install Packages
+    - name: Install packages
       community.general.homebrew:
         state: latest
         path: /home/linuxbrew/.linuxbrew/bin

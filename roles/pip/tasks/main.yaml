@@ -1,8 +1,8 @@
-- name: Install packaging Package
+- name: Install packaging package
   ansible.builtin.command: /home/linuxbrew/.linuxbrew/bin/pip3 install --break-system-packages packaging
   changed_when: false
 
-- name: Install pip Packages
+- name: Install pip packages
   ansible.builtin.pip: # noqa: package-latest
     executable: /home/linuxbrew/.linuxbrew/bin/pip3
     extra_args: --break-system-packages

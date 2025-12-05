@@ -4,11 +4,11 @@
     - name: Add gpg key
       ansible.builtin.apt_key:
         url: https://download.docker.com/linux/debian/gpg
-    - name: Add Docker Repository
+    - name: Add Docker repository
       ansible.builtin.apt_repository:
         repo: deb https://download.docker.com/linux/ubuntu jammy stable
         state: present
-    - name: Update apt Cache
+    - name: Update apt cache
       ansible.builtin.apt:
         update_cache: true
     - name: Install Docker
@@ -20,41 +20,41 @@
           - docker-compose-plugin
         state: present
 
-- name: Apply Containerd Settings
+- name: Apply containerd settings
   become: true
   block:
-    - name: Disable cri Plugin
+    - name: Disable cri plugin
       ansible.builtin.lineinfile:
         path: /etc/containerd/config.toml
         regexp: ^disabled_plugins
         line: disabled_plugins = ["io.containerd.grpc.v1.cri"]
         mode: "0644"
       notify: Restart containerd
-    - name: Set Version to 2
+    - name: Set version to 2
       ansible.builtin.lineinfile:
         path: /etc/containerd/config.toml
         regexp: ^version
         line: version = 2
         mode: "0644"
       notify: Restart containerd
-    - name: Flush Handlers
+    - name: Flush handlers
       ansible.builtin.meta: flush_handlers
 
-- name: Setup docker Group
+- name: Setup docker group
   become: true
   block:
-    - name: Create docker Group
+    - name: Create docker group
       ansible.builtin.group:
         name: docker
         state: present
-    - name: Append Current User to docker Group
+    - name: Append current user to docker group
       ansible.builtin.user:
         name: "{{ ansible_user }}"
         groups:
           - docker
         append: true
       register: docker_result
-    - name: Stop Ansible Playbook
+    - name: Stop ansible-playbook
       ansible.builtin.fail:
         msg: Please restart PC to apply docker group privilege
       when: docker_result.changed # noqa: no-handler

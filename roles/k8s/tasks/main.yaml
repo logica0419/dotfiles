@@ -1,4 +1,4 @@
-- name: Setup Kind Cluster
+- name: Setup Kind cluster
   block:
     - name: Install Kind
       community.general.homebrew:
@@ -6,18 +6,18 @@
         path: /home/linuxbrew/.linuxbrew/bin
         name:
           - kind
-    - name: Get Current Dir Path
+    - name: Get current dir path
       ansible.builtin.command: pwd
       register: k8s_dotfiles_dir
       changed_when: false
-    - name: Create kind cluster
+    - name: Create Kind cluster
       ansible.builtin.command: kind create cluster --config {{ k8s_dotfiles_dir.stdout }}/roles/k8s/files/cluster-config.yaml
       changed_when: false
       failed_when: false
 
-- name: Install K8s-related Components
+- name: Install K8s-related components
   block:
-    - name: Install K8s-related Packages
+    - name: Install K8s-related packages
       community.general.homebrew:
         state: latest
         path: /home/linuxbrew/.linuxbrew/bin
@@ -31,6 +31,6 @@
           - kubeconform
           - k9s
           - viddy
-    - name: Install kubectl Plugins
+    - name: Install kubectl plugins
       ansible.builtin.command: kubectl krew install stern iexec oidc-login view-allocations tree resource-capacity neat
       changed_when: false

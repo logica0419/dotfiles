@@ -25,7 +25,8 @@
     dest: ~/.bashrc
     mode: "0644"
   register: rc_result
-- name: Stop Ansible Playbook
+
+- name: Stop ansible-playbook
   ansible.builtin.fail:
     msg: Please run the playbook again after reloading .bashrc
   when: rc_result.changed # noqa: no-handler

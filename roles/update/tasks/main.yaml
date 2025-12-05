@@ -1,6 +1,6 @@
-- name: Update Brew-related Components
+- name: Update Homebrew-related components
   block:
-    - name: Update Brew & Brew Packages
+    - name: Update Homebrew & Homebrew packages
       community.general.homebrew:
         path: /home/linuxbrew/.linuxbrew/bin
         update_homebrew: true
@@ -9,27 +9,27 @@
       ansible.builtin.command: /home/linuxbrew/.linuxbrew/bin/brew autoremove
       changed_when: false
 
-- name: Update Go Packages
+- name: Update Go packages
   ansible.builtin.shell: |
     export PATH=$PATH:/usr/local/go/bin
     /home/{{ ansible_user }}/go/bin/gup update
   changed_when: false
 
-- name: Update Krew Packages
+- name: Update Krew packages
   ansible.builtin.command: /home/linuxbrew/.linuxbrew/bin/kubectl-krew upgrade
   changed_when: false
 
-- name: Update mise Packages
+- name: Update mise packages
   ansible.builtin.command: /home/linuxbrew/.linuxbrew/bin/mise upgrade --bump
   changed_when: false
 
-- name: Update Local DB
+- name: Update local DB
   block:
-    - name: Get Current Dir Path
+    - name: Get current dir path
       ansible.builtin.command: pwd
       register: update_dotfiles_dir
       changed_when: false
-    - name: Check Latest Images
+    - name: Check latest images
       ansible.builtin.shell:
         executable: /bin/bash
         cmd: |
@@ -41,7 +41,7 @@
       register: update_docker_compose
       changed_when: false
       failed_when: false
-    - name: Restart Local DB
+    - name: Restart local DB
       ansible.builtin.shell: docker compose down && docker compose up -d
       environment:
         COMPOSE_PROJECT_NAME: local_db
@@ -50,7 +50,7 @@
       failed_when: false
       when: update_docker_compose.rc == 0
 
-- name: Prune Docker Components
+- name: Prune Docker components
   ansible.builtin.shell: |
     docker image prune -a -f
     docker volume prune -a -f

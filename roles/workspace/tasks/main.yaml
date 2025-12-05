@@ -1,6 +1,6 @@
 - name: Update dotfiles
   block:
-    - name: Get Current Dir Path
+    - name: Get current dir path
       ansible.builtin.command: pwd
       register: workspace_dotfiles_dir
       changed_when: false
@@ -10,7 +10,7 @@
         dest: "{{ workspace_dotfiles_dir.stdout }}"
       failed_when: false
 
-- name: Clone GitHub Repositories
+- name: Clone GitHub repositories
   ansible.builtin.git: # noqa: latest
     repo: "{{ item.repo }}"
     dest: "~/prj/{{ item.dest }}"
@@ -63,7 +63,7 @@
     dest: ~/biome.json
     mode: "0664"
 
-- name: Setup Go Repository
+- name: Setup Go repository
   block:
     - name: Copy .envrc file
       ansible.builtin.copy:

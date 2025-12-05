@@ -1,4 +1,4 @@
-- name: Install Node Latest
+- name: Install Node latest
   ansible.builtin.shell: |
     mise install node@latest
     mise use -g node@latest

@@ -1,17 +1,17 @@
-- name: SSH Settings
+- name: SSH settings
   block:
-    - name: Create .ssh Directory
+    - name: Create .ssh directory
       ansible.builtin.file:
         path: ~/.ssh
         state: directory
         mode: "0755"
-    - name: Move SSH Config
+    - name: Move SSH config
       ansible.builtin.copy:
         src: ssh_config
         dest: ~/.ssh/config
         mode: "0644"
 
-- name: Put WSL Config
+- name: Put WSL config
   become: true
   ansible.builtin.copy:
     src: wsl.conf
@@ -19,26 +19,26 @@
     mode: "0644"
 
 # https://github.com/microsoft/WSL/issues/8843#issuecomment-1837264576
-- name: Setup binfmt Service
+- name: Setup binfmt service
   become: true
   block:
-    - name: Copy binfmt Service File
+    - name: Copy binfmt service file
       ansible.builtin.copy:
         src: binfmt.service
         dest: /etc/systemd/system/binfmt.service
         mode: "0644"
-    - name: Copy binfmt Path Unit File
+    - name: Copy binfmt path unit file
       ansible.builtin.copy:
         src: binfmt.path
         dest: /etc/systemd/system/binfmt.path
         mode: "0644"
-    - name: Enable binfmt Service
+    - name: Enable binfmt service
       ansible.builtin.systemd:
         name: binfmt.service
         enabled: true
         daemon_reload: true
         state: restarted
-    - name: Enable binfmt Path Unit
+    - name: Enable binfmt path unit
       ansible.builtin.systemd:
         name: binfmt.path
         enabled: true
@@ -46,7 +46,7 @@
         state: restarted
 
 # https://github.com/puppeteer/puppeteer/blob/main/docs/troubleshooting.md#running-puppeteer-on-wsl-windows-subsystem-for-linux
-- name: Install Chromium-related Packages
+- name: Install Chromium-related packages
   become: true
   ansible.builtin.apt:
     name:
@@ -57,50 +57,50 @@
       - libasound2t64
     state: present
 
-- name: Add Chrome File to /usr/bin
+- name: Add Chrome file to /usr/bin
   become: true
   ansible.builtin.copy:
     src: chrome
     dest: /usr/bin/chrome
     mode: "0755"
 
-- name: Font Settings
+- name: Font settings
   become: true
   block:
-    - name: Install Packages
+    - name: Install packages
       ansible.builtin.apt:
         name:
           - fontconfig
         state: present
-    - name: Copy Font Setting
+    - name: Copy font setting
       ansible.builtin.copy:
         src: local.conf
         dest: /etc/fonts/local.conf
         mode: "0644"
-    - name: Enable Font Setting
+    - name: Enable font setting
       ansible.builtin.command: fc-cache -fv
       changed_when: false
 
-- name: Get Current Paths
+- name: Get current paths
   block:
-    - name: Get Current Dir Path
+    - name: Get current dir path
       ansible.builtin.command: pwd
       register: wsl_dotfiles_dir
       changed_when: false
-    - name: Get Ansible Path
+    - name: Get ansible path
       ansible.builtin.command: which ansible-playbook
       register: wsl_ansible_path
       changed_when: false
 
-- name: Setup Updater Service
+- name: Setup updater service
   become: true
   block:
-    - name: Copy Updater Service Template
+    - name: Copy updater service template
       ansible.builtin.template:
         src: updater.service.j2
         dest: /etc/systemd/system/updater.service
         mode: "0644"
-    - name: Enable Updater Service
+    - name: Enable updater service
       ansible.builtin.systemd:
         name: updater.service
         enabled: true

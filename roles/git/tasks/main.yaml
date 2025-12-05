@@ -1,10 +1,10 @@
-- name: Copy Git Config
+- name: Copy gitconfig
   ansible.builtin.copy:
     src: gitconfig
     dest: ~/.gitconfig
     mode: "0664"
 
-- name: Check Credentials for Go Git Repositories
+- name: Check credentials for Go repositories
   block:
     - name: Check that the .gitcookies exists
       ansible.builtin.stat:
@@ -16,7 +16,7 @@
         state: touch
         mode: "0664"
       when: not git_stat_result.stat.exists
-    - name: Stop Ansible Playbook
+    - name: Stop ansible playbook
       ansible.builtin.fail:
         msg: Please setup credentials for Go Git repositories
       when: not git_stat_result.stat.exists or git_stat_result.stat.size == 0
