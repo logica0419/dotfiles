@@ -26,6 +26,16 @@
     - name: Enable linger state
       ansible.builtin.command: loginctl enable-linger {{ ansible_user }}
       changed_when: false
+    - name: Create VS Code settings directory
+      ansible.builtin.file:
+        path: ~/.vscode-server/data/Machine
+        state: directory
+        mode: "0755"
+    - name: Copy VS Code settings
+      ansible.builtin.copy:
+        src: settings.json
+        dest: ~/.vscode-server/data/Machine/settings.json
+        mode: "0644"
 
 - name: Setup updater
   block:

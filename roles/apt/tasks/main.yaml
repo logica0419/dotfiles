@@ -23,7 +23,7 @@
 
 - name: Clangd settings
   block:
-    - name: Create .config directory
+    - name: Create clangd config directory
       ansible.builtin.file:
         path: ~/.config/clangd
         state: directory
