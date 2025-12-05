@@ -81,7 +81,8 @@
       ansible.builtin.command: fc-cache -fv
       changed_when: false
 
-- name: Get current paths
+- name: Setup updater service
+  become: true
   block:
     - name: Get current dir path
       ansible.builtin.command: pwd
@@ -91,10 +92,6 @@
       ansible.builtin.command: which ansible-playbook
       register: wsl_ansible_path
       changed_when: false
-
-- name: Setup updater service
-  become: true
-  block:
     - name: Copy updater service template
       ansible.builtin.template:
         src: updater.service.j2
