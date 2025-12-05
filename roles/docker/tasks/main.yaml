@@ -35,6 +35,19 @@
         name: docker
         state: restarted
 
+- name: Apply containerd settings
+  become: true
+  block:
+    - name: Disable cri plugin
+      ansible.builtin.lineinfile:
+        path: /etc/containerd/config.toml
+        regexp: ^disabled_plugins
+        line: disabled_plugins = ["io.containerd.grpc.v1.cri"]
+        mode: "0644"
+      notify: Restart containerd
+    - name: Flush handlers
+      ansible.builtin.meta: flush_handlers
+
 - name: Setup docker group
   become: true
   block:

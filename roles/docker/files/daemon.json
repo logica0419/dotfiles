@@ -2,7 +2,8 @@
   "default-runtime": "youki",
   "runtimes": {
     "youki": {
-      "path": "/usr/bin/youki"
+      "path": "/usr/bin/youki",
+      "runtimeArgs": ["--debug", "--systemd-log"]
     }
   }
 }
