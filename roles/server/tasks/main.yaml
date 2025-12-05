@@ -87,7 +87,7 @@
         job: >-
           ssh -o StrictHostKeyChecking=no logica-server.tailccba4.ts.net
           curl -m 2 -sL log.tailscale.com >/dev/null || {{ server_reboot_path.stdout }} 0
-      when: server_tailscale_check is failed
+      when: server_tailscale_check is succeeded
 
 - name: Disable sleep mode
   become: true
