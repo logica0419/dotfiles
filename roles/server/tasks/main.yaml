@@ -70,6 +70,13 @@
         hour: 4
         user: root
         job: "[ -e /var/run/reboot-required ] && {{ server_reboot_path.stdout }} 0"
+    - name: Setup periodical reboot (connectivity check)
+      ansible.builtin.cron:
+        name: reboot server (connectivity check)
+        user: root
+        job: >-
+          ssh logica-server.tailccba4.ts.net curl -m 2 -sL log.tailscale.com >/dev/null
+          || {{ server_reboot_path.stdout }} 0
 
 - name: Disable sleep mode
   become: true
