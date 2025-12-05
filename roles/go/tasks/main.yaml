@@ -1,4 +1,4 @@
-- name: Install the latest Go
+- name: Install Go
   block:
     - name: Check current Go version
       ansible.builtin.shell:
