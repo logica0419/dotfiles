@@ -9,7 +9,7 @@
     - pip
     - go
     - mise
-    - docker
+    - container
     - k8s
     - db
     - git
