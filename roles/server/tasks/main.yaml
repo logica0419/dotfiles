@@ -16,10 +16,13 @@
 
 - name: Setup VS Code server
   block:
-    - name: Install VS Code server
+    - name: Install code CLI
       become: true
-      ansible.builtin.command: snap install --classic code
-      changed_when: false
+      ansible.builtin.unarchive:
+        src: https://code.visualstudio.com/sha/download?build=stable&os=cli-alpine-x64
+        dest: /usr/local/bin/
+        remote_src: true
+        mode: "0755"
     - name: Enable linger state
       ansible.builtin.command: loginctl enable-linger {{ ansible_user }}
       changed_when: false
