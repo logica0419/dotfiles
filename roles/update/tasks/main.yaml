@@ -40,7 +40,7 @@
         COMPOSE_FILE: "{{ update_dotfiles_dir.stdout }}/roles/db/files/docker-compose.yaml"
       register: update_docker_compose
       changed_when: false
-      failed_when: false
+      ignore_errors: true
     - name: Restart local DB
       ansible.builtin.shell: docker compose down && docker compose up -d
       environment:
@@ -48,7 +48,7 @@
         COMPOSE_FILE: "{{ update_dotfiles_dir.stdout }}/roles/db/files/docker-compose.yaml"
       changed_when: false
       failed_when: false
-      when: update_docker_compose.rc == 0
+      when: update_docker_compose is succeeded
 
 - name: Prune Docker components
   ansible.builtin.shell: |

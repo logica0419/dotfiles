@@ -49,4 +49,4 @@
     - name: Stop ansible-playbook
       ansible.builtin.fail:
         msg: Please restart PC to apply docker group privilege
-      when: container_result.changed # noqa: no-handler
+      when: container_result is changed # noqa: no-handler
