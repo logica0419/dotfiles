@@ -71,7 +71,7 @@
           {{ server_ansible_playbook_path.stdout }} -v -u {{ ansible_user }}
           -i {{ server_dotfiles_dir.stdout }}/inventory {{ server_dotfiles_dir.stdout }}/update.yaml
 
-- name: Setup reboot (update detection)
+- name: Setup reboot
   become: true
   block:
     - name: Get reboot path
