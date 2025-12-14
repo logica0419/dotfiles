@@ -15,6 +15,10 @@
     /home/{{ ansible_user }}/go/bin/gup update
   changed_when: false
 
+- name: Update Rust
+  ansible.builtin.command: /home/linuxbrew/.linuxbrew/bin/rustup update
+  changed_when: false
+
 - name: Update Krew packages
   ansible.builtin.command: /home/linuxbrew/.linuxbrew/bin/kubectl-krew upgrade
   changed_when: false
