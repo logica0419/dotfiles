@@ -13,7 +13,7 @@
     executable: /bin/bash
     cmd: |
       set -o pipefail
-      gh release view -R youki-dev/youki --json name -q .name | cut -b 2-
+      /home/linuxbrew/.linuxbrew/bin/gh release view -R youki-dev/youki --json name -q .name | cut -b 2-
   register: youki_latest
   changed_when: false
 
