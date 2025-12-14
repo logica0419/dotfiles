@@ -122,12 +122,12 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 eval "$(direnv hook bash)"
 eval "$(mise activate bash)"
 
-. "$HOME/.cargo/env"
+. "/home/logica/.cargo/env"
 
 export PATH="$PATH:/usr/local/go/bin"
-export PATH="$PATH:$HOME/go/bin"
-export PATH="$PATH:$HOME/.bun/bin"
-export PATH="$PATH:$HOME/.krew/bin"
+export PATH="$PATH:/home/logica/go/bin"
+export PATH="$PATH:/home/logica/.bun/bin"
+export PATH="$PATH:/home/logica/.krew/bin"
 export PATH="$PATH:/home/linuxbrew/.linuxbrew/opt/clang-format/bin"
 
 {% if lookup("env", "ENV") == "wsl" %}
