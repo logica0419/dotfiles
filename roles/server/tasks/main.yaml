@@ -118,31 +118,11 @@
 - name: Disable sleep mode
   become: true
   block:
-    - name: Disable suspend
-      ansible.builtin.lineinfile:
-        path: /etc/systemd/sleep.conf
-        regexp: "[#]{0,1}AllowSuspend"
-        line: "AllowSuspend=no"
-    - name: Disable hibernate
-      ansible.builtin.lineinfile:
-        path: /etc/systemd/sleep.conf
-        regexp: "[#]{0,1}AllowHibernation"
-        line: "AllowHibernation=no"
-    - name: Disable suspend then hibernate
-      ansible.builtin.lineinfile:
-        path: /etc/systemd/sleep.conf
-        regexp: "[#]{0,1}AllowSuspendThenHibernate"
-        line: "AllowSuspendThenHibernate=no"
     - name: Disable hybrid sleep
       ansible.builtin.lineinfile:
         path: /etc/systemd/logind.conf
         regexp: "[#]{0,1}IdleAction"
         line: "IdleAction=ignore"
-    - name: Disable idle action
-      ansible.builtin.lineinfile:
-        path: /etc/systemd/sleep.conf
-        regexp: "[#]{0,1}AllowHybridSleep"
-        line: "AllowHybridSleep=no"
     - name: Mask sleep-related targets
       ansible.builtin.systemd:
         name: "{{ item }}"
