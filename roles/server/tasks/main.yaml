@@ -30,37 +30,42 @@
 
 - name: Setup VS Code server
   block:
-    - name: Add gpg key
-      ansible.builtin.get_url:
-        url: https://packages.microsoft.com/keys/microsoft.asc
-        dest: /etc/apt/keyrings/microsoft.asc
-        mode: "0644"
-        force: true
-    - name: Copy repository ref
-      ansible.builtin.copy:
-        src: vscode.sources
-        dest: /etc/apt/sources.list.d/vscode.sources
-        mode: "0644"
-    - name: Update apt cache
-      ansible.builtin.apt:
-        update_cache: true
-    - name: Install VS Code
-      ansible.builtin.apt:
-        name: code
-        state: present
-    - name: Enable linger state
-      ansible.builtin.command: loginctl enable-linger {{ ansible_user }}
-      changed_when: false
-    - name: Create VS Code settings directory
-      ansible.builtin.file:
-        path: /home/{{ ansible_user }}/.vscode-server/data/Machine
-        state: directory
-        mode: "0755"
-    - name: Copy VS Code settings
-      ansible.builtin.copy:
-        src: settings.json
-        dest: /home/{{ ansible_user }}/.vscode-server/data/Machine/settings.json
-        mode: "0644"
+    - name: Install
+      become: true
+      block:
+        - name: Add gpg key
+          ansible.builtin.get_url:
+            url: https://packages.microsoft.com/keys/microsoft.asc
+            dest: /etc/apt/keyrings/microsoft.asc
+            mode: "0644"
+            force: true
+        - name: Copy repository ref
+          ansible.builtin.copy:
+            src: vscode.sources
+            dest: /etc/apt/sources.list.d/vscode.sources
+            mode: "0644"
+        - name: Update apt cache
+          ansible.builtin.apt:
+            update_cache: true
+        - name: Install code
+          ansible.builtin.apt:
+            name: code
+            state: present
+    - name: Setup server
+      block:
+        - name: Enable linger state
+          ansible.builtin.command: loginctl enable-linger {{ ansible_user }}
+          changed_when: false
+        - name: Create VS Code settings directory
+          ansible.builtin.file:
+            path: /home/{{ ansible_user }}/.vscode-server/data/Machine
+            state: directory
+            mode: "0755"
+        - name: Copy VS Code settings
+          ansible.builtin.copy:
+            src: settings.json
+            dest: /home/{{ ansible_user }}/.vscode-server/data/Machine/settings.json
+            mode: "0644"
 
 - name: Setup updater
   block:
