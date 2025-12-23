@@ -119,6 +119,11 @@
         line: "AllowSuspendThenHibernate=no"
     - name: Disable hybrid sleep
       ansible.builtin.lineinfile:
+        path: /etc/systemd/logind.conf
+        regexp: "[#]{0,1}IdleAction"
+        line: "IdleAction=ignore"
+    - name: Disable idle action
+      ansible.builtin.lineinfile:
         path: /etc/systemd/sleep.conf
         regexp: "[#]{0,1}AllowHybridSleep"
         line: "AllowHybridSleep=no"
