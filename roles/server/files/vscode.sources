@@ -1,0 +1,8 @@
+# https://code.visualstudio.com/docs/setup/linux#_install-vs-code-on-linux
+
+Types: deb
+URIs: https://packages.microsoft.com/repos/code
+Suites: stable
+Components: main
+Architectures: amd64,arm64,armhf
+Signed-By: /etc/apt/keyrings/microsoft.asc
