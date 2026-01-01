@@ -54,3 +54,37 @@
         dest: /home/{{ ansible_user }}/go/bin/golangci-lint-v2
         mode: "0755"
         remote_src: true
+
+- name: Install TinyGo
+  block:
+    - name: Check current TinyGo version
+      ansible.builtin.shell:
+        executable: /bin/bash
+        cmd: |
+          set -o pipefail
+          /usr/local/tinygo/bin/tinygo version | cut -f 3 -d " "
+      register: go_current
+      changed_when: false
+      failed_when: false
+    - name: Check latest TinyGo version
+      ansible.builtin.shell:
+        executable: /bin/bash
+        cmd: |
+          set -o pipefail
+          /home/linuxbrew/.linuxbrew/bin/gh release view -R tinygo-org/tinygo --json name -q .name
+      register: go_latest
+      changed_when: false
+    - name: Install latest TinyGo
+      become: true
+      when: go_current.stdout != go_latest.stdout
+      block:
+        - name: Remove old installation
+          ansible.builtin.file:
+            path: /usr/local/tinygo
+            state: absent
+        - name: Download latest TinyGo
+          ansible.builtin.unarchive:
+            src: "https://github.com/tinygo-org/tinygo/releases/download/\
+              v{{ go_latest.stdout }}/tinygo{{ go_latest.stdout }}.linux-amd64.tar.gz"
+            dest: /usr/local
+            remote_src: true
