@@ -31,18 +31,26 @@
             dest: /usr/local
             remote_src: true
 
-- name: Install Go packages
-  go_install:
-    name: "{{ item }}"
-  loop:
-    - golang.org/x/tools/gopls
-    - github.com/cweill/gotests/gotests
-    - github.com/fatih/gomodifytags
-    - github.com/josharian/impl
-    - github.com/haya14busa/goplay/cmd/goplay
-    - github.com/go-delve/delve/cmd/dlv
-    - github.com/golangci/golangci-lint/v2/cmd/golangci-lint
+- name: Install Go tools
+  block:
+    - name: Install Go tools
+      go_install:
+        name: "{{ item }}"
+      loop:
+        - golang.org/x/tools/gopls
+        - github.com/cweill/gotests/gotests
+        - github.com/fatih/gomodifytags
+        - github.com/josharian/impl
+        - github.com/haya14busa/goplay/cmd/goplay
+        - github.com/go-delve/delve/cmd/dlv
+        - github.com/golangci/golangci-lint/v2/cmd/golangci-lint
 
-    - github.com/nao1215/gup
-    - github.com/spf13/cobra-cli
-    - golang.org/x/review/git-codereview
+        - github.com/nao1215/gup
+        - github.com/spf13/cobra-cli
+        - golang.org/x/review/git-codereview
+    - name: Copy golangci-lint
+      ansible.builtin.copy:
+        src: /home/{{ ansible_user }}/go/bin/golangci-lint
+        dest: /home/{{ ansible_user }}/go/bin/golangci-lint-v2
+        mode: "0755"
+        remote_src: true
