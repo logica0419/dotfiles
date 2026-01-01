@@ -40,6 +40,8 @@
       dest: personal/coding-kubernetes
     - repo: https://github.com/logica0419/etsecd.git
       dest: personal/etsecd
+    - repo: https://github.com/logica0419/playground.git
+      dest: personal/playground
 
     - repo: https://github.com/hatahatack/score_plorer_v2.git
       dest: ajy/score_plorer_v2
