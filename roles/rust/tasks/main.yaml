@@ -1,0 +1,17 @@
+- name: Install Rust components
+  ansible.builtin.command: /home/linuxbrew/.linuxbrew/bin/rustup-init -y
+  changed_when: false
+
+- name: Rustfmt settings
+  block:
+    - name: Create Rustfmt config directory
+      ansible.builtin.file:
+        path: /home/{{ ansible_user }}/.config/rustfmt
+        state: directory
+        mode: "0755"
+        recurse: true
+    - name: Copy rustfmt.toml
+      ansible.builtin.copy:
+        src: rustfmt.toml
+        dest: /home/{{ ansible_user }}/.config/rustfmt/rustfmt.toml
+        mode: "0644"
