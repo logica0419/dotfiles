@@ -26,6 +26,8 @@
           - rustup
           - python3
           - pipenv
+          - wasmtime
+          - wabt
           - git
           - gh
           - htop
