@@ -4,6 +4,10 @@
     "youki": {
       "path": "/usr/bin/youki",
       "runtimeArgs": ["--debug", "--systemd-log"]
+    },
+    "youki-dev": {
+      "path": "/usr/local/sbin/youki",
+      "runtimeArgs": ["--debug", "--systemd-log"]
     }
   }
 }
