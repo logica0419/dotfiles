@@ -101,19 +101,6 @@
         hour: 4
         user: root
         job: "[ -e /var/run/reboot-required ] && {{ server_reboot_path.stdout }} 0"
-    - name: Check if tailscale is up
-      ansible.builtin.command: ping -c 1 logica-server.tailccba4.ts.net
-      register: server_tailscale_check
-      changed_when: false
-      ignore_errors: true
-    - name: Setup periodical reboot (connectivity check)
-      ansible.builtin.cron:
-        name: reboot server (connectivity check)
-        user: root
-        job: >-
-          ssh -o StrictHostKeyChecking=no logica-server.tailccba4.ts.net
-          curl -m 3 -sL log.tailscale.com >/dev/null || {{ server_reboot_path.stdout }} 0
-      when: server_tailscale_check is succeeded
 
 - name: Disable sleep mode
   become: true
