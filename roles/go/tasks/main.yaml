@@ -54,6 +54,7 @@
         dest: /home/{{ ansible_user }}/go/bin/golangci-lint-v2
         mode: "0755"
         remote_src: true
+        force: true
 
 - name: Install TinyGo
   block:
