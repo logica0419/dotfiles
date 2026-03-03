@@ -27,6 +27,18 @@
     - name: Enable auto update
       ansible.builtin.command: tailscale set --auto-update
       changed_when: false
+    - name: Enable IP v4/v6 forwarding
+      ansible.posix.sysctl:
+        name: "{{ item }}"
+        value: "1"
+        state: present
+        reload: true
+      loop:
+        - net.ipv4.ip_forward
+        - net.ipv6.conf.all.forwarding
+    - name: Advertise exit node
+      ansible.builtin.command: tailscale set --advertise-exit-node
+      changed_when: false
 
 - name: Setup VS Code server
   block:
