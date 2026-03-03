@@ -13,7 +13,7 @@ if ! (type uv &>/dev/null); then
   curl -LsSf https://astral.sh/uv/install.sh | sh >/dev/null 2>&1
   export PATH=$PATH:$HOME/.local/bin
 fi
-uv sync >/dev/null 2>&1
+uv sync >/dev/null
 
 while :; do
   unbuffer uv run ansible-playbook -v -u "$(whoami)" -i inventory "$ENV".yaml | tee /tmp/ansible.log
