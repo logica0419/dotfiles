@@ -6,7 +6,6 @@
     - wsl
     - brew
     - rc
-    - pip
     - go
     - rust
     - mise
