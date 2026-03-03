@@ -3,30 +3,30 @@
   "files.exclude": {
     "**/out": true,
     "**/.vscode-test": true,
-    "**/.user-data-dir-test": true
+    "**/.user-data-dir-test": true,
   },
   "search.exclude": {
     "node_modules": true,
     "out": true,
     "dist": true,
     ".vscode-test": true,
-    ".user-data-dir-test": true
+    ".user-data-dir-test": true,
   },
   "editor.insertSpaces": false,
   "[yaml]": {
-    "editor.autoIndent": "advanced"
+    "editor.autoIndent": "advanced",
   },
   "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
   "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
   "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
   "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
-  "biome.enabled": false
+  "biome.enabled": false,
 }
