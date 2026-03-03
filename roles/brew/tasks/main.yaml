@@ -24,8 +24,7 @@
         path: /home/linuxbrew/.linuxbrew/bin
         name:
           - rustup
-          - python3
-          - pipenv
+          - uv
           - wasmtime
           - wabt
           - git

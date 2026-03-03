@@ -8,16 +8,15 @@ fi
 sudo apt-get update >/dev/null
 sudo apt-get install expect -y >/dev/null
 
-# Install Ansible
-if ! (type ansible-playbook &>/dev/null); then
-  sudo apt-get install python3-pip -y >/dev/null
-  echo "Installing Ansible"
+if ! (type uv &>/dev/null); then
+  echo "Installing uv"
+  curl -LsSf https://astral.sh/uv/install.sh | sh >/dev/null 2>&1
   export PATH=$PATH:$HOME/.local/bin
-  pip install --break-system-packages ansible &>/dev/null
 fi
+uv sync >/dev/null 2>&1
 
 while :; do
-  unbuffer ansible-playbook -v -u "$(whoami)" -i inventory "$ENV".yaml | tee /tmp/ansible.log
+  unbuffer uv run ansible-playbook -v -u "$(whoami)" -i inventory "$ENV".yaml | tee /tmp/ansible.log
   RESULT=$(
     grep -q "failed=0" </tmp/ansible.log
     echo $?
@@ -58,4 +57,4 @@ while :; do
   fi
 done
 
-rm -rf "$HOME"/.local/bin "$HOME"/.local/lib &>/dev/null
+rm "$HOME/.local/bin/uv" "$HOME/.local/bin/uvx" &>/dev/null
