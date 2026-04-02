@@ -26,33 +26,6 @@
         msg: Please restart WSL and run playbook again
       when: wsl_conf is changed # noqa: no-handler
 
-# https://github.com/microsoft/WSL/issues/8843#issuecomment-1837264576
-- name: Setup binfmt service
-  become: true
-  block:
-    - name: Copy binfmt service file
-      ansible.builtin.copy:
-        src: binfmt.service
-        dest: /etc/systemd/system/binfmt.service
-        mode: "0644"
-    - name: Copy binfmt path unit file
-      ansible.builtin.copy:
-        src: binfmt.path
-        dest: /etc/systemd/system/binfmt.path
-        mode: "0644"
-    - name: Enable binfmt service
-      ansible.builtin.systemd:
-        name: binfmt.service
-        enabled: true
-        daemon_reload: true
-        state: restarted
-    - name: Enable binfmt path unit
-      ansible.builtin.systemd:
-        name: binfmt.path
-        enabled: true
-        daemon_reload: true
-        state: restarted
-
 # https://github.com/puppeteer/puppeteer/blob/main/docs/troubleshooting.md#running-puppeteer-on-wsl-windows-subsystem-for-linux
 - name: Install Chromium-related packages
   become: true
