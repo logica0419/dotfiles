@@ -1,3 +1,4 @@
+---
 - name: Set timezone to Asia/Tokyo
   become: true
   community.general.timezone:

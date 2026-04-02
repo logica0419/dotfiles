@@ -1,3 +1,4 @@
+---
 - name: Update Homebrew-related components
   block:
     - name: Update Homebrew & Homebrew packages
@@ -21,6 +22,10 @@
 
 - name: Update Krew packages
   ansible.builtin.command: /home/linuxbrew/.linuxbrew/bin/kubectl-krew upgrade
+  changed_when: false
+
+- name: Update Python packages
+  ansible.builtin.command: /home/linuxbrew/.linuxbrew/bin/uv tool upgrade --all
   changed_when: false
 
 - name: Update mise packages

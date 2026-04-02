@@ -1,0 +1,4 @@
+---
+- name: Install ansible
+  ansible.builtin.command: uv tool install --with-executables-from ansible-core,ansible-lint ansible --force
+  changed_when: false

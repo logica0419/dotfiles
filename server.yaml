@@ -1,3 +1,4 @@
+---
 - name: Run Playbook for Server
   hosts: local
   connection: local
@@ -8,6 +9,7 @@
     - rc
     - go
     - rust
+    - python
     - mise
     - youki
     - docker

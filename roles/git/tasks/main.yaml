@@ -1,3 +1,4 @@
+---
 - name: Copy gitconfig
   ansible.builtin.copy:
     src: gitconfig

@@ -1,3 +1,4 @@
+---
 - name: Install Homebrew
   install_brew:
 

@@ -1,3 +1,4 @@
+---
 - name: Install Go
   block:
     - name: Check current Go version

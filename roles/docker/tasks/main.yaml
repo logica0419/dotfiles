@@ -1,3 +1,4 @@
+---
 - name: Install Docker
   become: true
   block:
@@ -64,5 +65,5 @@
       register: docker_result
     - name: Stop ansible-playbook
       ansible.builtin.fail:
-        msg: Please restart PC to apply docker group privilege
+        msg: Please restart the computer to apply docker group privilege
       when: docker_result is changed # noqa: no-handler

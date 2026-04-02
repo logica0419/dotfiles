@@ -1,3 +1,4 @@
+---
 - name: Update dotfiles
   block:
     - name: Get current dir path

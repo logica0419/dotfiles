@@ -1,3 +1,4 @@
+---
 - name: Create .hushlogin
   ansible.builtin.file:
     path: /home/{{ ansible_user }}/.hushlogin

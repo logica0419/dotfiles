@@ -1,3 +1,4 @@
+---
 - name: Check current youki version
   ansible.builtin.shell:
     executable: /bin/bash
@@ -27,7 +28,6 @@
         state: absent
     - name: Download latest youki
       ansible.builtin.unarchive:
-        src: "https://github.com/youki-dev/youki/releases/download/\
-          v{{ youki_latest.stdout }}/youki-{{ youki_latest.stdout }}-x86_64-musl.tar.gz"
+        src: "https://github.com/youki-dev/youki/releases/download/v{{ youki_latest.stdout }}/youki-{{ youki_latest.stdout }}-x86_64-musl.tar.gz"
         dest: /usr/bin
         remote_src: true

@@ -1,3 +1,4 @@
+---
 - name: Setup Kind cluster
   block:
     - name: Install Kind
