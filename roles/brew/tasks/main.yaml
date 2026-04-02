@@ -13,9 +13,7 @@
         path: /home/linuxbrew/.linuxbrew/bin
         name:
           - ycd/tap
-          - ktr0731/evans
           - k1LoW/tap
-          - derailed/k9s
           - hashicorp/tap
           - oven-sh/bun
     - name: Install packages
@@ -25,12 +23,9 @@
         name:
           - rustup
           - uv
-          - wasmtime
-          - wabt
           - git
           - gh
           - htop
-          - buf
           - shfmt
           - hashicorp/tap/terraform
           - tflint
@@ -38,7 +33,6 @@
           - dstp
           - tbls
           - hadolint
-          - ko
           - go-task
           - mise
           - oven-sh/bun/bun
