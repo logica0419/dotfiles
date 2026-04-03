@@ -1,6 +1,8 @@
 ---
 - name: Install Rust components
-  ansible.builtin.command: /home/linuxbrew/.linuxbrew/bin/rustup-init -y
+  ansible.builtin.shell: |
+    rustup-init -y
+    rustup toolchain install
   changed_when: false
 
 - name: Rustfmt settings
