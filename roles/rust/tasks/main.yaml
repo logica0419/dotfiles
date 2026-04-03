@@ -1,8 +1,6 @@
 ---
 - name: Install Rust components
-  ansible.builtin.shell: |
-    rustup-init -y
-    rustup toolchain install
+  ansible.builtin.command: rustup-init -y
   changed_when: false
 
 - name: Rustfmt settings

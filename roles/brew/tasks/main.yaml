@@ -35,6 +35,7 @@
           - tbls
           - hadolint
           - go-task
+          - just
           - mise
           - oven-sh/bun/bun
           - oxlint
