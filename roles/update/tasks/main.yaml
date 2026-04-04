@@ -32,33 +32,6 @@
   ansible.builtin.command: /home/linuxbrew/.linuxbrew/bin/mise upgrade --bump
   changed_when: false
 
-- name: Update local DB
-  block:
-    - name: Get current dir path
-      ansible.builtin.command: pwd
-      register: update_dotfiles_dir
-      changed_when: false
-    - name: Check latest images
-      ansible.builtin.shell:
-        executable: /bin/bash
-        cmd: |
-          set -o pipefail
-          docker compose pull 2>&1 | grep "Pull complete"
-      environment:
-        COMPOSE_PROJECT_NAME: local_db
-        COMPOSE_FILE: "{{ update_dotfiles_dir.stdout }}/roles/db/files/docker-compose.yaml"
-      register: update_docker_compose
-      changed_when: false
-      ignore_errors: true
-    - name: Restart local DB
-      ansible.builtin.shell: docker compose down && docker compose up -d
-      environment:
-        COMPOSE_PROJECT_NAME: local_db
-        COMPOSE_FILE: "{{ update_dotfiles_dir.stdout }}/roles/db/files/docker-compose.yaml"
-      changed_when: false
-      failed_when: false
-      when: update_docker_compose is succeeded
-
 - name: Prune Docker components
   ansible.builtin.shell: |
     docker image prune -a -f
