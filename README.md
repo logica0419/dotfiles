@@ -2,6 +2,8 @@
 
 環境構築スクリプト
 
+> Windows環境は[`./windows`](windows/README.md)を参照
+
 ## 下準備
 
 ### ssh鍵を用意する
