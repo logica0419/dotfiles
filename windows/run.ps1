@@ -1,3 +1,5 @@
+Write-Host "Installing machine-scoped packages`n"
+
 $machine_packages = @(
   "Bitwarden.Bitwarden"
   "7zip.7zip"
@@ -26,8 +28,11 @@ $machine_packages = @(
 )
 
 foreach ($package in $machine_packages) {
+  Write-Host "Installing $package"
   winget install $package --scope machine --accept-package-agreements --accept-source-agreements
 }
+
+Write-Host "`nInstalling user-scoped packages`n"
 
 $user_packages = @(
   "OpenWhisperSystems.Signal"
@@ -43,10 +48,11 @@ $user_packages = @(
 )
 
 foreach ($package in $user_packages) {
+  Write-Host "Installing $package"
   winget install $package --scope user --accept-package-agreements --accept-source-agreements
 }
 
-# ---------- Set up an upgrade script ----------
+Write-Host "`nSetting up an auto-upgrade script`n"
 
 $startupBatPath = Join-Path $env:APPDATA "Microsoft\Windows\Start Menu\Programs\Startup\winget_upgrade.bat"
 $startupBatLines = @(
