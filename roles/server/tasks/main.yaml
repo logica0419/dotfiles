@@ -6,7 +6,7 @@
       ansible.builtin.apt:
         name:
           - powertop
-          - "linux-tools-{{ ansible_kernel }}"
+          - "linux-tools-{{ ansible_facts['kernel'] }}"
         state: present
     - name: Copy powertop systemd service
       ansible.builtin.copy:
