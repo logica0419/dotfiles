@@ -1,12 +1,9 @@
 #!/bin/bash
 
-if [ "$ENV" != "server" ] && [ "$ENV" != "wsl" ]; then
-  echo "ENV must be set to server or wsl"
+if [ "$ENV" != "server" ] && [ "$ENV" != "wsl" ] && [ "$ENV" != "mac" ]; then
+  echo "ENV must be set to server, wsl or mac"
   return 1
 fi
-
-sudo apt-get update >/dev/null
-sudo apt-get install expect -y >/dev/null
 
 if ! (type uv &>/dev/null); then
   echo "Installing uv"
@@ -15,8 +12,17 @@ if ! (type uv &>/dev/null); then
 fi
 uv sync >/dev/null
 
+if [ "$ENV" != "mac" ]; then
+  sudo apt-get update >/dev/null
+  sudo apt-get install expect -y >/dev/null
+fi
+
 while :; do
-  unbuffer uv run ansible-playbook -v -u "$(whoami)" -i inventory "$ENV".yaml | tee /tmp/ansible.log
+  if [ "$ENV" == "mac" ]; then
+    script -q /tmp/ansible.log uv run ansible-playbook -v -u "$(whoami)" -i inventory "$ENV".yaml
+  else
+    unbuffer uv run ansible-playbook -v -u "$(whoami)" -i inventory "$ENV".yaml | tee /tmp/ansible.log
+  fi
   RESULT=$(
     grep -q "failed=0" </tmp/ansible.log
     echo $?
