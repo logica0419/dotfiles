@@ -6,8 +6,10 @@
         path: /home/linuxbrew/.linuxbrew/bin
         update_homebrew: true
         upgrade_all: true
-    - name: Run brew autoremove
-      ansible.builtin.command: /home/linuxbrew/.linuxbrew/bin/brew autoremove
+    - name: Cleanup
+      ansible.builtin.shell: |
+        /home/linuxbrew/.linuxbrew/bin/brew autoremove
+        /home/linuxbrew/.linuxbrew/bin/brew cleanup
       changed_when: false
 
 - name: Update Go packages
