@@ -83,7 +83,7 @@
         dest: /etc/systemd/system/updater.service
         mode: "0644"
     - name: Enable updater service
-      ansible.builtin.systemd:
+      ansible.builtin.systemd_service:
         name: updater.service
         enabled: true
         daemon_reload: true

@@ -1,4 +1,39 @@
 ---
+- name: Tune power settings
+  become: true
+  block:
+    - name: Install Powertop and cpupower
+      ansible.builtin.apt:
+        name:
+          - powertop
+          - linux-tools-$(uname -r)
+        state: present
+    - name: Copy powertop systemd service
+      ansible.builtin.copy:
+        src: powertop.service
+        dest: /etc/systemd/system/powertop.service
+        mode: "0644"
+    - name: Enable and run powertop service
+      ansible.builtin.systemd_service:
+        name: powertop.service
+        enabled: true
+        state: started
+        daemon_reload: true
+    - name: Set cpu freq governor
+      ansible.builtin.command: cpupower frequency-set -g powersave
+      changed_when: false
+    - name: Add pcie parameter to GRUB
+      ansible.builtin.lineinfile:
+        path: /etc/default/grub
+        regexp: ^GRUB_CMDLINE_LINUX_DEFAULT=
+        line: GRUB_CMDLINE_LINUX_DEFAULT="quiet splash pcie_aspm=force"
+      notify: Update GRUB config
+    - name: Stop and disable motd-news.service
+      ansible.builtin.systemd_service:
+        name: motd-news.service
+        enabled: false
+        state: stopped
+
 - name: Set timezone to Asia/Tokyo
   become: true
   community.general.timezone:
@@ -124,7 +159,7 @@
         regexp: "[#]{0,1}IdleAction"
         line: "IdleAction=ignore"
     - name: Mask sleep-related targets
-      ansible.builtin.systemd:
+      ansible.builtin.systemd_service:
         name: "{{ item }}"
         masked: true
       loop:
@@ -133,6 +168,6 @@
         - hibernate.target
         - hybrid-sleep.target
     - name: Restart systemd-logind
-      ansible.builtin.systemd:
+      ansible.builtin.systemd_service:
         name: systemd-logind
         state: restarted
