@@ -25,7 +25,7 @@
     - name: Add pcie parameter to GRUB
       ansible.builtin.lineinfile:
         path: /etc/default/grub
-        regexp: ^GRUB_CMDLINE_LINUX_DEFAULT=
+        regexp: ^[#]{0,1}GRUB_CMDLINE_LINUX_DEFAULT=
         line: GRUB_CMDLINE_LINUX_DEFAULT="quiet splash pcie_aspm=force"
       notify: Update GRUB config
     - name: Stop and disable motd-news.service
@@ -156,8 +156,8 @@
     - name: Disable hybrid sleep
       ansible.builtin.lineinfile:
         path: /etc/systemd/logind.conf
-        regexp: "[#]{0,1}IdleAction"
-        line: "IdleAction=ignore"
+        regexp: ^[#]{0,1}IdleAction
+        line: IdleAction=ignore
     - name: Mask sleep-related targets
       ansible.builtin.systemd_service:
         name: "{{ item }}"
