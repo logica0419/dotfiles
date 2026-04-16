@@ -1,0 +1,60 @@
+---
+- name: Setup default shell
+  block:
+    - name: Install Homebrew bash
+      community.general.homebrew:
+        name: bash
+        state: present
+    - name: Change default shell to Homebrew bash
+      ansible.builtin.user:
+        name: "{{ ansible_user }}"
+        shell: /opt/homebrew/bin/bash
+      become: true
+    - name: Configure bash_profile
+      ansible.builtin.copy:
+        src: bash_profile
+        dest: /home/{{ ansible_user }}/.bash_profile
+        mode: "0644"
+
+- name: Install Homebrew formula applications
+  community.general.homebrew:
+    name:
+      - sevenzip
+    state: present
+- name: Install cask applications
+  community.general.homebrew_cask:
+    name:
+      # 必須アプリケーション
+      - bitwarden
+      - logitech-g-hub
+      - microsoft-office
+      - google-chrome
+      - tailscale-app
+
+      # エンジニアリング系
+      - visual-studio-code
+      - devtoys
+      - kicad
+
+      # 音楽系
+      - freac
+      - musescore
+      - rekordbox
+      - waves-central
+
+      # 画像・映像系
+      - adobe-creative-cloud
+      - figma
+      - obs
+      - xnconvert
+
+      # SNS・通信系
+      - discord
+      - mattermost
+      - signal
+      - slack
+      - zoom
+
+      # ゲーム系
+      - steam
+    state: present
