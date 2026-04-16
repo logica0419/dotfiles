@@ -17,7 +17,6 @@
           - oven-sh/bun
     - name: Install packages
       community.general.homebrew:
-        state: latest
         name:
           - rustup
           - uv
@@ -38,3 +37,4 @@
           - oxlint
           - oxfmt
           - stylelint
+        state: present

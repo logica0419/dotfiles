@@ -19,11 +19,11 @@
   block:
     - name: Install K8s-related packages
       community.general.homebrew:
-        state: latest
         name:
           - krew
           - kustomize
           - helm
+        state: present
     - name: Install kubectl plugins
       ansible.builtin.command: kubectl krew install oidc-login tree
       changed_when: false
