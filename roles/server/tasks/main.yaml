@@ -26,7 +26,7 @@
       ansible.builtin.lineinfile:
         path: /etc/default/grub
         regexp: ^[#]{0,1}GRUB_CMDLINE_LINUX_DEFAULT=
-        line: GRUB_CMDLINE_LINUX_DEFAULT="quiet splash pcie_aspm=force"
+        line: GRUB_CMDLINE_LINUX_DEFAULT="quiet splash pcie_aspm=force pcie_aspm.policy=powersupersave""
       notify: Update GRUB config
     - name: Stop and disable motd-news.service
       ansible.builtin.systemd_service:
