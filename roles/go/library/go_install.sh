@@ -18,6 +18,6 @@ if [[ "$(basename "$name")" =~ ^v. ]] && (type "$(basename "$(dirname "$name")")
   exit 0
 fi
 
-go install "$name@latest"
+/usr/local/go/bin/go install "$name@latest"
 
 echo "{\"changed\":true}"

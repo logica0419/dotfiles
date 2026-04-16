@@ -1,0 +1,12 @@
+---
+- name: Update Packages
+  hosts: local
+  connection: local
+  roles:
+    - role: check_os
+      check_os_expected_family: Darwin
+    - go
+    - youki
+    - role: update
+      update_homebrew_casks: true
+    - workspace

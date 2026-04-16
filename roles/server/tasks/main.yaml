@@ -133,7 +133,7 @@
         user: "{{ ansible_user }}"
         job: >-
           {{ server_ansible_playbook_path.stdout }} -v -u {{ ansible_user }}
-          -i {{ server_dotfiles_dir.stdout }}/inventory {{ server_dotfiles_dir.stdout }}/update.yaml
+          -i {{ server_dotfiles_dir.stdout }}/inventory {{ server_dotfiles_dir.stdout }}/update-linux.yaml
 
 - name: Setup reboot
   become: true
