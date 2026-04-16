@@ -7,8 +7,8 @@
         upgrade_all: true
     - name: Cleanup
       ansible.builtin.shell: |
-        {{ brew_base_path }}/bin/brew autoremove
-        {{ brew_base_path }}/bin/brew cleanup
+        {{ check_os.brew_base_path }}/bin/brew autoremove
+        {{ check_os.brew_base_path }}/bin/brew cleanup
       changed_when: false
 
 - name: Update Go packages
@@ -18,19 +18,19 @@
   changed_when: false
 
 - name: Update Rust
-  ansible.builtin.command: "{{ brew_base_path }}/bin/rustup update"
+  ansible.builtin.command: "{{ check_os.brew_base_path }}/bin/rustup update"
   changed_when: false
 
 - name: Update Krew packages
-  ansible.builtin.command: "{{ brew_base_path }}/bin/kubectl-krew upgrade"
+  ansible.builtin.command: "{{ check_os.brew_base_path }}/bin/kubectl-krew upgrade"
   changed_when: false
 
 - name: Update Python packages
-  ansible.builtin.command: "{{ brew_base_path }}/bin/uv tool upgrade --all"
+  ansible.builtin.command: "{{ check_os.brew_base_path }}/bin/uv tool upgrade --all"
   changed_when: false
 
 - name: Update mise packages
-  ansible.builtin.command: "{{ brew_base_path }}/bin/mise upgrade --bump"
+  ansible.builtin.command: "{{ check_os.brew_base_path }}/bin/mise upgrade --bump"
   changed_when: false
 
 - name: Prune Docker components

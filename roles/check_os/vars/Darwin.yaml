@@ -1,2 +1,3 @@
 ---
-brew_base_path: /opt/homebrew
+check_os:
+  brew_base_path: /opt/homebrew
