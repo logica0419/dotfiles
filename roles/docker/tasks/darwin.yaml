@@ -1,2 +1,9 @@
 ---
+- name: Install Colima
+  community.general.homebrew:
+    name: colima
+    state: present
 
+- name: Start Colima
+  ansible.builtin.command: brew services start colima
+  changed_when: false

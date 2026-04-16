@@ -1,5 +1,5 @@
 ---
-- name: Install Docker on Debian/Linux
+- name: Install Docker engine
   become: true
   block:
     - name: Add gpg key
