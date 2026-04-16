@@ -21,7 +21,6 @@
       ansible.builtin.apt:
         name:
           - docker-ce
-          - containerd.io
         state: present
     - name: Copy daemon settings
       ansible.builtin.copy:
