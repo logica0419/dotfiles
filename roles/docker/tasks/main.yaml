@@ -8,21 +8,21 @@
           - docker-compose
           - docker-buildx
         state: present
-    - name: Create Docker config directory
-      ansible.builtin.file:
-        path: /home/{{ ansible_user }}/.docker
-        state: directory
-        mode: "0755"
-    - name: Configure Docker CLI plugins directory
-      ansible.builtin.copy:
-        content: |
-          {
-            "cliPluginsExtraDirs": [
-              "{{ brew_base_path }}/lib/docker/cli-plugins"
-            ]
-          }
-        dest: /home/{{ ansible_user }}/.docker/config.json
-        mode: "0644"
+    # - name: Create Docker config directory
+    #   ansible.builtin.file:
+    #     path: /home/{{ ansible_user }}/.docker
+    #     state: directory
+    #     mode: "0755"
+    # - name: Configure Docker CLI plugins directory
+    #   ansible.builtin.copy:
+    #     content: |
+    #       {
+    #         "cliPluginsExtraDirs": [
+    #           "{{ check_os.brew_base_path }}/lib/docker/cli-plugins"
+    #         ]
+    #       }
+    #     dest: /home/{{ ansible_user }}/.docker/config.json
+    #     mode: "0644"
 
 - name: Include OS-specific Docker installation
   ansible.builtin.include_tasks: "{{ ansible_facts['os_family'] | lower }}.yaml"
