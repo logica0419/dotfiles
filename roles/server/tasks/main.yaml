@@ -1,12 +1,13 @@
 ---
-- name: Tune power settings
+- name: Power tuning
   become: true
   block:
-    - name: Install Powertop and cpupower
+    - name: Install power tuning tools
       ansible.builtin.apt:
         name:
           - powertop
           - "linux-tools-{{ ansible_facts['kernel'] }}"
+          - r8125-dkms
         state: present
     - name: Copy powertop service
       ansible.builtin.copy:
@@ -22,17 +23,19 @@
     - name: Set cpu freq governor
       ansible.builtin.command: cpupower frequency-set -g powersave
       changed_when: false
-    - name: Add pcie parameter to GRUB
-      ansible.builtin.lineinfile:
-        path: /etc/default/grub
-        regexp: ^[#]{0,1}GRUB_CMDLINE_LINUX_DEFAULT=
-        line: GRUB_CMDLINE_LINUX_DEFAULT="quiet splash pcie_aspm=force pcie_aspm.policy=powersupersave"
-      notify: Update GRUB config
-    - name: Stop and disable motd-news.service
-      ansible.builtin.systemd_service:
-        name: motd-news.service
-        enabled: false
-        state: stopped
+    - name: Configure r8125 driver
+      ansible.builtin.copy:
+        content: "options r8125 aspm=1 eee_enable=1\n"
+        dest: /etc/modprobe.d/r8125.conf
+        mode: "0644"
+    - name: Put r8169 into blacklist
+      ansible.builtin.copy:
+        content: "blacklist r8169\n"
+        dest: /etc/modprobe.d/blacklist-r8169.conf
+        mode: "0644"
+    - name: Update initramfs
+      ansible.builtin.command: update-initramfs -u
+      changed_when: false
 
 - name: Set timezone to Asia/Tokyo
   become: true
