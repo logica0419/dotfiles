@@ -14,13 +14,8 @@
         state: directory
         mode: "0755"
     - name: Configure Docker CLI plugins directory
-      ansible.builtin.copy:
-        content: |
-          {
-            "cliPluginsExtraDirs": [
-              "{{ check_os_brew_base_path }}/lib/docker/cli-plugins"
-            ]
-          }
+      ansible.builtin.template:
+        src: config.json.j2
         dest: /home/{{ ansible_user }}/.docker/config.json
         mode: "0644"
 
