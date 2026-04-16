@@ -10,17 +10,11 @@
         name: "{{ ansible_user }}"
         shell: /opt/homebrew/bin/bash
       become: true
-    - name: Configure bash_profile
-      ansible.builtin.copy:
-        src: bash_profile
-        dest: /home/{{ ansible_user }}/.bash_profile
-        mode: "0644"
+    - name: Remove bash_profile
+      ansible.builtin.file:
+        path: /home/{{ ansible_user }}/.bash_profile
+        state: absent
 
-- name: Install Homebrew formula applications
-  community.general.homebrew:
-    name:
-      - sevenzip
-    state: present
 - name: Install cask applications
   community.general.homebrew_cask:
     name:

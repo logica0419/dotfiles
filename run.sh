@@ -37,6 +37,8 @@ while :; do
 
   if [ "$ENV" == "server" ] && (type code &>/dev/null) && ! (systemctl --user status code-tunnel &>/dev/null); then
     code tunnel service install
+    systemctl --user daemon-reload &>/dev/null
+    systemctl --user restart code-tunnel &>/dev/null
   fi
 
   if [ "$ENV" == "wsl" ] && ! (sudo systemctl status &>/dev/null); then

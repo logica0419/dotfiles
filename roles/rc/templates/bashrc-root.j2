@@ -97,17 +97,4 @@ fi
 # . /etc/bash_completion
 #fi
 
-eval "$({{ check_os_brew_base_path }}/bin/brew shellenv)"
 eval "$(mise activate bash)"
-
-. "/home/{{ ansible_user }}/.cargo/env"
-
-export PATH="$PATH:/usr/local/go/bin"
-export PATH="$PATH:/home/{{ ansible_user }}/go/bin"
-export PATH="$PATH:/home/{{ ansible_user }}/.bun/bin"
-export PATH="$PATH:/home/{{ ansible_user }}/.krew/bin"
-export PATH="$PATH:{{ check_os_brew_base_path }}/opt/clang-format/bin"
-
-{% if lookup("env", "ENV") == "wsl" %}
-export BROWSER="/usr/bin/chrome"
-{% endif %}

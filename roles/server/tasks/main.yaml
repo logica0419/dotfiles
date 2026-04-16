@@ -107,6 +107,16 @@
         - name: Enable linger state
           ansible.builtin.command: loginctl enable-linger {{ ansible_user }}
           changed_when: false
+        - name: Create code tunnel service override directory
+          ansible.builtin.file:
+            path: /home/{{ ansible_user }}/.config/systemd/user/code-tunnel.service.d
+            state: directory
+            mode: "0755"
+        - name: Configure code tunnel service PATH override
+          ansible.builtin.template:
+            src: override.conf.j2
+            dest: /home/{{ ansible_user }}/.config/systemd/user/code-tunnel.service.d/override.conf
+            mode: "0644"
         - name: Create VS Code settings directory
           ansible.builtin.file:
             path: /home/{{ ansible_user }}/.vscode-server/data/Machine

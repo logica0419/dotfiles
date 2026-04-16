@@ -1,0 +1,16 @@
+[Service]
+Environment=PATH={{ [
+  check_os_brew_base_path ~ '/bin',
+  check_os_brew_base_path ~ '/sbin',
+  '/home/' ~ ansible_user ~ '/.local/share/mise/shims',
+  '/home/' ~ ansible_user ~ '/.bun/bin',
+  '/home/' ~ ansible_user ~ '/.krew/bin',
+  '/home/' ~ ansible_user ~ '/go/bin',
+  '/usr/local/go/bin',
+  '/usr/local/sbin',
+  '/usr/local/bin',
+  '/usr/sbin',
+  '/usr/bin',
+  '/sbin',
+  '/bin'
+] | join(':') }}
