@@ -14,7 +14,7 @@
     executable: /bin/bash
     cmd: |
       set -o pipefail
-      {{ check_os.brew_base_path }}/bin/gh release view -R youki-dev/youki --json name -q .name | cut -b 2-
+      {{ check_os_brew_base_path }}/bin/gh release view -R youki-dev/youki --json name -q .name | cut -b 2-
   register: youki_latest
   changed_when: false
 

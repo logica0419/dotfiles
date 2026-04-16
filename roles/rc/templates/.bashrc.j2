@@ -118,7 +118,7 @@ fi
 
 eval "$(dircolors -b ~/.colorrc)"
 
-eval "$({{ check_os.brew_base_path }}/bin/brew shellenv)"
+eval "$({{ check_os_brew_base_path }}/bin/brew shellenv)"
 eval "$(direnv hook bash)"
 eval "$(mise activate bash)"
 
@@ -128,7 +128,7 @@ export PATH="$PATH:/usr/local/go/bin"
 export PATH="$PATH:$HOME/go/bin"
 export PATH="$PATH:$HOME/.bun/bin"
 export PATH="$PATH:$HOME/.krew/bin"
-export PATH="$PATH:{{ check_os.brew_base_path }}/opt/clang-format/bin"
+export PATH="$PATH:{{ check_os_brew_base_path }}/opt/clang-format/bin"
 
 {% if lookup("env", "ENV") == "wsl" %}
 export BROWSER="/usr/bin/chrome"

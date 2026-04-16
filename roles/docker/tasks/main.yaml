@@ -18,7 +18,7 @@
         content: |
           {
             "cliPluginsExtraDirs": [
-              "{{ check_os.brew_base_path }}/lib/docker/cli-plugins"
+              "{{ check_os_brew_base_path }}/lib/docker/cli-plugins"
             ]
           }
         dest: /home/{{ ansible_user }}/.docker/config.json
