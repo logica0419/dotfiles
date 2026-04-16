@@ -1,0 +1,11 @@
+[Unit]
+Description=Set SATA ALPM to min_power
+After=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c 'echo "min_power" | tee /sys/class/scsi_host/host*/link_power_management_policy'
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

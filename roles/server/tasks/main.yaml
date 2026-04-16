@@ -8,7 +8,7 @@
           - powertop
           - "linux-tools-{{ ansible_facts['kernel'] }}"
         state: present
-    - name: Copy powertop systemd service
+    - name: Copy powertop service
       ansible.builtin.copy:
         src: powertop.service
         dest: /etc/systemd/system/powertop.service
@@ -28,16 +28,17 @@
         regexp: ^[#]{0,1}GRUB_CMDLINE_LINUX_DEFAULT=
         line: GRUB_CMDLINE_LINUX_DEFAULT="quiet splash pcie_aspm=force pcie_aspm.policy=powersupersave"
       notify: Update GRUB config
-    - name: Copy udev rule
+    - name: Copy SATA ALPM service
       ansible.builtin.copy:
-        src: 60-sata-alpm.rules
-        dest: /etc/udev/rules.d/60-sata-alpm.rules
+        src: sata-alpm.service
+        dest: /etc/systemd/system/sata-alpm.service
         mode: "0644"
-    - name: Reload udev rules
-      ansible.builtin.shell: |
-        udevadm control --reload-rules
-        udevadm trigger
-      changed_when: false
+    - name: Enable and run SATA ALPM service
+      ansible.builtin.systemd_service:
+        name: sata-alpm.service
+        enabled: true
+        state: started
+        daemon_reload: true
     - name: Stop and disable motd-news.service
       ansible.builtin.systemd_service:
         name: motd-news.service
