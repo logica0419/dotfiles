@@ -5,7 +5,11 @@ if (type brew); then
   exit 0
 fi
 
-sudo apt-get install build-essential procps curl file git -y
+case "$(uname -s)" in
+  Linux)
+    sudo apt-get install build-essential procps curl file git -y
+    ;;
+esac
 
 NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
