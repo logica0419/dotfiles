@@ -3,7 +3,7 @@
   hosts: local
   connection: local
   roles:
-    - role: check-os
+    - role: check_os
       check_os_expected_family: Debian
     - apt
     - go
