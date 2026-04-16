@@ -1,0 +1,66 @@
+---
+- name: Install Docker on Debian/Linux
+  become: true
+  block:
+    - name: Add gpg key
+      ansible.builtin.get_url:
+        url: https://download.docker.com/linux/debian/gpg
+        dest: /etc/apt/keyrings/docker.asc
+        mode: "0644"
+        force: true
+    - name: Add Docker repository
+      ansible.builtin.apt_repository:
+        repo: >-
+          deb [signed-by=/etc/apt/keyrings/docker.asc]
+          https://download.docker.com/linux/ubuntu jammy stable
+        state: present
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+    - name: Install Docker packages
+      ansible.builtin.apt:
+        name:
+          - docker-ce
+          - containerd.io
+        state: present
+    - name: Copy daemon settings
+      ansible.builtin.copy:
+        src: daemon.json
+        dest: /etc/docker/daemon.json
+        mode: "0644"
+    - name: Restart Docker
+      ansible.builtin.service:
+        name: docker
+        state: restarted
+
+- name: Apply containerd settings
+  become: true
+  block:
+    - name: Disable cri plugin
+      ansible.builtin.lineinfile:
+        path: /etc/containerd/config.toml
+        regexp: ^disabled_plugins
+        line: disabled_plugins = ["io.containerd.grpc.v1.cri"]
+        mode: "0644"
+      notify: Restart containerd
+    - name: Flush handlers
+      ansible.builtin.meta: flush_handlers
+
+- name: Setup docker group
+  become: true
+  block:
+    - name: Create docker group
+      ansible.builtin.group:
+        name: docker
+        state: present
+    - name: Append current user to docker group
+      ansible.builtin.user:
+        name: "{{ ansible_user }}"
+        groups:
+          - docker
+        append: true
+      register: docker_result
+    - name: Stop ansible-playbook
+      ansible.builtin.fail:
+        msg: Please restart the computer to apply docker group privilege
+      when: docker_result is changed # noqa: no-handler
