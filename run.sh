@@ -12,9 +12,9 @@ if ! (type uv &>/dev/null); then
 fi
 uv sync >/dev/null
 
-if [ "$ENV" != "mac" ]; then
-  sudo apt-get update >/dev/null
-  sudo apt-get install expect -y >/dev/null
+if [ "$ENV" != "mac" ] && ! (type unbuffer &>/dev/null); then
+  sudo apt-get update
+  sudo apt-get install expect -y
 fi
 
 while :; do
