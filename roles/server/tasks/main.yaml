@@ -28,17 +28,6 @@
         regexp: ^[#]{0,1}GRUB_CMDLINE_LINUX_DEFAULT=
         line: GRUB_CMDLINE_LINUX_DEFAULT="quiet splash pcie_aspm=force pcie_aspm.policy=powersupersave"
       notify: Update GRUB config
-    - name: Copy SATA ALPM service
-      ansible.builtin.copy:
-        src: sata-alpm.service
-        dest: /etc/systemd/system/sata-alpm.service
-        mode: "0644"
-    - name: Enable and run SATA ALPM service
-      ansible.builtin.systemd_service:
-        name: sata-alpm.service
-        enabled: true
-        state: started
-        daemon_reload: true
     - name: Stop and disable motd-news.service
       ansible.builtin.systemd_service:
         name: motd-news.service
