@@ -1,7 +1,7 @@
 ---
 - name: Copy gitconfig
-  ansible.builtin.copy:
-    src: gitconfig
+  ansible.builtin.template:
+    src: gitconfig.j2
     dest: /home/{{ ansible_user }}/.gitconfig
     mode: "0664"
 

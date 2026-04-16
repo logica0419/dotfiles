@@ -4,14 +4,12 @@
 
 - name: Update Homebrew
   community.general.homebrew:
-    path: /home/linuxbrew/.linuxbrew/bin
     update_homebrew: true
 
 - name: Install packages
   block:
     - name: Register Homebrew tap
       community.general.homebrew_tap:
-        path: /home/linuxbrew/.linuxbrew/bin
         name:
           - ycd/tap
           - k1LoW/tap
@@ -20,7 +18,6 @@
     - name: Install packages
       community.general.homebrew:
         state: latest
-        path: /home/linuxbrew/.linuxbrew/bin
         name:
           - rustup
           - uv

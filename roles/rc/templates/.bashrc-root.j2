@@ -97,16 +97,16 @@ fi
 # . /etc/bash_completion
 #fi
 
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+eval "$({{ brew_base_path }}/bin/brew shellenv)"
 eval "$(mise activate bash)"
 
-. "/home/logica/.cargo/env"
+. "/home/{{ ansible_user }}/.cargo/env"
 
-export PATH="$PATH:/usr/local/go/bin:/usr/local/tinygo/bin"
-export PATH="$PATH:/home/logica/go/bin"
-export PATH="$PATH:/home/logica/.bun/bin"
-export PATH="$PATH:/home/logica/.krew/bin"
-export PATH="$PATH:/home/linuxbrew/.linuxbrew/opt/clang-format/bin"
+export PATH="$PATH:/usr/local/go/bin"
+export PATH="$PATH:/home/{{ ansible_user }}/go/bin"
+export PATH="$PATH:/home/{{ ansible_user }}/.bun/bin"
+export PATH="$PATH:/home/{{ ansible_user }}/.krew/bin"
+export PATH="$PATH:{{ brew_base_path }}/opt/clang-format/bin"
 
 {% if lookup("env", "ENV") == "wsl" %}
 export BROWSER="/usr/bin/chrome"
