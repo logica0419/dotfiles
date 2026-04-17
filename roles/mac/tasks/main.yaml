@@ -10,6 +10,11 @@
       ansible.builtin.user:
         name: "{{ ansible_user }}"
         shell: "{{ check_os_brew_base_path }}/bin/bash"
+    - name: Remove zsh related files
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      loop: "{{ query('ansible.builtin.fileglob', ansible_facts['user_dir'] + '/.zsh*') }}"
 
 - name: SSH settings
   block:
