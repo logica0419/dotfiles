@@ -20,6 +20,9 @@
       changed_when: false
     - name: Install latest Go
       become: true
+      vars:
+        go_download_os: "{{ 'darwin' if ansible_system == 'Darwin' else 'linux' }}"
+        go_download_arch: "{{ 'arm64' if ansible_architecture in ['arm64', 'aarch64'] else 'amd64' }}"
       when: go_current.stdout != go_latest.stdout
       block:
         - name: Remove old installation
@@ -28,7 +31,7 @@
             state: absent
         - name: Download latest Go
           ansible.builtin.unarchive:
-            src: https://go.dev/dl/{{ go_latest.stdout }}.linux-amd64.tar.gz
+            src: https://go.dev/dl/{{ go_latest.stdout }}.{{ go_download_os }}-{{ go_download_arch }}.tar.gz
             dest: /usr/local
             remote_src: true
 
