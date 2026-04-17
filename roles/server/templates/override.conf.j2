@@ -7,12 +7,12 @@
   '/bin',
   check_os_brew_base_path ~ '/bin',
   check_os_brew_base_path ~ '/sbin',
-  '/home/' ~ ansible_user ~ '/go/bin',
-  '/home/' ~ ansible_user ~ '/.bun/bin',
-  '/home/' ~ ansible_user ~ '/.krew/bin',
-  '/home/' ~ ansible_user ~ '/.cargo/bin',
-  '/home/' ~ ansible_user ~ '/.local/bin',
-  '/home/' ~ ansible_user ~ '/.local/share/mise/shims',
+  ansible_user_dir ~ '/go/bin',
+  ansible_user_dir ~ '/.bun/bin',
+  ansible_user_dir ~ '/.krew/bin',
+  ansible_user_dir ~ '/.cargo/bin',
+  ansible_user_dir ~ '/.local/bin',
+  ansible_user_dir ~ '/.local/share/mise/shims',
   '/usr/local/go/bin'
 ] | join(':') %}
 [Service]

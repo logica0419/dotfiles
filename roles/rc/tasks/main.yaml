@@ -1,7 +1,7 @@
 ---
 - name: Create .hushlogin
   ansible.builtin.file:
-    path: /home/{{ ansible_user }}/.hushlogin
+    path: "{{ ansible_user_dir }}/.hushlogin"
     state: touch
     access_time: preserve
     modification_time: preserve
@@ -23,13 +23,13 @@
 - name: Copy .bashrc to home directory
   ansible.builtin.copy:
     src: bashrc
-    dest: /home/{{ ansible_user }}/.bashrc
+    dest: "{{ ansible_user_dir }}/.bashrc"
     mode: "0644"
   register: rc_bashrc_result
 - name: Copy .profile to home directory
   ansible.builtin.template:
     src: profile.j2
-    dest: /home/{{ ansible_user }}/.profile
+    dest: "{{ ansible_user_dir }}/.profile"
     mode: "0644"
   register: rc_profile_result
 - name: Stop ansible-playbook

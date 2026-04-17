@@ -1,22 +1,20 @@
 # ~/.profile: executed by the command interpreter for login shells.
+{% if lookup("env", "ENV") == "wsl" %}
+export BROWSER="/usr/bin/chrome"
+{% endif %}
 
 # Homebrew environment variables (PATH, MANPATH, INFOPATH, etc.)
 eval "$({{ check_os_brew_base_path }}/bin/brew shellenv)"
 
 # Rust and Cargo
-if [ -f "/home/{{ ansible_user }}/.cargo/env" ]; then
-  . "/home/{{ ansible_user }}/.cargo/env"
+if [ -f "{{ ansible_user_dir }}/.cargo/env" ]; then
+. "{{ ansible_user_dir }}/.cargo/env"
 fi
-
 
 # Language and toolchain paths
 export PATH="$PATH:/usr/local/go/bin"
-export PATH="$PATH:/home/{{ ansible_user }}/go/bin"
-export PATH="$PATH:/home/{{ ansible_user }}/.bun/bin"
-export PATH="$PATH:/home/{{ ansible_user }}/.krew/bin"
-export PATH="$PATH:/home/{{ ansible_user }}/.local/bin"
-export PATH="$PATH:/home/{{ ansible_user }}/.local/share/mise/shims"
-
-{% if lookup("env", "ENV") == "wsl" %}
-export BROWSER="/usr/bin/chrome"
-{% endif %}
+export PATH="$PATH:{{ ansible_user_dir }}/go/bin"
+export PATH="$PATH:{{ ansible_user_dir }}/.bun/bin"
+export PATH="$PATH:{{ ansible_user_dir }}/.krew/bin"
+export PATH="$PATH:{{ ansible_user_dir }}/.local/bin"
+export PATH="$PATH:{{ ansible_user_dir }}/.local/share/mise/shims"

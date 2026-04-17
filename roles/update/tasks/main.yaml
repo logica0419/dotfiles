@@ -18,7 +18,7 @@
 - name: Update Go packages
   ansible.builtin.shell: |
     export PATH=$PATH:/usr/local/go/bin
-    /home/{{ ansible_user }}/go/bin/gup update
+    {{ ansible_user_dir }}/go/bin/gup update
   changed_when: false
 
 - name: Update Rust

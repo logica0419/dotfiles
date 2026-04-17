@@ -7,7 +7,7 @@
   block:
     - name: Create config directories
       ansible.builtin.file:
-        path: /home/{{ ansible_user }}/{{ item }}
+        path: "{{ ansible_user_dir }}/{{ item }}"
         state: directory
         mode: "0700"
       loop:
@@ -16,5 +16,5 @@
     - name: Copy rustfmt.toml
       ansible.builtin.copy:
         src: rustfmt.toml
-        dest: /home/{{ ansible_user }}/.config/rustfmt/rustfmt.toml
+        dest: "{{ ansible_user_dir }}/.config/rustfmt/rustfmt.toml"
         mode: "0600"
