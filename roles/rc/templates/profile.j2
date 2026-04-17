@@ -18,3 +18,7 @@ export PATH="$PATH:{{ ansible_user_dir }}/.bun/bin"
 export PATH="$PATH:{{ ansible_user_dir }}/.krew/bin"
 export PATH="$PATH:{{ ansible_user_dir }}/.local/bin"
 export PATH="$PATH:{{ ansible_user_dir }}/.local/share/mise/shims"
+
+if [ -f ~/.bashrc ]; then
+. ~/.bashrc
+fi
