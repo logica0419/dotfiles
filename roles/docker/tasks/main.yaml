@@ -10,13 +10,13 @@
         state: present
     - name: Create Docker config directory
       ansible.builtin.file:
-        path: "{{ ansible_user_dir }}/.docker"
+        path: "{{ ansible_facts['user_dir'] }}/.docker"
         state: directory
         mode: "0755"
     - name: Configure Docker CLI plugins directory
       ansible.builtin.template:
         src: config.json.j2
-        dest: "{{ ansible_user_dir }}/.docker/config.json"
+        dest: "{{ ansible_facts['user_dir'] }}/.docker/config.json"
         mode: "0644"
 
 - name: Include OS-specific Docker installation
