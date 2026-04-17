@@ -10,27 +10,5 @@
         autoclean: true
         autoremove: true
         update_cache: true
+        cache_valid_time: 86400
         upgrade: dist
-
-- name: Install packages
-  become: true
-  ansible.builtin.apt:
-    name:
-      - jq
-      - lldb
-      - clangd
-    state: present
-
-- name: Clangd settings
-  block:
-    - name: Create clangd config directory
-      ansible.builtin.file:
-        path: /home/{{ ansible_user }}/.config/clangd
-        state: directory
-        mode: "0755"
-        recurse: true
-    - name: Copy config.yaml
-      ansible.builtin.copy:
-        src: config.yaml
-        dest: /home/{{ ansible_user }}/.config/clangd/config.yaml
-        mode: "0644"

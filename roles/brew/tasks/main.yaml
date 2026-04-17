@@ -20,9 +20,11 @@
         name:
           - rustup
           - uv
+          - llvm
           - git
           - gh
           - htop
+          - jq
           - shfmt
           - hashicorp/tap/terraform
           - tflint
