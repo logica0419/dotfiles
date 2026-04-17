@@ -98,24 +98,24 @@
       register: mac_updater_plist
     - name: Check updater launch agent status
       ansible.builtin.command: >-
-        launchctl print gui/{{ ansible_user_uid }}/com.dotfiles-updater
+        launchctl print gui/{{ ansible_facts['user_uid'] }}/com.dotfiles-updater
       register: mac_updater_status
       failed_when: false
       changed_when: false
     - name: Unload updater launch agent
       ansible.builtin.command: >-
-        launchctl bootout gui/{{ ansible_user_uid }}
+        launchctl bootout gui/{{ ansible_facts['user_uid'] }}
         {{ ansible_facts['user_dir'] }}/Library/LaunchAgents/com.dotfiles-updater.plist
       when: mac_updater_plist is changed or mac_updater_status.rc == 0
       failed_when: false
       changed_when: mac_updater_status.rc == 0
     - name: Load updater launch agent
       ansible.builtin.command: >-
-        launchctl bootstrap gui/{{ ansible_user_uid }}
+        launchctl bootstrap gui/{{ ansible_facts['user_uid'] }}
         {{ ansible_facts['user_dir'] }}/Library/LaunchAgents/com.dotfiles-updater.plist
       when: mac_updater_plist is changed or mac_updater_status.rc != 0
       changed_when: true
     - name: Enable updater launch agent
       ansible.builtin.command: >-
-        launchctl enable gui/{{ ansible_user_uid }}/com.dotfiles-updater
+        launchctl enable gui/{{ ansible_facts['user_uid'] }}/com.dotfiles-updater
       changed_when: false
