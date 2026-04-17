@@ -6,7 +6,7 @@
       ansible.builtin.apt:
         name:
           - powertop
-          - "linux-tools-{{ ansible_facts['kernel'] }}"
+          - "linux-tools-{{ ansible_facts.kernel }}"
           - r8125-dkms
         state: present
     - name: Copy powertop service
@@ -45,7 +45,7 @@
 - name: Copy SSH keys to root home
   become: true
   ansible.builtin.copy:
-    src: "{{ ansible_facts['user_dir'] }}/.ssh/"
+    src: "{{ ansible_facts.user_dir }}/.ssh/"
     dest: /root/.ssh/
     mode: "0755"
     owner: root
@@ -114,7 +114,7 @@
           changed_when: false
         - name: Create config directories
           ansible.builtin.file:
-            path: "{{ ansible_facts['user_dir'] }}/{{ item }}"
+            path: "{{ ansible_facts.user_dir }}/{{ item }}"
             state: directory
             mode: "0700"
           loop:
@@ -125,11 +125,11 @@
         - name: Configure code tunnel service PATH override
           ansible.builtin.template:
             src: override.conf.j2
-            dest: "{{ ansible_facts['user_dir'] }}/.config/systemd/user/code-tunnel.service.d/override.conf"
+            dest: "{{ ansible_facts.user_dir }}/.config/systemd/user/code-tunnel.service.d/override.conf"
             mode: "0600"
         - name: Create VS Code directories
           ansible.builtin.file:
-            path: "{{ ansible_facts['user_dir'] }}/{{ item }}"
+            path: "{{ ansible_facts.user_dir }}/{{ item }}"
             state: directory
             mode: "0755"
           loop:
@@ -139,7 +139,7 @@
         - name: Copy VS Code settings
           ansible.builtin.template:
             src: settings.json.j2
-            dest: "{{ ansible_facts['user_dir'] }}/.vscode-server/data/Machine/settings.json"
+            dest: "{{ ansible_facts.user_dir }}/.vscode-server/data/Machine/settings.json"
             mode: "0644"
 
 - name: Setup updater

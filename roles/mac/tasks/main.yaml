@@ -14,19 +14,19 @@
       ansible.builtin.file:
         path: "{{ item }}"
         state: absent
-      loop: "{{ query('ansible.builtin.fileglob', ansible_facts['user_dir'] + '/.zsh*') }}"
+      loop: "{{ query('ansible.builtin.fileglob', ansible_facts.user_dir + '/.zsh*') }}"
 
 - name: SSH settings
   block:
     - name: Create .ssh directory
       ansible.builtin.file:
-        path: "{{ ansible_facts['user_dir'] }}/.ssh"
+        path: "{{ ansible_facts.user_dir }}/.ssh"
         state: directory
         mode: "0755"
     - name: Move SSH config
       ansible.builtin.copy:
         src: ssh_config
-        dest: "{{ ansible_facts['user_dir'] }}/.ssh/config"
+        dest: "{{ ansible_facts.user_dir }}/.ssh/config"
         mode: "0644"
 
 - name: Show hidden files in Finder
@@ -87,40 +87,40 @@
       changed_when: false
     - name: Create launch agents directory
       ansible.builtin.file:
-        path: "{{ ansible_facts['user_dir'] }}/Library/LaunchAgents"
+        path: "{{ ansible_facts.user_dir }}/Library/LaunchAgents"
         state: directory
         mode: "0755"
     - name: Create updater log directory
       ansible.builtin.file:
-        path: "{{ ansible_facts['user_dir'] }}/.local/state/dotfiles"
+        path: "{{ ansible_facts.user_dir }}/.local/state/dotfiles"
         state: directory
         mode: "0755"
     - name: Copy updater launchd plist
       ansible.builtin.template:
         src: updater.plist.j2
-        dest: "{{ ansible_facts['user_dir'] }}/Library/LaunchAgents/com.dotfiles-updater.plist"
+        dest: "{{ ansible_facts.user_dir }}/Library/LaunchAgents/com.dotfiles-updater.plist"
         mode: "0644"
       register: mac_updater_plist
     - name: Check updater launch agent status
       ansible.builtin.command: >-
-        launchctl print gui/{{ ansible_facts['user_uid'] }}/com.dotfiles-updater
+        launchctl print gui/{{ ansible_facts.user_uid }}/com.dotfiles-updater
       register: mac_updater_status
       failed_when: false
       changed_when: false
     - name: Unload updater launch agent
       ansible.builtin.command: >-
-        launchctl bootout gui/{{ ansible_facts['user_uid'] }}
-        {{ ansible_facts['user_dir'] }}/Library/LaunchAgents/com.dotfiles-updater.plist
+        launchctl bootout gui/{{ ansible_facts.user_uid }}
+        {{ ansible_facts.user_dir }}/Library/LaunchAgents/com.dotfiles-updater.plist
       when: mac_updater_plist is changed or mac_updater_status.rc == 0
       failed_when: false
       changed_when: mac_updater_status.rc == 0
     - name: Load updater launch agent
       ansible.builtin.command: >-
-        launchctl bootstrap gui/{{ ansible_facts['user_uid'] }}
-        {{ ansible_facts['user_dir'] }}/Library/LaunchAgents/com.dotfiles-updater.plist
+        launchctl bootstrap gui/{{ ansible_facts.user_uid }}
+        {{ ansible_facts.user_dir }}/Library/LaunchAgents/com.dotfiles-updater.plist
       when: mac_updater_plist is changed or mac_updater_status.rc != 0
       changed_when: true
     - name: Enable updater launch agent
       ansible.builtin.command: >-
-        launchctl enable gui/{{ ansible_facts['user_uid'] }}/com.dotfiles-updater
+        launchctl enable gui/{{ ansible_facts.user_uid }}/com.dotfiles-updater
       changed_when: false

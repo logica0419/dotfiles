@@ -4,7 +4,7 @@
 . "$1"
 
 if [ -z "$name" ]; then
-  echo "{\"failed\": true, \"msg\": \"Arg 'name' is Required\"}"
+  echo "{\"failed\": true, \"msg\": \"Arg \\\"name\\\" is Required\"}"
   exit 1
 fi
 

@@ -3,13 +3,13 @@
   block:
     - name: Create .ssh directory
       ansible.builtin.file:
-        path: "{{ ansible_facts['user_dir'] }}/.ssh"
+        path: "{{ ansible_facts.user_dir }}/.ssh"
         state: directory
         mode: "0755"
     - name: Move SSH config
       ansible.builtin.copy:
         src: ssh_config
-        dest: "{{ ansible_facts['user_dir'] }}/.ssh/config"
+        dest: "{{ ansible_facts.user_dir }}/.ssh/config"
         mode: "0644"
 
 - name: Enable systemd
@@ -67,7 +67,7 @@
   block:
     - name: Create VS Code server directories
       ansible.builtin.file:
-        path: "{{ ansible_facts['user_dir'] }}/{{ item }}"
+        path: "{{ ansible_facts.user_dir }}/{{ item }}"
         state: directory
         mode: "0755"
       loop:
@@ -77,7 +77,7 @@
     - name: Put VS Code settings
       ansible.builtin.template:
         src: settings.json.j2
-        dest: "{{ ansible_facts['user_dir'] }}/.vscode-server/data/Machine/settings.json"
+        dest: "{{ ansible_facts.user_dir }}/.vscode-server/data/Machine/settings.json"
         mode: "0644"
 
 - name: Get current paths

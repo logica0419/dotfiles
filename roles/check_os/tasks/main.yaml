@@ -3,12 +3,12 @@
   ansible.builtin.assert:
     that:
       - check_os_expected_system is defined
-      - ansible_facts["system"] == check_os_expected_system
+      - ansible_facts.system == check_os_expected_system
     fail_msg: >-
-      System mismatch: expected '{{ check_os_expected_system | default("<undefined>") }}'
-      but got '{{ ansible_facts["system"] }}'
-    success_msg: 'System check passed: {{ ansible_facts["system"] }}'
+      System mismatch: expected "{{ check_os_expected_system | default("<undefined>") }}"
+      but got "{{ ansible_facts.system }}"
+    success_msg: "System check passed: {{ ansible_facts.system }}"
 
 - name: Load OS specific settings
   ansible.builtin.include_vars:
-    file: '{{ ansible_facts["system"] }}.yaml'
+    file: "{{ ansible_facts.system }}.yaml"
