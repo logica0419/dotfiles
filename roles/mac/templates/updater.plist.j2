@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>Label</key>
+    <string>com.dotfiles-updater</string>
+
+    <key>ProgramArguments</key>
+    <array>
+      <string>{{ mac_ansible_playbook_path.stdout }}</string>
+      <string>-v</string>
+      <string>-u</string>
+      <string>{{ ansible_user }}</string>
+      <string>-i</string>
+      <string>{{ mac_dotfiles_dir.stdout }}/inventory</string>
+      <string>{{ mac_dotfiles_dir.stdout }}/update-mac.yaml</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>{{ mac_dotfiles_dir.stdout }}</string>
+
+    <key>StartCalendarInterval</key>
+    <dict>
+      <key>Hour</key>
+      <integer>4</integer>
+      <key>Minute</key>
+      <integer>0</integer>
+    </dict>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>StandardOutPath</key>
+    <string>{{ ansible_user_dir }}/.local/state/dotfiles/update-mac.log</string>
+    <key>StandardErrorPath</key>
+    <string>{{ ansible_user_dir }}/.local/state/dotfiles/update-mac.log</string>
+  </dict>
+</plist>

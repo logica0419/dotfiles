@@ -69,3 +69,53 @@
       # ゲーム系
       - steam
     state: present
+
+- name: Setup updater
+  block:
+    - name: Get current dir path
+      ansible.builtin.command: pwd
+      register: mac_dotfiles_dir
+      changed_when: false
+    - name: Get ansible-playbook path
+      ansible.builtin.command: which ansible-playbook
+      register: mac_ansible_playbook_path
+      changed_when: false
+    - name: Create launch agents directory
+      ansible.builtin.file:
+        path: "{{ ansible_user_dir }}/Library/LaunchAgents"
+        state: directory
+        mode: "0755"
+    - name: Create updater log directory
+      ansible.builtin.file:
+        path: "{{ ansible_user_dir }}/.local/state/dotfiles"
+        state: directory
+        mode: "0755"
+    - name: Copy updater launchd plist
+      ansible.builtin.template:
+        src: updater.plist.j2
+        dest: "{{ ansible_user_dir }}/Library/LaunchAgents/com.dotfiles-updater.plist"
+        mode: "0644"
+      register: mac_updater_plist
+    - name: Check updater launch agent status
+      ansible.builtin.command: >-
+        launchctl print gui/{{ ansible_user_uid }}/com.dotfiles-updater
+      register: mac_updater_status
+      failed_when: false
+      changed_when: false
+    - name: Unload updater launch agent
+      ansible.builtin.command: >-
+        launchctl bootout gui/{{ ansible_user_uid }}
+        {{ ansible_user_dir }}/Library/LaunchAgents/com.dotfiles-updater.plist
+      when: mac_updater_plist is changed or mac_updater_status.rc == 0
+      failed_when: false
+      changed_when: mac_updater_status.rc == 0
+    - name: Load updater launch agent
+      ansible.builtin.command: >-
+        launchctl bootstrap gui/{{ ansible_user_uid }}
+        {{ ansible_user_dir }}/Library/LaunchAgents/com.dotfiles-updater.plist
+      when: mac_updater_plist is changed or mac_updater_status.rc != 0
+      changed_when: true
+    - name: Enable updater launch agent
+      ansible.builtin.command: >-
+        launchctl enable gui/{{ ansible_user_uid }}/com.dotfiles-updater
+      changed_when: false
