@@ -11,6 +11,19 @@
         name: "{{ ansible_user }}"
         shell: "{{ check_os_brew_base_path }}/bin/bash"
 
+- name: SSH settings
+  block:
+    - name: Create .ssh directory
+      ansible.builtin.file:
+        path: "{{ ansible_user_dir }}/.ssh"
+        state: directory
+        mode: "0755"
+    - name: Move SSH config
+      ansible.builtin.copy:
+        src: ssh_config
+        dest: "{{ ansible_user_dir }}/.ssh/config"
+        mode: "0644"
+
 - name: Show hidden files in Finder
   community.general.osx_defaults:
     domain: com.apple.finder
