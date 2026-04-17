@@ -10,4 +10,3 @@
     src: https://go.dev/dl/{{ go_latest.stdout }}.darwin-arm64.tar.gz
     dest: /usr/local
     remote_src: true
-    tar: "{{ check_os_brew_base_path }}/bin/gtar"
