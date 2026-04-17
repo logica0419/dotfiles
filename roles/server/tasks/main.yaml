@@ -62,6 +62,8 @@
         mode: "0755"
     - name: Install Tailscale
       ansible.builtin.command: /tmp/install.sh
+      args:
+        creates: /usr/bin/tailscale
       changed_when: false
     - name: Enable auto update
       ansible.builtin.command: tailscale set --auto-update
@@ -90,14 +92,17 @@
             dest: /etc/apt/keyrings/microsoft.asc
             mode: "0644"
             force: true
+          register: server_ms_gpg_key
         - name: Copy repository ref
           ansible.builtin.copy:
             src: vscode.sources
             dest: /etc/apt/sources.list.d/vscode.sources
             mode: "0644"
+          register: server_vscode_repo
         - name: Update apt cache
           ansible.builtin.apt:
             update_cache: true
+          when: server_ms_gpg_key is changed or server_vscode_repo is changed
         - name: Install code
           ansible.builtin.apt:
             name: code
@@ -171,16 +176,14 @@
         path: /etc/systemd/logind.conf
         regexp: ^[#]{0,1}IdleAction
         line: IdleAction=ignore
+      notify: Restart systemd-logind
     - name: Mask sleep-related targets
       ansible.builtin.systemd_service:
         name: "{{ item }}"
         masked: true
+      notify: Restart systemd-logind
       loop:
         - sleep.target
         - suspend.target
         - hibernate.target
         - hybrid-sleep.target
-    - name: Restart systemd-logind
-      ansible.builtin.systemd_service:
-        name: systemd-logind
-        state: restarted

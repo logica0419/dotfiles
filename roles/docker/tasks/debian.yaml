@@ -8,15 +8,18 @@
         dest: /etc/apt/keyrings/docker.asc
         mode: "0644"
         force: true
+      register: docker_gpg_key
     - name: Add Docker repository
       ansible.builtin.apt_repository:
         repo: >-
           deb [signed-by=/etc/apt/keyrings/docker.asc]
           https://download.docker.com/linux/ubuntu jammy stable
         state: present
+      register: docker_repo
     - name: Update apt cache
       ansible.builtin.apt:
         update_cache: true
+      when: docker_gpg_key is changed or docker_repo is changed
     - name: Install Docker engine
       ansible.builtin.apt:
         name: docker-ce
@@ -26,10 +29,7 @@
         src: daemon.json
         dest: /etc/docker/daemon.json
         mode: "0644"
-    - name: Restart Docker
-      ansible.builtin.service:
-        name: docker
-        state: restarted
+      notify: Restart Docker
 
 - name: Apply containerd settings
   become: true
