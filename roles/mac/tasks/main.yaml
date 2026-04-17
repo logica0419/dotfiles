@@ -6,14 +6,18 @@
         name: bash
         state: present
     - name: Change default shell to Homebrew bash
+      become: true
       ansible.builtin.user:
         name: "{{ ansible_user }}"
-        shell: /opt/homebrew/bin/bash
-      become: true
-    - name: Remove bash_profile
-      ansible.builtin.file:
-        path: /home/{{ ansible_user }}/.bash_profile
-        state: absent
+        shell: "{{ check_os_brew_base_path }}/bin/bash"
+
+- name: Show hidden files in Finder
+  community.general.osx_defaults:
+    domain: com.apple.finder
+    key: AppleShowAllFiles
+    type: bool
+    value: true
+  notify: Restart Finder
 
 - name: Install cask applications
   community.general.homebrew_cask:
