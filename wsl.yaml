@@ -4,7 +4,7 @@
   connection: local
   roles:
     - role: check_os
-      check_os_expected_family: Debian
+      check_os_expected_system: Linux
     - apt
     - wsl
     - brew

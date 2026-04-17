@@ -1,14 +1,14 @@
 ---
-- name: Validate expected OS family
+- name: Validate expected system
   ansible.builtin.assert:
     that:
-      - check_os_expected_family is defined
-      - ansible_facts["os_family"] == check_os_expected_family
+      - check_os_expected_system is defined
+      - ansible_facts["system"] == check_os_expected_system
     fail_msg: >-
-      OS family mismatch: expected '{{ check_os_expected_family | default("<undefined>") }}'
-      but got '{{ ansible_facts["os_family"] }}'
-    success_msg: 'OS family check passed: {{ ansible_facts["os_family"] }}'
+      System mismatch: expected '{{ check_os_expected_system | default("<undefined>") }}'
+      but got '{{ ansible_facts["system"] }}'
+    success_msg: 'System check passed: {{ ansible_facts["system"] }}'
 
 - name: Load OS specific settings
   ansible.builtin.include_vars:
-    file: '{{ ansible_facts["os_family"] }}.yaml'
+    file: '{{ ansible_facts["system"] }}.yaml'

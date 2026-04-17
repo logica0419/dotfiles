@@ -4,9 +4,8 @@
   connection: local
   roles:
     - role: check_os
-      check_os_expected_family: Darwin
+      check_os_expected_system: Darwin
     - go
     - youki
-    - role: update
-      update_homebrew_casks: true
+    - update
     - workspace

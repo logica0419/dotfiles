@@ -20,4 +20,4 @@
         mode: "0644"
 
 - name: Include OS-specific Docker installation
-  ansible.builtin.include_tasks: "{{ ansible_facts['os_family'] | lower }}.yaml"
+  ansible.builtin.include_tasks: "{{ ansible_facts['system'] | lower }}.yaml"

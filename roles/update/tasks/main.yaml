@@ -13,7 +13,7 @@
     - name: Update Homebrew cask applications
       community.general.homebrew_cask:
         upgrade_all: true
-      when: update_homebrew_casks | default(false) | bool
+      when: ansible_facts["system"] == "Darwin"
 
 - name: Update Go packages
   ansible.builtin.shell: |

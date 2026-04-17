@@ -7,32 +7,37 @@
     modification_time: preserve
     mode: "0644"
 
-- name: Copy .bashrc to root home directory
+- name: Setup rc files for root
   become: true
-  ansible.builtin.copy:
-    src: bashrc-root
-    dest: /root/.bashrc
-    mode: "0644"
-- name: Copy .profile to root home directory
-  become: true
-  ansible.builtin.template:
-    src: profile.j2
-    dest: /root/.profile
-    mode: "0644"
+  when: ansible_facts["system"] == 'Linux'
+  block:
+    - name: Copy .bashrc to root home directory
+      ansible.builtin.copy:
+        src: bashrc-root
+        dest: /root/.bashrc
+        mode: "0644"
+    - name: Copy .profile to root home directory
+      become: true
+      ansible.builtin.template:
+        src: profile.j2
+        dest: /root/.profile
+        mode: "0644"
 
-- name: Copy .bashrc to home directory
-  ansible.builtin.copy:
-    src: bashrc
-    dest: "{{ ansible_user_dir }}/.bashrc"
-    mode: "0644"
-  register: rc_bashrc_result
-- name: Copy .profile to home directory
-  ansible.builtin.template:
-    src: profile.j2
-    dest: "{{ ansible_user_dir }}/.profile"
-    mode: "0644"
-  register: rc_profile_result
-- name: Stop ansible-playbook
-  ansible.builtin.fail:
-    msg: Please run the playbook again after reloading .bashrc or .profile
-  when: rc_bashrc_result is changed or rc_profile_result is changed
+- name: Setup rc files for current user
+  block:
+    - name: Copy .bashrc to home directory
+      ansible.builtin.copy:
+        src: bashrc
+        dest: "{{ ansible_user_dir }}/.bashrc"
+        mode: "0644"
+      register: rc_bashrc_result
+    - name: Copy .profile to home directory
+      ansible.builtin.template:
+        src: profile.j2
+        dest: "{{ ansible_user_dir }}/.profile"
+        mode: "0644"
+      register: rc_profile_result
+    - name: Stop ansible-playbook
+      ansible.builtin.fail:
+        msg: Please run the playbook again after reloading .bashrc or .profile
+      when: rc_bashrc_result is changed or rc_profile_result is changed
