@@ -1,6 +1,6 @@
 ---
 - name: Install Rust components
-  ansible.builtin.command: rustup-init -y
+  ansible.builtin.command: rustup-init -y --no-modify-path
   changed_when: false
 
 - name: Rustfmt settings
