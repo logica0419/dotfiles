@@ -20,6 +20,7 @@
     - name: Install K8s-related packages
       community.general.homebrew:
         name:
+          - kubectl
           - krew
           - kustomize
           - helm
