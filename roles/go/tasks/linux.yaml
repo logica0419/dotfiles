@@ -1,0 +1,7 @@
+---
+- name: Download latest Go
+  become: true
+  ansible.builtin.unarchive:
+    src: https://go.dev/dl/{{ go_latest.stdout }}.linux-amd64.tar.gz
+    dest: /usr/local
+    remote_src: true

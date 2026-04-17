@@ -19,21 +19,15 @@
       register: go_latest
       changed_when: false
     - name: Install latest Go
-      become: true
-      vars:
-        go_download_os: "{{ 'darwin' if ansible_system == 'Darwin' else 'linux' }}"
-        go_download_arch: "{{ 'arm64' if ansible_architecture in ['arm64', 'aarch64'] else 'amd64' }}"
       when: go_current.stdout != go_latest.stdout
       block:
         - name: Remove old installation
+          become: true
           ansible.builtin.file:
             path: /usr/local/go
             state: absent
         - name: Download latest Go
-          ansible.builtin.unarchive:
-            src: https://go.dev/dl/{{ go_latest.stdout }}.{{ go_download_os }}-{{ go_download_arch }}.tar.gz
-            dest: /usr/local
-            remote_src: true
+          ansible.builtin.include_tasks: "{{ ansible_facts['system'] | lower }}.yaml"
 
 - name: Install Go tools
   block:
