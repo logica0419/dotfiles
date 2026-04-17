@@ -48,3 +48,11 @@ curl -L https://raw.githubusercontent.com/logica0419/dotfiles/main/import.sh -o 
   - mac (MacOS環境用)
   - wsl (WSL2環境用)
   - server (開発自宅鯖用)
+
+## 手動でインストールするもの
+
+Macは手動インストールが必要なものがある
+
+- 各種フォント類
+  - 特にcica
+- DockLock Lite

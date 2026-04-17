@@ -12,6 +12,8 @@ Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/log
 
 wingetでインストールできない以下のソフトは手動でインストール
 
+- 各種フォント類
+  - 特にcica
 - Open Hardware Monitor
 - NVIDIA App
 - WSL本体 (wsl --install ubuntu)
