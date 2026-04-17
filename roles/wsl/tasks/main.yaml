@@ -63,6 +63,23 @@
       ansible.builtin.command: fc-cache -fv
       changed_when: false
 
+- name: Setup VS Code server settings
+  block:
+    - name: Create VS Code server directories
+      ansible.builtin.file:
+        path: /home/{{ ansible_user }}/{{ item }}
+        state: directory
+        mode: "0755"
+      loop:
+        - .vscode-server
+        - .vscode-server/data
+        - .vscode-server/data/Machine
+    - name: Put VS Code settings
+      ansible.builtin.template:
+        src: settings.json.j2
+        dest: /home/{{ ansible_user }}/.vscode-server/data/Machine/settings.json
+        mode: "0644"
+
 - name: Get current paths
   block:
     - name: Get current dir path

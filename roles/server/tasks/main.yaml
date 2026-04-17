@@ -137,8 +137,8 @@
             - .vscode-server/data
             - .vscode-server/data/Machine
         - name: Copy VS Code settings
-          ansible.builtin.copy:
-            src: settings.json
+          ansible.builtin.template:
+            src: settings.json.j2
             dest: /home/{{ ansible_user }}/.vscode-server/data/Machine/settings.json
             mode: "0644"
 
