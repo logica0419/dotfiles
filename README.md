@@ -32,9 +32,10 @@ sudo visudo
 ## 実行
 
 ```bash
-curl -L https://raw.githubusercontent.com/logica0419/dotfiles/main/import.sh -o /tmp/import.sh && ENV={environment} source /tmp/import.sh
+curl -L https://raw.githubusercontent.com/logica0419/dotfiles/main/import.sh -o /tmp/import.sh && ENV={environment} bash /tmp/import.sh
 ```
 
 - {environment} について
+  - mac (MacOS環境用)
   - wsl (WSL2環境用)
   - server (開発自宅鯖用)
