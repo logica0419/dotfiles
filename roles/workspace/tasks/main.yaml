@@ -66,31 +66,35 @@
 
 - name: Setup oxfmt config
   block:
-    - name: Create config directory
+    - name: Create config directories
       ansible.builtin.file:
-        path: /home/{{ ansible_user }}/.config/oxfmt
+        path: /home/{{ ansible_user }}/{{ item }}
         state: directory
-        mode: "0755"
-        recurse: true
+        mode: "0700"
+      loop:
+        - .config
+        - .config/oxfmt
     - name: Copy .oxfmtrc.json
       ansible.builtin.copy:
         src: .oxfmtrc.json
         dest: /home/{{ ansible_user }}/.config/oxfmt/.oxfmtrc.json
-        mode: "0664"
+        mode: "0600"
 
 - name: Setup clangd config
   block:
-    - name: Create clangd config directory
+    - name: Create config directories
       ansible.builtin.file:
-        path: /home/{{ ansible_user }}/.config/clangd
+        path: /home/{{ ansible_user }}/{{ item }}
         state: directory
-        mode: "0755"
-        recurse: true
+        mode: "0700"
+      loop:
+        - .config
+        - .config/clangd
     - name: Copy config.yaml
       ansible.builtin.copy:
         src: config.yaml
         dest: /home/{{ ansible_user }}/.config/clangd/config.yaml
-        mode: "0644"
+        mode: "0600"
 
 - name: Setup Go repository
   block:
