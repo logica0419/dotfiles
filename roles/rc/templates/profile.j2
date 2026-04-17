@@ -8,15 +8,14 @@ if [ -f "/home/{{ ansible_user }}/.cargo/env" ]; then
 . "/home/{{ ansible_user }}/.cargo/env"
 fi
 
-# Expose mise-managed binaries to non-interactive processes.
-export PATH="/home/{{ ansible_user }}/.local/share/mise/shims:$PATH"
 
 # Language and toolchain paths
 export PATH="$PATH:/usr/local/go/bin"
 export PATH="$PATH:/home/{{ ansible_user }}/go/bin"
 export PATH="$PATH:/home/{{ ansible_user }}/.bun/bin"
 export PATH="$PATH:/home/{{ ansible_user }}/.krew/bin"
-export PATH="$PATH:{{ check_os_brew_base_path }}/opt/clang-format/bin"
+export PATH="$PATH:/home/{{ ansible_user }}/.local/share/mise/shims"
+export PATH="$PATH:/home/{{ ansible_user }}/.local/share/uv/tools"
 
 {% if lookup("env", "ENV") == "wsl" %}
 export BROWSER="/usr/bin/chrome"
