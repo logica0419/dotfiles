@@ -9,8 +9,8 @@
 
 - name: Copy .bashrc to root home directory
   become: true
-  ansible.builtin.template:
-    src: bashrc-root.j2
+  ansible.builtin.copy:
+    src: bashrc-root
     dest: /root/.bashrc
     mode: "0644"
 - name: Copy .profile to root home directory
@@ -21,8 +21,8 @@
     mode: "0644"
 
 - name: Copy .bashrc to home directory
-  ansible.builtin.template:
-    src: bashrc.j2
+  ansible.builtin.copy:
+    src: bashrc
     dest: /home/{{ ansible_user }}/.bashrc
     mode: "0644"
   register: rc_bashrc_result
