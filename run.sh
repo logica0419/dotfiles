@@ -13,8 +13,8 @@ fi
 uv sync >/dev/null
 
 if [ "$ENV" != "mac" ] && ! (type unbuffer &>/dev/null); then
-  sudo apt-get update
-  sudo apt-get install expect -y
+  sudo apt-get update &>/dev/null
+  sudo apt-get install expect -y &>/dev/null
 fi
 
 while :; do
@@ -28,6 +28,8 @@ while :; do
     echo $?
   )
 
+  # shellcheck source=/dev/null
+  source ~/.profile
   # shellcheck source=/dev/null
   source ~/.bashrc
 
