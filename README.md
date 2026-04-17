@@ -19,9 +19,18 @@
 sudo visudo
 ```
 
+Linuxの場合
+
 ```diff
 - %sudo ALL=(ALL) ALL
 + %sudo ALL=(ALL) NOPASSWD:ALL
+```
+
+MacOSの場合
+
+```diff
+- %admin          ALL = (ALL) ALL
++ %admin          ALL = (ALL) NOPASSWD:ALL
 ```
 
 ### Requirements
