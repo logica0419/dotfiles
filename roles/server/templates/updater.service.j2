@@ -5,4 +5,4 @@ Description=Server updater
 Type=oneshot
 EnvironmentFile=-{{ ansible_facts.user_dir }}/.config/environment.d/env.conf
 WorkingDirectory={{ server_dotfiles_dir.stdout }}
-ExecStart=uv run ansible-playbook -v -i inventory update-linux.yaml
+ExecStart={{ check_os_brew_base_path }}/bin/uv run ansible-playbook -v -i inventory update-linux.yaml
