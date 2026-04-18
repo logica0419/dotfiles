@@ -4,7 +4,7 @@
     executable: /bin/bash
     cmd: |
       set -o pipefail
-      /usr/bin/youki -v | grep "youki version" | cut -f 3 -d " "
+      youki -v | grep "youki version" | cut -f 3 -d " "
   register: youki_current
   changed_when: false
   failed_when: false
@@ -14,7 +14,7 @@
     executable: /bin/bash
     cmd: |
       set -o pipefail
-      {{ check_os_brew_base_path }}/bin/gh release view -R youki-dev/youki --json name -q .name | cut -b 2-
+      gh release view -R youki-dev/youki --json name -q .name | cut -b 2-
   register: youki_latest
   changed_when: false
 

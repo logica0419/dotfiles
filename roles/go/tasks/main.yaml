@@ -6,7 +6,7 @@
         executable: /bin/bash
         cmd: |
           set -o pipefail
-          /usr/local/go/bin/go version | cut -f 3 -d " "
+          go version | cut -f 3 -d " "
       register: go_current
       changed_when: false
       failed_when: false

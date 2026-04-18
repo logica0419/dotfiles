@@ -1,26 +1,11 @@
 ---
-# - name: Setup Kind cluster
-#   block:
-#     - name: Install Kind
-#       community.general.homebrew:
-#         state: latest
-#         name:
-#           - kind
-#     - name: Get current dir path
-#       ansible.builtin.command: pwd
-#       register: k8s_dotfiles_dir
-#       changed_when: false
-#     - name: Create Kind cluster
-#       ansible.builtin.command: kind create cluster --config {{ k8s_dotfiles_dir.stdout }}/roles/k8s/files/cluster-config.yaml
-#       changed_when: false
-#       failed_when: false
-
 - name: Install K8s-related components
   block:
     - name: Install K8s-related packages
       community.general.homebrew:
         name:
           - kubectl
+          - kind
           - krew
           - kustomize
           - helm

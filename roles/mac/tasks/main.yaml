@@ -80,10 +80,6 @@
       ansible.builtin.command: pwd
       register: mac_dotfiles_dir
       changed_when: false
-    - name: Get ansible-playbook path
-      ansible.builtin.command: which ansible-playbook
-      register: mac_ansible_playbook_path
-      changed_when: false
     - name: Create launch agents directory
       ansible.builtin.file:
         path: "{{ ansible_facts.user_dir }}/Library/LaunchAgents"

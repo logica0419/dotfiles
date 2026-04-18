@@ -105,7 +105,7 @@
         mode: "0664"
     - name: Allow direnv
       ansible.builtin.command:
-        cmd: "{{ check_os_brew_base_path }}/bin/direnv allow"
+        cmd: "direnv allow"
         chdir: "{{ ansible_facts.user_dir }}/prj/oss/go"
       changed_when: false
     - name: Copy exclude file
@@ -152,7 +152,7 @@
   block:
     - name: Put .vscode to skip-worktree # noqa: command-instead-of-module
       ansible.builtin.shell:
-        cmd: "{{ check_os_brew_base_path }}/bin/git update-index --skip-worktree .vscode/*"
+        cmd: git update-index --skip-worktree .vscode/*
         chdir: "{{ ansible_facts.user_dir }}/prj/oss/vscode-go"
       changed_when: false
     - name: Copy settings.json file

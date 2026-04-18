@@ -10,5 +10,5 @@
     state: present
 
 - name: Switch Docker context to Colima
-  ansible.builtin.command: "{{ check_os_brew_base_path }}/bin/docker context use colima"
+  ansible.builtin.command: docker context use colima
   changed_when: false

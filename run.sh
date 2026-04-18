@@ -19,9 +19,9 @@ fi
 
 while :; do
   if [ "$ENV" == "mac" ]; then
-    script -q /tmp/ansible.log uv run ansible-playbook -v -u "$(whoami)" -i inventory "$ENV".yaml
+    script -q /tmp/ansible.log uv run ansible-playbook -v -i inventory "$ENV".yaml
   else
-    unbuffer uv run ansible-playbook -v -u "$(whoami)" -i inventory "$ENV".yaml | tee /tmp/ansible.log
+    unbuffer uv run ansible-playbook -v -i inventory "$ENV".yaml | tee /tmp/ansible.log
   fi
   RESULT=$(
     grep -q "failed=0" </tmp/ansible.log

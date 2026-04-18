@@ -26,33 +26,32 @@
         msg: Please restart WSL and run playbook again
       when: wsl_conf is changed # noqa: no-handler
 
-# https://github.com/puppeteer/puppeteer/blob/main/docs/troubleshooting.md#running-puppeteer-on-wsl-windows-subsystem-for-linux
-- name: Install Chromium-related packages
+- name: Setup Chrome
   become: true
-  ansible.builtin.apt:
-    name:
-      - libgtk-3-dev
-      - libnotify-dev
-      - libgconf-2-4
-      - libnss3
-      - libxss1
-      - libasound2
-    state: present
-
-- name: Add Chrome file to /usr/bin
-  become: true
-  ansible.builtin.copy:
-    src: chrome
-    dest: /usr/bin/chrome
-    mode: "0755"
+  block:
+    # https://github.com/puppeteer/puppeteer/blob/main/docs/troubleshooting.md#running-puppeteer-on-wsl-windows-subsystem-for-linux
+    - name: Install Chromium-related packages
+      ansible.builtin.apt:
+        name:
+          - libgtk-3-dev
+          - libnotify-dev
+          - libgconf-2-4
+          - libnss3
+          - libxss1
+          - libasound2
+        state: present
+    - name: Add Chrome file to /usr/bin
+      ansible.builtin.copy:
+        src: chrome
+        dest: /usr/bin/chrome
+        mode: "0755"
 
 - name: Font settings
   become: true
   block:
-    - name: Install packages
+    - name: Install fontconfig
       ansible.builtin.apt:
-        name:
-          - fontconfig
+        name: fontconfig
         state: present
     - name: Copy font setting
       ansible.builtin.copy:
@@ -80,20 +79,13 @@
         dest: "{{ ansible_facts.user_dir }}/.vscode-server/data/Machine/settings.json"
         mode: "0644"
 
-- name: Get current paths
+- name: Setup updater service
+  become: true
   block:
     - name: Get current dir path
       ansible.builtin.command: pwd
       register: wsl_dotfiles_dir
       changed_when: false
-    - name: Get ansible path
-      ansible.builtin.command: which ansible-playbook
-      register: wsl_ansible_path
-      changed_when: false
-
-- name: Setup updater service
-  become: true
-  block:
     - name: Copy updater service template
       ansible.builtin.template:
         src: updater.service.j2

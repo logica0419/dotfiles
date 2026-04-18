@@ -9,16 +9,19 @@
 
 - name: Setup environment files
   block:
-    - name: Create environment.d directory
+    - name: Create config directories
       ansible.builtin.file:
-        path: "{{ ansible_facts.user_dir }}/.config/environment.d"
+        path: "{{ ansible_facts.user_dir }}/{{ item }}"
         state: directory
-        mode: "0755"
+        mode: "0700"
+      loop:
+        - .config
+        - .config/environment.d
     - name: Copy shared environment file
       ansible.builtin.template:
         src: env.conf.j2
         dest: "{{ ansible_facts.user_dir }}/.config/environment.d/env.conf"
-        mode: "0644"
+        mode: "0600"
       register: rc_env_file_result
 
 - name: Setup rc files for root

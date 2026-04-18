@@ -7,8 +7,8 @@
         upgrade_all: true
     - name: Cleanup
       ansible.builtin.shell: |
-        {{ check_os_brew_base_path }}/bin/brew autoremove
-        {{ check_os_brew_base_path }}/bin/brew cleanup
+        brew autoremove
+        brew cleanup
       changed_when: false
     - name: Update Homebrew cask applications
       community.general.homebrew_cask:
@@ -16,30 +16,28 @@
       when: ansible_facts.system == "Darwin"
 
 - name: Update Go packages
-  ansible.builtin.shell: |
-    export PATH=$PATH:/usr/local/go/bin
-    {{ ansible_facts.user_dir }}/go/bin/gup update
+  ansible.builtin.command: gup update
   changed_when: false
 
 - name: Update Rust
-  ansible.builtin.command: "{{ check_os_brew_base_path }}/bin/rustup update"
+  ansible.builtin.command: rustup update
   changed_when: false
 
 - name: Update Krew packages
-  ansible.builtin.command: "{{ check_os_brew_base_path }}/bin/kubectl-krew upgrade"
+  ansible.builtin.command: kubectl-krew upgrade
   changed_when: false
 
 - name: Update Python packages
-  ansible.builtin.command: "{{ check_os_brew_base_path }}/bin/uv tool upgrade --all"
+  ansible.builtin.command: uv tool upgrade --all
   changed_when: false
 
 - name: Update mise packages
-  ansible.builtin.command: "{{ check_os_brew_base_path }}/bin/mise upgrade --bump"
+  ansible.builtin.command: mise upgrade --bump
   changed_when: false
 
 - name: Prune Docker components
   ansible.builtin.shell: |
-    {{ check_os_brew_base_path }}/bin/docker image prune -a -f
-    {{ check_os_brew_base_path }}/bin/docker volume prune -a -f
-    {{ check_os_brew_base_path }}/bin/docker network prune -f
+    docker image prune -a -f
+    docker volume prune -a -f
+    docker network prune -f
   changed_when: false

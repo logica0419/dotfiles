@@ -9,10 +9,12 @@
     <array>
       <string>{{ check_os_brew_base_path }}/bin/bash</string>
       <string>-lc</string>
-      <string>set -a
-[ -f "{{ ansible_facts.user_dir }}/.config/environment.d/env.conf" ] &amp;&amp; . "{{ ansible_facts.user_dir }}/.config/environment.d/env.conf"
-set +a
-exec "{{ mac_ansible_playbook_path.stdout }}" -v -u "{{ ansible_user }}" -i "{{ mac_dotfiles_dir.stdout }}/inventory" "{{ mac_dotfiles_dir.stdout }}/update-mac.yaml"</string>
+      <string>
+      set -a
+      . "{{ ansible_facts.user_dir }}/.config/environment.d/env.conf"
+      set +a
+      exec uv run ansible-playbook -v -i inventory update-mac.yaml
+      </string>
     </array>
 
     <key>WorkingDirectory</key>
@@ -25,9 +27,6 @@ exec "{{ mac_ansible_playbook_path.stdout }}" -v -u "{{ ansible_user }}" -i "{{ 
       <key>Minute</key>
       <integer>0</integer>
     </dict>
-
-    <key>RunAtLoad</key>
-    <true/>
 
     <key>StandardOutPath</key>
     <string>{{ ansible_facts.user_dir }}/.local/state/dotfiles/update-mac.log</string>
