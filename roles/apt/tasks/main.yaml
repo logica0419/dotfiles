@@ -10,5 +10,4 @@
         autoclean: true
         autoremove: true
         update_cache: true
-        cache_valid_time: 86400
         upgrade: dist
