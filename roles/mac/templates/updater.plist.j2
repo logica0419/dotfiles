@@ -7,13 +7,12 @@
 
     <key>ProgramArguments</key>
     <array>
-      <string>{{ mac_ansible_playbook_path.stdout }}</string>
-      <string>-v</string>
-      <string>-u</string>
-      <string>{{ ansible_user }}</string>
-      <string>-i</string>
-      <string>{{ mac_dotfiles_dir.stdout }}/inventory</string>
-      <string>{{ mac_dotfiles_dir.stdout }}/update-mac.yaml</string>
+      <string>{{ check_os_brew_base_path }}/bin/bash</string>
+      <string>-lc</string>
+      <string>set -a
+[ -f "{{ ansible_facts.user_dir }}/.config/environment.d/env.conf" ] &amp;&amp; . "{{ ansible_facts.user_dir }}/.config/environment.d/env.conf"
+set +a
+exec "{{ mac_ansible_playbook_path.stdout }}" -v -u "{{ ansible_user }}" -i "{{ mac_dotfiles_dir.stdout }}/inventory" "{{ mac_dotfiles_dir.stdout }}/update-mac.yaml"</string>
     </array>
 
     <key>WorkingDirectory</key>

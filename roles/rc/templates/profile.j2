@@ -11,13 +11,12 @@ if [ -f "{{ ansible_facts.user_dir }}/.cargo/env" ]; then
   . "{{ ansible_facts.user_dir }}/.cargo/env"
 fi
 
-# Language and toolchain paths
-export PATH="$PATH:/usr/local/go/bin"
-export PATH="$PATH:{{ ansible_facts.user_dir }}/go/bin"
-export PATH="$PATH:{{ ansible_facts.user_dir }}/.bun/bin"
-export PATH="$PATH:{{ ansible_facts.user_dir }}/.krew/bin"
-export PATH="$PATH:{{ ansible_facts.user_dir }}/.local/bin"
-export PATH="$PATH:{{ ansible_facts.user_dir }}/.local/share/mise/shims"
+# Shared environment variables for services and shell startup
+if [ -f "{{ ansible_facts.user_dir }}/.config/environment.d/env.conf" ]; then
+  set -a
+  . "{{ ansible_facts.user_dir }}/.config/environment.d/env.conf"
+  set +a
+fi
 
 if [ -f ~/.bashrc ]; then
   . ~/.bashrc

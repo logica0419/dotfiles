@@ -1,0 +1,8 @@
+[Unit]
+Description=Server updater
+
+[Service]
+Type=oneshot
+EnvironmentFile=-{{ ansible_facts.user_dir }}/.config/environment.d/env.conf
+WorkingDirectory={{ server_dotfiles_dir.stdout }}
+ExecStart={{ server_ansible_playbook_path.stdout }} -v -u {{ ansible_user }} -i {{ server_dotfiles_dir.stdout }}/inventory {{ server_dotfiles_dir.stdout }}/update-linux.yaml

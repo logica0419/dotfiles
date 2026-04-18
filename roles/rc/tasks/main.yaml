@@ -25,6 +25,17 @@
 
 - name: Setup rc files for current user
   block:
+    - name: Create environment.d directory
+      ansible.builtin.file:
+        path: "{{ ansible_facts.user_dir }}/.config/environment.d"
+        state: directory
+        mode: "0755"
+    - name: Copy shared environment file
+      ansible.builtin.template:
+        src: env.conf.j2
+        dest: "{{ ansible_facts.user_dir }}/.config/environment.d/env.conf"
+        mode: "0644"
+      register: rc_env_file_result
     - name: Copy .bashrc to home directory
       ansible.builtin.copy:
         src: bashrc
@@ -40,4 +51,4 @@
     - name: Stop ansible-playbook
       ansible.builtin.fail:
         msg: Please run the playbook again after reloading .bashrc or .profile
-      when: rc_bashrc_result is changed or rc_profile_result is changed
+      when: rc_env_file_result is changed or rc_bashrc_result is changed or rc_profile_result is changed

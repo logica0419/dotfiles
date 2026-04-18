@@ -109,9 +109,6 @@
             state: present
     - name: Setup server
       block:
-        - name: Enable linger state
-          ansible.builtin.command: loginctl enable-linger {{ ansible_user }}
-          changed_when: false
         - name: Create config directories
           ansible.builtin.file:
             path: "{{ ansible_facts.user_dir }}/{{ item }}"
@@ -142,40 +139,9 @@
             dest: "{{ ansible_facts.user_dir }}/.vscode-server/data/Machine/settings.json"
             mode: "0644"
 
-- name: Setup updater
-  block:
-    - name: Get current dir path
-      ansible.builtin.command: pwd
-      register: server_dotfiles_dir
-      changed_when: false
-    - name: Get ansible-playbook path
-      ansible.builtin.command: which ansible-playbook
-      register: server_ansible_playbook_path
-      changed_when: false
-    - name: Setup updater for server
-      ansible.builtin.cron:
-        name: update packages
-        minute: 0
-        hour: 4
-        user: "{{ ansible_user }}"
-        job: >-
-          {{ server_ansible_playbook_path.stdout }} -v -u {{ ansible_user }}
-          -i {{ server_dotfiles_dir.stdout }}/inventory {{ server_dotfiles_dir.stdout }}/update-linux.yaml
-
-- name: Setup reboot
-  become: true
-  block:
-    - name: Get reboot path
-      ansible.builtin.command: which reboot
-      register: server_reboot_path
-      changed_when: false
-    - name: Setup periodical reboot (update detection)
-      ansible.builtin.cron:
-        name: reboot server (update detection)
-        minute: 30
-        hour: 4
-        user: root
-        job: "[ -e /var/run/reboot-required ] && {{ server_reboot_path.stdout }} 0"
+- name: Enable linger state
+  ansible.builtin.command: loginctl enable-linger {{ ansible_user }}
+  changed_when: false
 
 - name: Disable sleep mode
   become: true
@@ -196,3 +162,51 @@
         - hibernate.target
         - hybrid-sleep.target
       notify: Restart systemd-logind
+
+- name: Setup updater
+  block:
+    - name: Get current dir path
+      ansible.builtin.command: pwd
+      register: server_dotfiles_dir
+      changed_when: false
+    - name: Get ansible-playbook path
+      ansible.builtin.command: which ansible-playbook
+      register: server_ansible_playbook_path
+      changed_when: false
+    - name: Remove updater cron job
+      ansible.builtin.cron:
+        name: update packages
+        user: "{{ ansible_user }}"
+        state: absent
+    - name: Copy updater service template
+      ansible.builtin.template:
+        src: updater.service.j2
+        dest: "{{ ansible_facts.user_dir }}/.config/systemd/user/updater.service"
+        mode: "0644"
+    - name: Copy updater timer template
+      ansible.builtin.template:
+        src: updater.timer.j2
+        dest: "{{ ansible_facts.user_dir }}/.config/systemd/user/updater.timer"
+        mode: "0644"
+    - name: Enable and start updater timer
+      ansible.builtin.systemd_service:
+        name: updater.timer
+        enabled: true
+        state: started
+        scope: user
+        daemon_reload: true
+
+- name: Setup reboot
+  become: true
+  block:
+    - name: Get reboot path
+      ansible.builtin.command: which reboot
+      register: server_reboot_path
+      changed_when: false
+    - name: Setup periodical reboot (update detection)
+      ansible.builtin.cron:
+        name: reboot server (update detection)
+        minute: 30
+        hour: 4
+        user: root
+        job: "[ -e /var/run/reboot-required ] && {{ server_reboot_path.stdout }} 0"
