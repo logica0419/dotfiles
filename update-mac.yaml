@@ -6,6 +6,5 @@
     - role: check_os
       check_os_expected_system: Darwin
     - go
-    - youki
     - update
     - workspace
