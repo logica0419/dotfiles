@@ -5,12 +5,12 @@
       ansible.builtin.file:
         path: "{{ ansible_facts.user_dir }}/.ssh"
         state: directory
-        mode: "0755"
+        mode: "0700"
     - name: Move SSH config
       ansible.builtin.copy:
         src: ssh_config
         dest: "{{ ansible_facts.user_dir }}/.ssh/config"
-        mode: "0644"
+        mode: "0600"
 
 - name: Enable systemd
   block:

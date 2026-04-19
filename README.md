@@ -22,8 +22,8 @@ sudo visudo
 Linuxの場合
 
 ```diff
-- %sudo ALL=(ALL) ALL
-+ %sudo ALL=(ALL) NOPASSWD:ALL
+- %sudo   ALL=(ALL:ALL) ALL
++ %sudo   ALL=(ALL) NOPASSWD:ALL
 ```
 
 MacOSの場合

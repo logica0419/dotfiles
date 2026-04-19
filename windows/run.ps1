@@ -2,7 +2,6 @@ Write-Host "Installing machine-scoped packages`n"
 
 $machine_packages = @(
   "Bitwarden.Bitwarden"
-  "7zip.7zip"
   "CrystalDewWorld.CrystalDiskInfo"
   "CrystalDewWorld.CrystalDiskMark"
   "KiCad.KiCad"
