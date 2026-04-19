@@ -7,6 +7,7 @@
         upgrade_all: true
     - name: Cleanup
       ansible.builtin.shell: |
+        set -e
         brew autoremove
         brew cleanup
       changed_when: false
@@ -37,6 +38,7 @@
 
 - name: Prune Docker components
   ansible.builtin.shell: |
+    set -e
     docker image prune -a -f
     docker volume prune -a -f
     docker network prune -f

@@ -1,4 +1,5 @@
 #!/bin/bash
+set -eu
 
 # shellcheck source=/dev/null
 . "$1"

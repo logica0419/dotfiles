@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 if [ "$ENV" != "server" ] && [ "$ENV" != "wsl" ] && [ "$ENV" != "mac" ]; then
   echo "ENV must be set to server, wsl or mac"
@@ -30,8 +31,6 @@ while :; do
 
   # shellcheck source=/dev/null
   source ~/.profile
-  # shellcheck source=/dev/null
-  source ~/.bashrc
 
   if [ "$ENV" == "server" ] && command -v tailscale &>/dev/null && ! (tailscale status &>/dev/null); then
     sudo tailscale up

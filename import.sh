@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Install Git
 if ! command -v git &>/dev/null; then
