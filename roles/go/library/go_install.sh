@@ -8,12 +8,12 @@ if [ -z "$name" ]; then
   exit 1
 fi
 
-if (type "$(basename "$name")"); then
+if command -v "$(basename "$name")" &>/dev/null; then
   echo "{}"
   exit 0
 fi
 
-if [[ "$(basename "$name")" =~ ^v. ]] && (type "$(basename "$(dirname "$name")")"); then
+if [[ "$(basename "$name")" =~ ^v. ]] && command -v "$(basename "$(dirname "$name")")" &>/dev/null; then
   echo "{}"
   exit 0
 fi

@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Install Git
-if ! (type git &>/dev/null); then
+if ! command -v git &>/dev/null; then
   echo "Installing git"
   sudo apt-get update
-  sudo apt-get install git -y >/dev/null
+  sudo apt-get install git -y &>/dev/null
 fi
 
 if [ ! -d dotfiles ]; then

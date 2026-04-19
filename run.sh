@@ -5,14 +5,14 @@ if [ "$ENV" != "server" ] && [ "$ENV" != "wsl" ] && [ "$ENV" != "mac" ]; then
   return 1
 fi
 
-if ! (type uv &>/dev/null); then
+if ! command -v uv &>/dev/null; then
   echo "Installing uv"
   curl -LsSf https://astral.sh/uv/install.sh | sh >/dev/null 2>&1
   export PATH=$PATH:$HOME/.local/bin
 fi
 uv sync >/dev/null
 
-if [ "$ENV" != "mac" ] && ! (type unbuffer &>/dev/null); then
+if [ "$ENV" != "mac" ] && ! command -v unbuffer &>/dev/null; then
   sudo apt-get update &>/dev/null
   sudo apt-get install expect -y &>/dev/null
 fi
@@ -33,11 +33,11 @@ while :; do
   # shellcheck source=/dev/null
   source ~/.bashrc
 
-  if [ "$ENV" == "server" ] && (type tailscale &>/dev/null) && ! (tailscale status &>/dev/null); then
+  if [ "$ENV" == "server" ] && command -v tailscale &>/dev/null && ! (tailscale status &>/dev/null); then
     sudo tailscale up
   fi
 
-  if [ "$ENV" == "server" ] && (type code &>/dev/null) && ! (systemctl --user status code-tunnel &>/dev/null); then
+  if [ "$ENV" == "server" ] && command -v code &>/dev/null && ! (systemctl --user status code-tunnel &>/dev/null); then
     code tunnel service install
     systemctl --user daemon-reload &>/dev/null
     systemctl --user restart code-tunnel &>/dev/null
@@ -47,11 +47,11 @@ while :; do
     return 1
   fi
 
-  if (type gh &>/dev/null) && ! (gh auth status &>/dev/null); then
+  if command -v gh &>/dev/null && ! (gh auth status &>/dev/null); then
     gh auth login -p https -w
   fi
 
-  if (type docker &>/dev/null) && ! (docker ps &>/dev/null); then
+  if command -v docker &>/dev/null && ! (docker ps &>/dev/null); then
     if [ "$ENV" == "server" ]; then
       sudo reboot 0
     fi

@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 
-if (type brew); then
+if command -v brew &>/dev/null; then
   echo "{}"
   exit 0
 fi
