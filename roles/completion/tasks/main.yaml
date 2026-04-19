@@ -1,0 +1,48 @@
+---
+- name: Ensure completion parent directories exist
+  ansible.builtin.file:
+    path: "{{ ansible_facts.user_dir }}/{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - .local
+    - .local/share
+    - .local/share/bash-completion
+    - .local/share/bash-completion/completions
+
+- name: Generate completions into completion directory
+  ansible.builtin.shell: "{{ item.command }} > {{ ansible_facts.user_dir }}/.local/share/bash-completion/completions/{{ item.file }}"
+  changed_when: false
+  loop:
+    - command: docker completion bash
+      file: docker
+    - command: gh completion -s bash
+      file: gh
+    - command: kubectl completion bash
+      file: kubectl
+    - command: kind completion bash
+      file: kind
+    - command: kustomize completion bash
+      file: kustomize
+    - command: helm completion bash
+      file: helm
+    - command: just --completions bash
+      file: just
+    - command: mise completion bash --include-bash-completion-lib
+      file: mise
+    - command: rustup completions bash
+      file: rustup
+    - command: task --completion bash
+      file: task
+    - command: uv generate-shell-completion bash
+      file: uv
+
+- name: Install terraform completion shim
+  ansible.builtin.copy:
+    dest: "{{ ansible_facts.user_dir }}/.local/share/bash-completion/completions/terraform"
+    mode: "0644"
+    content: complete -C "$(command -v terraform)" terraform
+
+- name: Generate bun completion script
+  ansible.builtin.shell: bun completions > "{{ ansible_facts.user_dir }}/.local/share/bash-completion/completions/bun"
+  changed_when: false
