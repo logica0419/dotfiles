@@ -1,6 +1,6 @@
 # ~/.profile: executed by the command interpreter for login shells.
-{% if lookup("env", "ENV") == "wsl" %}
-export BROWSER="/usr/bin/chrome"
+{% if rc_browser_path is defined %}
+export BROWSER="{{ rc_browser_path }}"
 {% endif %}
 
 # Homebrew environment variables (PATH, MANPATH, INFOPATH, etc.)
