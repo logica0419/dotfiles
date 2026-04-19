@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+set -uo pipefail
 
 if [ "$ENV" != "server" ] && [ "$ENV" != "wsl" ] && [ "$ENV" != "mac" ]; then
   echo "ENV must be set to server, wsl or mac"
@@ -66,4 +66,4 @@ while :; do
   fi
 done
 
-rm "$HOME/.local/bin/uv" "$HOME/.local/bin/uvx" &>/dev/null
+rm -f "$HOME/.local/bin/uv" "$HOME/.local/bin/uvx" &>/dev/null
