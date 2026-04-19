@@ -7,10 +7,10 @@ fi
 
 if ! command -v uv &>/dev/null; then
   echo "Installing uv"
-  curl -LsSf https://astral.sh/uv/install.sh | sh >/dev/null 2>&1
+  curl -LsSf https://astral.sh/uv/install.sh | sh &>/dev/null
   export PATH=$PATH:$HOME/.local/bin
 fi
-uv sync >/dev/null
+uv sync &>/dev/null
 
 if [ "$ENV" != "mac" ] && ! command -v unbuffer &>/dev/null; then
   sudo apt-get update &>/dev/null
