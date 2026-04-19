@@ -8,7 +8,3 @@
   community.general.homebrew_services:
     name: colima
     state: present
-
-- name: Switch Docker context to Colima
-  ansible.builtin.command: docker context use colima
-  changed_when: false
