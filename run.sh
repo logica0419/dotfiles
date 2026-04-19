@@ -1,5 +1,4 @@
 #!/bin/bash
-set -uo pipefail
 
 if [ "$ENV" != "server" ] && [ "$ENV" != "wsl" ] && [ "$ENV" != "mac" ]; then
   echo "ENV must be set to server, wsl or mac"
