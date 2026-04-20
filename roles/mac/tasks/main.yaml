@@ -3,7 +3,9 @@
   block:
     - name: Install Homebrew bash
       community.general.homebrew:
-        name: bash
+        name:
+          - bash
+          - bash-completion@2
         state: present
     - name: Change default shell to Homebrew bash
       become: true
