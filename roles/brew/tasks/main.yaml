@@ -6,7 +6,7 @@
   community.general.homebrew:
     update_homebrew: true
 
-- name: Install packages
+- name: Install Homebrew packages
   block:
     - name: Register Homebrew tap
       community.general.homebrew_tap:
@@ -15,7 +15,7 @@
           - k1LoW/tap
           - hashicorp/tap
           - oven-sh/bun
-    - name: Install packages
+    - name: Install Homebrew packages
       community.general.homebrew:
         name:
           - rustup

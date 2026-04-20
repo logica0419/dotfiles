@@ -3,7 +3,7 @@
   ansible.builtin.command: rustup-init -y --no-modify-path
   changed_when: false
 
-- name: Rustfmt settings
+- name: Configure rustfmt settings
   block:
     - name: Create config directories
       ansible.builtin.file:
@@ -13,7 +13,7 @@
       loop:
         - .config
         - .config/rustfmt
-    - name: Copy rustfmt.toml
+    - name: Deploy rustfmt config file
       ansible.builtin.copy:
         src: rustfmt.toml
         dest: "{{ ansible_facts.user_dir }}/.config/rustfmt/rustfmt.toml"

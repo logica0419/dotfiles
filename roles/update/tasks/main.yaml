@@ -5,7 +5,7 @@
       community.general.homebrew:
         update_homebrew: true
         upgrade_all: true
-    - name: Cleanup
+    - name: Prune Homebrew cache
       ansible.builtin.shell: |
         set -e
         brew autoremove
@@ -20,7 +20,7 @@
   ansible.builtin.command: gup update
   changed_when: false
 
-- name: Update Rust
+- name: Update Rust toolchain
   ansible.builtin.command: rustup update
   changed_when: false
 

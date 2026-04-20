@@ -1,5 +1,5 @@
 ---
-- name: Install Docker cli and plugins
+- name: Install Docker CLI and plugins
   community.general.homebrew:
     name:
       - docker
@@ -7,14 +7,14 @@
       - docker-buildx
     state: present
 
-- name: Setup Docker config
+- name: Configure Docker config
   block:
     - name: Create Docker config directory
       ansible.builtin.file:
         path: "{{ ansible_facts.user_dir }}/.docker"
         state: directory
         mode: "0755"
-    - name: Deploy Docker config
+    - name: Deploy Docker config file
       ansible.builtin.template:
         src: "config-{{ ansible_facts.system | lower }}.json.j2"
         dest: "{{ ansible_facts.user_dir }}/.docker/config.json"

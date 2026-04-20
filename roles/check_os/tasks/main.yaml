@@ -9,6 +9,6 @@
       but got "{{ ansible_facts.system }}"
     success_msg: "System check passed: {{ ansible_facts.system }}"
 
-- name: Load OS specific settings
+- name: Load OS-specific settings
   ansible.builtin.include_vars:
     file: "{{ ansible_facts.system }}.yaml"

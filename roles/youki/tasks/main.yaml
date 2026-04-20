@@ -1,5 +1,5 @@
 ---
-- name: Check current youki version
+- name: Get current youki version
   ansible.builtin.shell:
     executable: /bin/bash
     cmd: |
@@ -9,7 +9,7 @@
   changed_when: false
   failed_when: false
 
-- name: Check latest youki version
+- name: Get latest youki version
   ansible.builtin.shell:
     executable: /bin/bash
     cmd: |
@@ -18,15 +18,15 @@
   register: youki_latest
   changed_when: false
 
-- name: Install latest youki
+- name: Install latest youki release
   become: true
   when: youki_current.stdout != youki_latest.stdout
   block:
-    - name: Remove old installation
+    - name: Remove previous youki installation
       ansible.builtin.file:
         path: /usr/bin/youki
         state: absent
-    - name: Download latest youki
+    - name: Install latest youki package
       ansible.builtin.unarchive:
         src: "https://github.com/youki-dev/youki/releases/download/v{{ youki_latest.stdout }}/youki-{{ youki_latest.stdout }}-x86_64-musl.tar.gz"
         dest: /usr/bin

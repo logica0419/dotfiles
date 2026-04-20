@@ -1,5 +1,5 @@
 ---
-- name: Power tuning
+- name: Configure power tuning
   become: true
   block:
     - name: Install power tuning tools
@@ -9,7 +9,7 @@
           - "linux-tools-{{ ansible_facts.kernel }}"
           - r8125-dkms
         state: present
-    - name: Copy powertop service
+    - name: Deploy powertop service file
       ansible.builtin.copy:
         src: powertop.service
         dest: /etc/systemd/system/powertop.service
@@ -20,7 +20,7 @@
         enabled: true
         state: started
         daemon_reload: true
-    - name: Set cpu freq governor
+    - name: Set CPU frequency governor
       ansible.builtin.command: cpupower frequency-set -g powersave
       changed_when: false
     - name: Configure r8125 driver
@@ -28,7 +28,7 @@
         content: "options r8125 aspm=1 eee_enable=1\n"
         dest: /etc/modprobe.d/r8125.conf
         mode: "0644"
-    - name: Put r8169 into blacklist
+    - name: Blacklist r8169 module
       ansible.builtin.copy:
         content: "blacklist r8169\n"
         dest: /etc/modprobe.d/blacklist-r8169.conf
@@ -37,12 +37,12 @@
       ansible.builtin.command: update-initramfs -u
       changed_when: false
 
-- name: Set timezone to Asia/Tokyo
+- name: Configure timezone to Asia/Tokyo
   become: true
   community.general.timezone:
     name: Asia/Tokyo
 
-- name: Copy SSH keys to root home
+- name: Deploy SSH keys to root
   become: true
   ansible.builtin.copy:
     src: "{{ ansible_facts.user_dir }}/.ssh/"
@@ -52,7 +52,7 @@
     group: root
     remote_src: true
 
-- name: Setup Tailscale
+- name: Configure Tailscale service
   become: true
   block:
     - name: Get Tailscale install script
@@ -81,19 +81,19 @@
       ansible.builtin.command: tailscale set --advertise-exit-node
       changed_when: false
 
-- name: Setup VS Code server
+- name: Configure VS Code server
   block:
-    - name: Install
+    - name: Install VS Code package
       become: true
       block:
-        - name: Add gpg key
+        - name: Deploy Microsoft GPG key
           ansible.builtin.get_url:
             url: https://packages.microsoft.com/keys/microsoft.asc
             dest: /etc/apt/keyrings/microsoft.asc
             mode: "0644"
             force: true
           register: server_ms_gpg_key
-        - name: Copy repository ref
+        - name: Deploy VS Code repository file
           ansible.builtin.copy:
             src: vscode.sources
             dest: /etc/apt/sources.list.d/vscode.sources
@@ -103,11 +103,11 @@
           ansible.builtin.apt:
             update_cache: true
           when: server_ms_gpg_key is changed or server_vscode_repo is changed
-        - name: Install code
+        - name: Install code package
           ansible.builtin.apt:
             name: code
             state: present
-    - name: Setup server
+    - name: Configure VS Code server settings
       block:
         - name: Create config directories
           ansible.builtin.file:
@@ -133,13 +133,13 @@
             - .vscode-server
             - .vscode-server/data
             - .vscode-server/data/Machine
-        - name: Copy VS Code settings
+        - name: Deploy VS Code settings
           ansible.builtin.template:
             src: settings.json.j2
             dest: "{{ ansible_facts.user_dir }}/.vscode-server/data/Machine/settings.json"
             mode: "0644"
 
-- name: Enable linger state
+- name: Enable linger mode
   ansible.builtin.command: loginctl enable-linger {{ ansible_user }}
   changed_when: false
 
@@ -163,18 +163,18 @@
         - hybrid-sleep.target
       notify: Restart systemd-logind
 
-- name: Setup updater
+- name: Configure updater service
   block:
-    - name: Get current dir path
+    - name: Get current workspace path
       ansible.builtin.command: pwd
       register: server_dotfiles_dir
       changed_when: false
-    - name: Copy updater service template
+    - name: Deploy updater service template
       ansible.builtin.template:
         src: updater.service.j2
         dest: "{{ ansible_facts.user_dir }}/.config/systemd/user/updater.service"
         mode: "0644"
-    - name: Copy updater timer template
+    - name: Deploy updater timer template
       ansible.builtin.template:
         src: updater.timer.j2
         dest: "{{ ansible_facts.user_dir }}/.config/systemd/user/updater.timer"
@@ -187,14 +187,14 @@
         scope: user
         daemon_reload: true
 
-- name: Setup reboot
+- name: Configure periodic reboot
   become: true
   block:
     - name: Get reboot path
       ansible.builtin.command: which reboot
       register: server_reboot_path
       changed_when: false
-    - name: Setup periodical reboot (update detection)
+    - name: Configure reboot check cron
       ansible.builtin.cron:
         name: reboot server (update detection)
         minute: 30

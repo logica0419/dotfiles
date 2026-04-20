@@ -1,36 +1,36 @@
 ---
-- name: SSH settings
+- name: Configure SSH settings
   block:
-    - name: Create .ssh directory
+    - name: Create SSH directory
       ansible.builtin.file:
         path: "{{ ansible_facts.user_dir }}/.ssh"
         state: directory
         mode: "0700"
-    - name: Move SSH config
+    - name: Deploy SSH config file
       ansible.builtin.copy:
         src: ssh_config
         dest: "{{ ansible_facts.user_dir }}/.ssh/config"
         mode: "0600"
 
-- name: Enable systemd
+- name: Enable WSL systemd
   block:
-    - name: Put WSL config
+    - name: Deploy WSL config file
       become: true
       ansible.builtin.copy:
         src: wsl.conf
         dest: /etc/wsl.conf
         mode: "0644"
       register: wsl_conf
-    - name: Stop ansible playbook
+    - name: Stop playbook for WSL restart
       ansible.builtin.fail:
         msg: Please restart WSL and run playbook again
       when: wsl_conf is changed # noqa: no-handler
 
-- name: Setup Chrome
+- name: Configure Chrome support
   become: true
   block:
     # https://github.com/puppeteer/puppeteer/blob/main/docs/troubleshooting.md#running-puppeteer-on-wsl-windows-subsystem-for-linux
-    - name: Install Chromium-related packages
+    - name: Install Chromium dependencies
       ansible.builtin.apt:
         name:
           - libgtk-3-dev
@@ -40,29 +40,29 @@
           - libxss1
           - libasound2
         state: present
-    - name: Add Chrome file to /usr/bin
+    - name: Install Chrome wrapper command
       ansible.builtin.copy:
         src: chrome
         dest: /usr/bin/chrome
         mode: "0755"
 
-- name: Font settings
+- name: Configure font settings
   become: true
   block:
-    - name: Install fontconfig
+    - name: Install fontconfig package
       ansible.builtin.apt:
         name: fontconfig
         state: present
-    - name: Copy font setting
+    - name: Deploy font config file
       ansible.builtin.copy:
         src: local.conf
         dest: /etc/fonts/local.conf
         mode: "0644"
-    - name: Enable font setting
+    - name: Refresh font cache
       ansible.builtin.command: fc-cache -fv
       changed_when: false
 
-- name: Setup VS Code server settings
+- name: Configure VS Code server settings
   block:
     - name: Create VS Code server directories
       ansible.builtin.file:
@@ -73,25 +73,25 @@
         - .vscode-server
         - .vscode-server/data
         - .vscode-server/data/Machine
-    - name: Put VS Code settings
+    - name: Deploy VS Code settings
       ansible.builtin.template:
         src: settings.json.j2
         dest: "{{ ansible_facts.user_dir }}/.vscode-server/data/Machine/settings.json"
         mode: "0644"
 
-- name: Setup updater service
+- name: Configure updater service
   become: true
   block:
-    - name: Get current dir path
+    - name: Get current workspace path
       ansible.builtin.command: pwd
       register: wsl_dotfiles_dir
       changed_when: false
-    - name: Copy updater service template
+    - name: Deploy updater service template
       ansible.builtin.template:
         src: updater.service.j2
         dest: /etc/systemd/system/updater.service
         mode: "0644"
-    - name: Enable updater service
+    - name: Enable and restart updater service
       ansible.builtin.systemd_service:
         name: updater.service
         enabled: true

@@ -1,15 +1,15 @@
 ---
-- name: Setup Docker engine
+- name: Configure Docker engine
   become: true
   block:
-    - name: Add gpg key
+    - name: Deploy Docker GPG key
       ansible.builtin.get_url:
         url: https://download.docker.com/linux/debian/gpg
         dest: /etc/apt/keyrings/docker.asc
         mode: "0644"
         force: true
       register: docker_gpg_key
-    - name: Add Docker repository
+    - name: Configure Docker repository
       ansible.builtin.apt_repository:
         repo: >-
           deb [signed-by=/etc/apt/keyrings/docker.asc]
@@ -24,7 +24,7 @@
       ansible.builtin.apt:
         name: docker-ce
         state: present
-    - name: Copy daemon settings
+    - name: Deploy Docker daemon config
       ansible.builtin.copy:
         src: daemon.json
         dest: /etc/docker/daemon.json
@@ -34,7 +34,7 @@
 - name: Apply containerd settings
   become: true
   block:
-    - name: Disable cri plugin
+    - name: Disable CRI plugin
       ansible.builtin.lineinfile:
         path: /etc/containerd/config.toml
         regexp: ^disabled_plugins
@@ -44,7 +44,7 @@
     - name: Flush handlers
       ansible.builtin.meta: flush_handlers
 
-- name: Setup docker group
+- name: Configure docker group
   become: true
   block:
     - name: Create docker group
@@ -58,7 +58,7 @@
           - docker
         append: true
       register: docker_result
-    - name: Stop ansible-playbook
+    - name: Stop playbook for group refresh
       ansible.builtin.fail:
         msg: Please restart the computer to apply docker group privilege
       when: docker_result is changed # noqa: no-handler

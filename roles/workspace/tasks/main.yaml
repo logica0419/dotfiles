@@ -1,17 +1,17 @@
 ---
-- name: Update dotfiles
+- name: Update dotfiles repository
   block:
-    - name: Get current dir path
+    - name: Get current workspace path
       ansible.builtin.command: pwd
       register: workspace_dotfiles_dir
       changed_when: false
-    - name: Update dotfiles
+    - name: Pull dotfiles repository
       ansible.builtin.git: # noqa: latest
         repo: https://github.com/logica0419/dotfiles.git
         dest: "{{ workspace_dotfiles_dir.stdout }}"
       failed_when: false
 
-- name: Clone GitHub repositories
+- name: Clone Git repositories
   ansible.builtin.git: # noqa: latest
     repo: "{{ item.repo }}"
     dest: "{{ ansible_facts.user_dir }}/prj/{{ item.dest }}"
@@ -64,7 +64,7 @@
     - repo: https://github.com/logica0419/runc
       dest: oss/runc
 
-- name: Setup oxfmt config
+- name: Configure oxfmt settings
   block:
     - name: Create config directories
       ansible.builtin.file:
@@ -74,13 +74,13 @@
       loop:
         - .config
         - .config/oxfmt
-    - name: Copy .oxfmtrc.json
+    - name: Deploy oxfmt config file
       ansible.builtin.copy:
         src: .oxfmtrc.json
         dest: "{{ ansible_facts.user_dir }}/.config/oxfmt/.oxfmtrc.json"
         mode: "0600"
 
-- name: Setup clangd config
+- name: Configure clangd settings
   block:
     - name: Create config directories
       ansible.builtin.file:
@@ -90,15 +90,15 @@
       loop:
         - .config
         - .config/clangd
-    - name: Copy config.yaml
+    - name: Deploy clangd config file
       ansible.builtin.copy:
         src: config.yaml
         dest: "{{ ansible_facts.user_dir }}/.config/clangd/config.yaml"
         mode: "0600"
 
-- name: Setup Go repository
+- name: Configure Go repository
   block:
-    - name: Check built Go version
+    - name: Get built Go version
       ansible.builtin.shell:
         executable: /bin/bash
         cmd: |
@@ -107,7 +107,7 @@
       register: workspace_go_built
       changed_when: false
       failed_when: false
-    - name: Check required Go version
+    - name: Get required Go version
       ansible.builtin.shell:
         executable: /bin/bash
         cmd: |
@@ -122,40 +122,40 @@
         chdir: "{{ ansible_facts.user_dir }}/prj/oss/go/src"
       changed_when: false
       when: workspace_go_built.stdout != workspace_go_required.stdout
-    - name: Copy .envrc file
+    - name: Deploy .envrc file
       ansible.builtin.copy:
         src: .envrc
         dest: "{{ ansible_facts.user_dir }}/prj/oss/go/.envrc"
         mode: "0664"
-    - name: Allow direnv
+    - name: Run direnv allow
       ansible.builtin.command:
         cmd: "direnv allow"
         chdir: "{{ ansible_facts.user_dir }}/prj/oss/go"
       changed_when: false
-    - name: Copy exclude file
+    - name: Deploy Git exclude file
       ansible.builtin.copy:
         src: exclude
         dest: "{{ ansible_facts.user_dir }}/prj/oss/go/.git/info/exclude"
         mode: "0664"
-    - name: Create .vscode directory
+    - name: Create VS Code directory
       ansible.builtin.file:
         path: "{{ ansible_facts.user_dir }}/prj/oss/go/.vscode"
         state: directory
         mode: "0755"
-    - name: Copy settings.json file
+    - name: Deploy VS Code settings file
       ansible.builtin.copy:
         src: go-settings.jsonc
         dest: "{{ ansible_facts.user_dir }}/prj/oss/go/.vscode/settings.json"
         mode: "0664"
 
-- name: Setup vscode-go repository
+- name: Configure vscode-go repository
   block:
-    - name: Put .vscode to skip-worktree # noqa: command-instead-of-module
+    - name: Set .vscode skip-worktree # noqa: command-instead-of-module
       ansible.builtin.shell:
         cmd: git update-index --skip-worktree .vscode/*
         chdir: "{{ ansible_facts.user_dir }}/prj/oss/vscode-go"
       changed_when: false
-    - name: Copy settings.json file
+    - name: Deploy VS Code settings file
       ansible.builtin.copy:
         src: vscode-go-settings.jsonc
         dest: "{{ ansible_facts.user_dir }}/prj/oss/vscode-go/.vscode/settings.json"

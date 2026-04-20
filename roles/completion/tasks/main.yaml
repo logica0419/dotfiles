@@ -1,5 +1,5 @@
 ---
-- name: Ensure completion parent directories exist
+- name: Create completion directories
   ansible.builtin.file:
     path: "{{ ansible_facts.user_dir }}/{{ item }}"
     state: directory
@@ -10,8 +10,10 @@
     - .local/share/bash-completion
     - .local/share/bash-completion/completions
 
-- name: Generate completions into completion directory
-  ansible.builtin.shell: "{{ item.command }} > {{ ansible_facts.user_dir }}/.local/share/bash-completion/completions/{{ item.file }}"
+- name: Deploy completion scripts
+  ansible.builtin.shell:
+    executable: /bin/bash
+    cmd: "{{ item.command }} > {{ ansible_facts.user_dir }}/.local/share/bash-completion/completions/{{ item.file }}"
   changed_when: false
   loop:
     - command: docker completion bash
@@ -43,6 +45,8 @@
     mode: "0644"
     content: complete -C "$(command -v terraform)" terraform
 
-- name: Generate bun completion script
-  ansible.builtin.shell: bun completions > "{{ ansible_facts.user_dir }}/.local/share/bash-completion/completions/bun"
+- name: Deploy bun completion script
+  ansible.builtin.shell:
+    executable: /bin/bash
+    cmd: bun completions > "{{ ansible_facts.user_dir }}/.local/share/bash-completion/completions/bun"
   changed_when: false

@@ -1,5 +1,5 @@
 ---
-- name: Create .hushlogin
+- name: Create .hushlogin file
   ansible.builtin.file:
     path: "{{ ansible_facts.user_dir }}/.hushlogin"
     state: touch
@@ -7,7 +7,7 @@
     modification_time: preserve
     mode: "0644"
 
-- name: Setup environment files
+- name: Configure environment files
   block:
     - name: Create config directories
       ansible.builtin.file:
@@ -17,44 +17,44 @@
       loop:
         - .config
         - .config/environment.d
-    - name: Copy shared environment file
+    - name: Deploy shared environment file
       ansible.builtin.template:
         src: env.conf.j2
         dest: "{{ ansible_facts.user_dir }}/.config/environment.d/env.conf"
         mode: "0600"
       register: rc_env_file_result
 
-- name: Setup rc files for root
+- name: Configure rc files for root
   become: true
   when: ansible_facts.system == "Linux"
   block:
-    - name: Copy .bashrc to root home directory
+    - name: Deploy .bashrc to root home
       ansible.builtin.copy:
         src: bashrc-root
         dest: /root/.bashrc
         mode: "0644"
-    - name: Copy .profile to root home directory
+    - name: Deploy .profile to root home
       become: true
       ansible.builtin.template:
         src: profile.j2
         dest: /root/.profile
         mode: "0644"
 
-- name: Setup rc files for current user
+- name: Configure rc files for current user
   block:
-    - name: Copy .bashrc to home directory
+    - name: Deploy .bashrc to home directory
       ansible.builtin.copy:
         src: bashrc
         dest: "{{ ansible_facts.user_dir }}/.bashrc"
         mode: "0644"
       register: rc_bashrc_result
-    - name: Copy .profile to home directory
+    - name: Deploy .profile to home directory
       ansible.builtin.template:
         src: profile.j2
         dest: "{{ ansible_facts.user_dir }}/.profile"
         mode: "0644"
       register: rc_profile_result
-    - name: Stop ansible-playbook
+    - name: Stop playbook for shell reload
       ansible.builtin.fail:
         msg: Please run the playbook again after reloading .bashrc or .profile
       when: rc_env_file_result is changed or rc_bashrc_result is changed or rc_profile_result is changed

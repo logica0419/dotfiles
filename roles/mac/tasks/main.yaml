@@ -1,5 +1,5 @@
 ---
-- name: Setup default shell
+- name: Configure default shell
   block:
     - name: Install Homebrew bash
       community.general.homebrew:
@@ -12,20 +12,20 @@
       ansible.builtin.user:
         name: "{{ ansible_user }}"
         shell: "{{ check_os_brew_base_path }}/bin/bash"
-    - name: Remove zsh related files
+    - name: Remove zsh files
       ansible.builtin.file:
         path: "{{ item }}"
         state: absent
       loop: "{{ query('ansible.builtin.fileglob', ansible_facts.user_dir + '/.zsh*') }}"
 
-- name: SSH settings
+- name: Configure SSH settings
   block:
-    - name: Create .ssh directory
+    - name: Create SSH directory
       ansible.builtin.file:
         path: "{{ ansible_facts.user_dir }}/.ssh"
         state: directory
         mode: "0700"
-    - name: Move SSH config
+    - name: Deploy SSH config file
       ansible.builtin.copy:
         src: ssh_config
         dest: "{{ ansible_facts.user_dir }}/.ssh/config"
@@ -39,7 +39,7 @@
     value: true
   notify: Restart Finder
 
-- name: Install cask applications
+- name: Install Homebrew cask applications
   community.general.homebrew_cask:
     name:
       # 必須アプリケーション
@@ -76,9 +76,9 @@
       - steam
     state: present
 
-- name: Setup updater
+- name: Configure updater service
   block:
-    - name: Get current dir path
+    - name: Get current workspace path
       ansible.builtin.command: pwd
       register: mac_dotfiles_dir
       changed_when: false
@@ -92,13 +92,13 @@
         path: "{{ ansible_facts.user_dir }}/.local/state/dotfiles"
         state: directory
         mode: "0755"
-    - name: Copy updater launchd plist
+    - name: Deploy updater launchd plist
       ansible.builtin.template:
         src: updater.plist.j2
         dest: "{{ ansible_facts.user_dir }}/Library/LaunchAgents/com.dotfiles-updater.plist"
         mode: "0644"
       register: mac_updater_plist
-    - name: Check updater launch agent status
+    - name: Get updater launch agent status
       ansible.builtin.command: >-
         launchctl print gui/{{ ansible_facts.user_uid }}/com.dotfiles-updater
       register: mac_updater_status

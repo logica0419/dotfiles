@@ -1,7 +1,7 @@
 ---
-- name: Install K8s-related components
+- name: Install Kubernetes components
   block:
-    - name: Install K8s-related packages
+    - name: Install Kubernetes packages
       community.general.homebrew:
         name:
           - kubectl

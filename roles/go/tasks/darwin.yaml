@@ -1,10 +1,10 @@
 ---
-- name: Install gnu-tar
+- name: Install GNU tar package
   community.general.homebrew:
     name: gnu-tar
     state: present
 
-- name: Download latest Go (Darwin)
+- name: Install latest Go package (Darwin)
   become: true
   ansible.builtin.unarchive:
     src: https://go.dev/dl/{{ go_latest.stdout }}.darwin-arm64.tar.gz

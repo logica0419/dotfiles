@@ -1,5 +1,5 @@
 ---
-- name: Install ansible
+- name: Install Ansible tools
   ansible.builtin.command: uv tool install --with-executables-from ansible-core,ansible-lint ansible --force
   environment:
     UV_NO_CACHE: "1"
