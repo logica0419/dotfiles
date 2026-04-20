@@ -47,9 +47,8 @@
         - github.com/spf13/cobra-cli
         - golang.org/x/review/git-codereview
     - name: Deploy golangci-lint alias
-      ansible.builtin.copy:
+      ansible.builtin.file:
+        path: "{{ ansible_facts.user_dir }}/go/bin/golangci-lint-v2"
         src: "{{ ansible_facts.user_dir }}/go/bin/golangci-lint"
-        dest: "{{ ansible_facts.user_dir }}/go/bin/golangci-lint-v2"
-        mode: "0755"
-        remote_src: true
+        state: link
         force: true
