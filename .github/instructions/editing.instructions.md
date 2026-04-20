@@ -23,12 +23,18 @@
 - facts は既存の現行表現に合わせる。特に user_dir や user_uid の扱いを崩さない。
 - top-level facts の非推奨を踏まえ、`ansible_user_dir` や `ansible_user_uid` ではなく `ansible_facts['user_dir']` / `ansible_facts['user_uid']` を使う。
 - 変更がある task は、changed_when と failed_when を適切に付けて冪等性を保つ。
+- role 内で `register` する変数名は、原則として `<role>_` 接頭辞を付ける。
+- 変更時だけ実行したい後続処理は、通常 task の `when: <reg>.changed` ではなく `notify` + handler を優先する。
 - become の有無は既存の責務分離に合わせる。
+- Homebrew service の管理は `brew services` の直実行より `community.general.homebrew_services` を優先する。
 - 同じ role 内では、同種 task のフィールド順をそろえる。
   - 推奨順: `name` -> `become` / `when` -> module -> module 引数 -> `changed_when` / `failed_when` -> `register` -> `notify`
   - module 引数の中も、`path` / `src` / `dest` などの対象指定を先、`state`、`mode`、その他を後ろに寄せる。
+  - ただし package 系 module (`ansible.builtin.apt`, `community.general.homebrew`, `community.general.homebrew_cask`) では、`name` の直後に `state` を置く。
 - 関心ごとが近い task は `block` でまとめる。特に `become` や `when` を共有できるときは block を優先する。
 - 親ディレクトリが未作成の可能性がある多段パスを作る場合は、`loop` で親から段階的に `state: directory` を適用する。
+  - `ansible.builtin.file` の `recurse` は、基本的に使わない。
+- 外部インストーラが dotfile (`.profile` / `.bashrc` など) を自動編集する場合は、可能な限り無効化オプションを使い、dotfile 配布は `rc` role 側で一元管理する。
 
 ## Jinja2 テンプレート
 
@@ -40,8 +46,15 @@
 
 - 配置可能なものは、できるだけ `roles/<role>/files` または `roles/<role>/templates` に置く。
 - 変数展開が必要な設定は `templates` を使う。
+- 変数展開が不要なら、`templates` ではなく `files` を優先する。
 - `content` は 1 行以内で収まる内容を原則とする。
 - 2 行以上になる場合は、特別な理由がない限り `files` か `templates` へ切り出す。
+- dotfile を配布する場合でも、repo 内のソース名は先頭ドットなしを優先し、配置先 `dest` 側でドット付きファイル名にする。
+
+## VS Code 設定の配置
+
+- Linux の remote 環境（WSL / server）で VS Code 設定を配る場合は、`~/.vscode-server/data/Machine/settings.json` を優先する。
+- Homebrew パス依存の設定値は、固定パスを直書きせず `check_os_brew_base_path` を使ってテンプレート化する。
 
 ## Bash スクリプト
 
@@ -56,7 +69,6 @@
   - パイプラインを使う場合は `-o pipefail`
 - ただし `run.sh` は例外として扱う。
 - `ansible.builtin.shell` で Bash 専用記法を使う場合は、`args.executable` か POSIX 互換化のどちらで扱うかを先に決める。
-- completion role 固有の運用は `roles/completion/notes.md` を参照する。
 
 ## 文字列とスタイル
 
