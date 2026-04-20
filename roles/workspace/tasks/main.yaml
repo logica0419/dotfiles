@@ -18,9 +18,9 @@
   failed_when: false
   with_items:
     - repo: https://github.com/ictsc/ictsc-regalia.git
-      dest: ICTSC/ictsc-regalia
+      dest: ictsc/ictsc-regalia
     - repo: https://github.com/ictsc/ictsc-drove.git
-      dest: ICTSC/ictsc-drove
+      dest: ictsc/ictsc-drove
 
     - repo: https://github.com/nekko-lab/kakko
       dest: nekko-lab/kakko
