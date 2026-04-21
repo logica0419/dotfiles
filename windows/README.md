@@ -5,7 +5,7 @@
 PowerShellを管理者権限で起動し、以下のコマンドを実行
 
 ```powershell
-Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/logica0419/dotfiles/refs/heads/main/windows/run.ps1" -UseBasicParsing).Content
+Invoke-Expression (Invoke-WebRequest -Uri "https://raw.githubusercontent.com/logica0419/dotfiles/refs/heads/main/windows/run.ps1").Content
 ```
 
 ## 手動でインストールするもの

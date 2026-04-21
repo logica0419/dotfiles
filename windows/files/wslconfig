@@ -1,0 +1,5 @@
+[wsl2]
+networkingMode=Mirrored
+swap=0
+[experimental]
+hostAddressLoopback=true

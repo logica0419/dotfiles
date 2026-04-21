@@ -1,3 +1,15 @@
+Write-Host "Deploying WSL host configuration`n"
+
+if (-not $env:USERPROFILE) {
+  throw "USERPROFILE is not set. Cannot deploy .wslconfig."
+}
+
+$wslConfigUrl = "https://raw.githubusercontent.com/logica0419/dotfiles/main/windows/files/wslconfig"
+$wslConfigDestination = Join-Path $env:USERPROFILE ".wslconfig"
+
+Write-Host "Creating $wslConfigDestination"
+Invoke-WebRequest -Uri $wslConfigUrl -OutFile $wslConfigDestination
+
 Write-Host "Installing machine-scoped packages`n"
 
 $machine_packages = @(
