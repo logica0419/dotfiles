@@ -34,7 +34,6 @@ $machine_packages = @(
   "Yamaha.SteinbergUSBDriver"
   "Tailscale.Tailscale"
   "Figma.Figma"
-  "9P1XD8ZQJ7JD" # Fre:ac
 )
 
 foreach ($package in $machine_packages) {
@@ -55,6 +54,7 @@ $user_packages = @(
   "Canonical.Ubuntu"
   "Microsoft.AppInstaller"
   "Microsoft.WindowsTerminal"
+  "9P1XD8ZQJ7JD" # Fre:ac
 )
 
 foreach ($package in $user_packages) {
