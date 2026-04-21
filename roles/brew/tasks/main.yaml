@@ -25,6 +25,7 @@
           - gh
           - htop
           - jq
+          - yq
           - shfmt
           - hashicorp/tap/terraform
           - tflint
