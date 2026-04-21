@@ -43,6 +43,8 @@
       dest: personal/etsecd
     - repo: https://github.com/logica0419/playground.git
       dest: personal/playground
+    - repo: https://github.com/logica0419/gwc2025-container-runtime
+      dest: personal/gwc2025-container-runtime
 
     - repo: https://github.com/hatahatack/score_plorer_v2.git
       dest: ajy/score_plorer_v2
@@ -63,6 +65,8 @@
       dest: oss/youki
     - repo: https://github.com/logica0419/runc
       dest: oss/runc
+    - repo: https://github.com/logica0419/external-secrets
+      dest: oss/external-secrets
 
 - name: Configure oxfmt settings
   block:
