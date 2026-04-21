@@ -34,6 +34,7 @@ $machine_packages = @(
   "Yamaha.SteinbergUSBDriver"
   "Tailscale.Tailscale"
   "Figma.Figma"
+  "9P1XD8ZQJ7JD" # Fre:ac
 )
 
 foreach ($package in $machine_packages) {
