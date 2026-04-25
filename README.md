@@ -19,7 +19,7 @@
 sudo visudo
 ```
 
-Linuxの場合
+Ubuntu (wsl・server) の場合
 
 ```diff
 - %sudo   ALL=(ALL:ALL) ALL
@@ -46,8 +46,8 @@ curl -L https://raw.githubusercontent.com/logica0419/dotfiles/main/import.sh -o 
 
 - {environment} について
   - mac (MacOS環境用)
-  - wsl (WSL2環境用)
-  - server (開発自宅鯖用)
+  - wsl (Ubuntu 26.04 on WSL2環境用)
+  - server (Ubuntu 26.04 on 自宅サーバー用)
 
 ## その他
 
