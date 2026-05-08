@@ -15,6 +15,7 @@
           - k1LoW/tap
           - hashicorp/tap
           - oven-sh/bun
+          - terror/tap
     - name: Install Homebrew packages
       community.general.homebrew:
         name:
@@ -35,6 +36,7 @@
           - hadolint
           - go-task
           - just
+          - just-lsp
           - mise
           - oven-sh/bun/bun
           - oxlint
