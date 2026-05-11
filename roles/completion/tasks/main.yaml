@@ -28,6 +28,8 @@
       file: kustomize
     - command: helm completion bash
       file: helm
+    - command: container --generate-completion-script bash
+      file: container
     - command: just --completions bash
       file: just
     - command: mise completion bash --include-bash-completion-lib

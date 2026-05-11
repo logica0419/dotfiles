@@ -30,6 +30,8 @@ Copilot 向けの詳細編集ルール。先に `.github/instructions/priority.i
 ## Ansible と YAML
 
 - 関心が近い task は `block` にまとめる。
+- `block` 内で同じ権限が必要な場合は `become` を block レベルにまとめ、個別 task では繰り返さない。
+- `block` 内のタスクは空行で分けず連続して記述する。
 - OS 差分は `include_tasks` や `vars` 分離で表現する。
 - facts は `ansible_facts.<fact_name>` を使う。
 - 変更のある task には `changed_when` / `failed_when` を適切に付ける。
@@ -40,6 +42,7 @@ Copilot 向けの詳細編集ルール。先に `.github/instructions/priority.i
   - 推奨順: `name` -> `become` / `when` -> module -> module 引数 -> `changed_when` / `failed_when` -> `register` -> `notify`
   - package 系 module は `name` の直後に `state` を置く。
 - 多段ディレクトリは親から順に `state: directory` で作成する。
+- 複数の関連ディレクトリを作成する場合は、`ansible.builtin.file` を `loop` でまとめる。
 - `ansible.builtin.file` の `recurse` は原則使わない。
 - 外部インストーラが dotfile を自動編集する場合は可能な限り無効化し、dotfile 配布は `rc` role へ寄せる。
 

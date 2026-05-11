@@ -1,10 +1,109 @@
 ---
-- name: Install Colima
-  community.general.homebrew:
-    name: colima
-    state: present
+- name: Install containerization packages
+  block:
+    - name: Register Homebrew tap
+      community.general.homebrew_tap:
+        name:
+          - socktainer/tap
+    - name: Install Homebrew packages
+      community.general.homebrew:
+        name:
+          - colima # for buildx support
+          - container
+          - socktainer
 
-- name: Start Colima
-  community.general.homebrew_services:
-    name: colima
-    state: present
+- name: Configure container launch daemon
+  become: true
+  block:
+    - name: Create root LaunchDaemons directory
+      ansible.builtin.file:
+        path: /Library/LaunchDaemons
+        state: directory
+        mode: "0755"
+    - name: Deploy container launchd plist
+      ansible.builtin.copy:
+        src: container.plist
+        dest: /Library/LaunchDaemons/homebrew.mxcl.container.plist
+        mode: "0644"
+      register: docker_container_plist
+    - name: Get container launch daemon status
+      ansible.builtin.command: launchctl print system/homebrew.mxcl.container
+      register: docker_container_status
+      failed_when: false
+      changed_when: false
+    - name: Unload container launch daemon
+      ansible.builtin.command: launchctl bootout system /Library/LaunchDaemons/homebrew.mxcl.container.plist
+      when: docker_container_plist is changed and docker_container_status.rc == 0
+      failed_when: false
+      changed_when: docker_container_status.rc == 0
+    - name: Load container launch daemon
+      ansible.builtin.command: launchctl bootstrap system /Library/LaunchDaemons/homebrew.mxcl.container.plist
+      when: docker_container_plist is changed or docker_container_status.rc != 0
+      changed_when: true
+    - name: Enable container service
+      ansible.builtin.command: launchctl enable system/homebrew.mxcl.container
+      changed_when: false
+
+- name: Configure socktainer launch agent
+  block:
+    - name: Create user LaunchAgents directory
+      ansible.builtin.file:
+        path: "{{ ansible_facts.user_dir }}/Library/LaunchAgents"
+        state: directory
+        mode: "0755"
+    - name: Deploy socktainer launchd plist
+      ansible.builtin.copy:
+        src: socktainer.plist
+        dest: "{{ ansible_facts.user_dir }}/Library/LaunchAgents/homebrew.mxcl.socktainer.plist"
+        mode: "0644"
+      register: docker_socktainer_plist
+    - name: Get socktainer launch agent status
+      ansible.builtin.command: >-
+        launchctl print gui/{{ ansible_facts.user_uid }}/homebrew.mxcl.socktainer
+      register: docker_socktainer_status
+      failed_when: false
+      changed_when: false
+    - name: Unload socktainer launch agent
+      ansible.builtin.command: >-
+        launchctl bootout gui/{{ ansible_facts.user_uid }}
+        {{ ansible_facts.user_dir }}/Library/LaunchAgents/homebrew.mxcl.socktainer.plist
+      when: docker_socktainer_plist is changed and docker_socktainer_status.rc == 0
+      failed_when: false
+      changed_when: docker_socktainer_status.rc == 0
+    - name: Load socktainer launch agent
+      ansible.builtin.command: >-
+        launchctl bootstrap gui/{{ ansible_facts.user_uid }}
+        {{ ansible_facts.user_dir }}/Library/LaunchAgents/homebrew.mxcl.socktainer.plist
+      when: docker_socktainer_plist is changed or docker_socktainer_status.rc != 0
+      changed_when: true
+    - name: Enable socktainer service
+      ansible.builtin.command: >-
+        launchctl enable gui/{{ ansible_facts.user_uid }}/homebrew.mxcl.socktainer
+      changed_when: false
+
+- name: Create socktainer context
+  block:
+    - name: Check socktainer Docker context
+      ansible.builtin.command: docker context inspect socktainer
+      register: docker_socktainer_context
+      failed_when: false
+      changed_when: false
+    - name: Create socktainer Docker context
+      ansible.builtin.command: docker context create --docker host=unix://{{ ansible_facts.user_dir }}/.socktainer/container.sock socktainer
+      when: docker_socktainer_context.rc != 0
+      changed_when: true
+# - name: Install docker wrapper to local override path
+#   block:
+#     - name: Create local override directories
+#       ansible.builtin.file:
+#         path: "{{ ansible_facts.user_dir }}/{{ item }}"
+#         state: directory
+#         mode: "0755"
+#       loop:
+#         - .local
+#         - .local/bin-override
+#     - name: Deploy docker wrapper to override bin
+#       ansible.builtin.template:
+#         src: docker-wrapper.j2
+#         dest: "{{ ansible_facts.user_dir }}/.local/bin-override/docker"
+#         mode: "0755"

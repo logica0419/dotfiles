@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ "$1" = "buildx" ] && [ "$2" = "build" ]; then
+
+  container_name=$(
+    set -- "$@"
+    while [ $# -gt 0 ]; do
+      case "$1" in
+      -t | --tag) echo "$2" && break ;;
+      *) shift ;;
+      esac
+    done
+  )
+
+  colima start --cpu 10 --memory 16 --mount-type virtiofs
+
+  docker --context colima image prune -af
+  "{{ check_os_brew_base_path }}/bin/docker" --context colima "$@"
+  docker --context colima save -o /tmp/docker-buildx-cache.tar $(docker --context colima image ls -q)
+
+  colima stop
+  docker context use socktainer
+
+  container image load -i /tmp/docker-buildx-cache.tar
+  container image tag $(container image ls -q | grep untagged) "$container_name"
+
+  rm /tmp/docker-buildx-cache.tar
+  container image prune
+
+elif [ "$1" = "build" ]; then
+
+  args=("$@")
+  for i in "${!args[@]}"; do
+    case "${args[i]}" in
+    --load) args[i]="--output=type=oci" ;;
+    esac
+  done
+
+  container build "${args[@]}"
+
+else
+
+  "{{ check_os_brew_base_path }}/bin/docker" "$@"
+
+fi
