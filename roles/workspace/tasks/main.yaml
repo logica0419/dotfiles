@@ -154,8 +154,9 @@
 
 - name: Configure vscode-go repository
   block:
-    - name: Set .vscode skip-worktree # noqa: command-instead-of-module
+    - name: Configure .vscode skip-worktree # noqa: command-instead-of-module
       ansible.builtin.shell:
+        executable: /bin/bash
         cmd: git update-index --skip-worktree .vscode/*
         chdir: "{{ ansible_facts.user_dir }}/prj/oss/vscode-go"
       changed_when: false
