@@ -46,23 +46,11 @@
         dest: /Library/LaunchDaemons/homebrew.mxcl.container.plist
         mode: "0644"
       register: docker_container_plist
-    - name: Get container launch daemon status
-      ansible.builtin.command: launchctl print system/homebrew.mxcl.container
-      register: docker_container_status
-      failed_when: false
-      changed_when: false
-    - name: Unload container launch daemon
-      ansible.builtin.command: launchctl bootout system /Library/LaunchDaemons/homebrew.mxcl.container.plist
-      when: docker_container_plist is changed and docker_container_status.rc == 0
-      failed_when: false
-      changed_when: docker_container_status.rc == 0
-    - name: Load container launch daemon
-      ansible.builtin.command: launchctl bootstrap system /Library/LaunchDaemons/homebrew.mxcl.container.plist
-      when: docker_container_plist is changed or docker_container_status.rc != 0
-      changed_when: true
-    - name: Enable container service
-      ansible.builtin.command: launchctl enable system/homebrew.mxcl.container
-      changed_when: false
+    - name: Enable container launch agent
+      community.general.launchd:
+        name: homebrew.mxcl.container
+        enabled: true
+        state: reloaded
 
 - name: Configure socktainer launch agent
   block:
@@ -77,29 +65,11 @@
         dest: "{{ ansible_facts.user_dir }}/Library/LaunchAgents/homebrew.mxcl.socktainer.plist"
         mode: "0644"
       register: docker_socktainer_plist
-    - name: Get socktainer launch agent status
-      ansible.builtin.command: >-
-        launchctl print gui/{{ ansible_facts.user_uid }}/homebrew.mxcl.socktainer
-      register: docker_socktainer_status
-      failed_when: false
-      changed_when: false
-    - name: Unload socktainer launch agent
-      ansible.builtin.command: >-
-        launchctl bootout gui/{{ ansible_facts.user_uid }}
-        {{ ansible_facts.user_dir }}/Library/LaunchAgents/homebrew.mxcl.socktainer.plist
-      when: docker_socktainer_plist is changed and docker_socktainer_status.rc == 0
-      failed_when: false
-      changed_when: docker_socktainer_status.rc == 0
-    - name: Load socktainer launch agent
-      ansible.builtin.command: >-
-        launchctl bootstrap gui/{{ ansible_facts.user_uid }}
-        {{ ansible_facts.user_dir }}/Library/LaunchAgents/homebrew.mxcl.socktainer.plist
-      when: docker_socktainer_plist is changed or docker_socktainer_status.rc != 0
-      changed_when: true
-    - name: Enable socktainer service
-      ansible.builtin.command: >-
-        launchctl enable gui/{{ ansible_facts.user_uid }}/homebrew.mxcl.socktainer
-      changed_when: false
+    - name: Enable socktainer launch agent
+      community.general.launchd:
+        name: homebrew.mxcl.socktainer
+        enabled: true
+        state: reloaded
 
 - name: Create socktainer context
   block:
