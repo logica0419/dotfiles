@@ -77,6 +77,16 @@
       - steam
     state: present
 
+- name: Install TinyGo
+  block:
+    - name: Register TinyGo tap
+      community.general.homebrew_tap:
+        name: tinygo-org/tools
+    - name: Install TinyGo
+      community.general.homebrew:
+        name: tinygo
+        state: present
+
 - name: Configure updater service
   block:
     - name: Get current workspace path
