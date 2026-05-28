@@ -25,7 +25,6 @@
           - git
           - gh
           - htop
-          - ripgrep
           - jq
           - yq
           - shfmt
