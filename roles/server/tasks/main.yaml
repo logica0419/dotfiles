@@ -191,7 +191,7 @@
   become: true
   block:
     - name: Get reboot path
-      ansible.builtin.command: command -v reboot
+      ansible.builtin.shell: command -v reboot
       register: server_reboot_path
       changed_when: false
     - name: Configure reboot check cron
