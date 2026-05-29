@@ -60,6 +60,8 @@ Copilot 向けの詳細編集ルール。先に `.github/instructions/priority.i
 - 冪等性を優先する。
 - 終了コードを明確にし、失敗挙動を曖昧にしない。
 - 外部コマンド確認は `command -v`、出力抑制は `&>/dev/null` で統一する。
+  - `command -v` のようなシェル組み込みは外部バイナリでないため、`ansible.builtin.command` で直接実行すると失敗する。
+  - `command -v` で存在確認を行う場合は `ansible.builtin.shell` を使う。
 - `shell` とスクリプトは必要に応じて `-e` / `-u` / `-o pipefail` を付ける（`run.sh` は例外）。
 - `ansible.builtin.shell` で Bash 専用記法を使う場合は、`args.executable` を使うか POSIX 互換にするかを先に決める。
 

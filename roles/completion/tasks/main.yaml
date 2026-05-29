@@ -28,8 +28,6 @@
       file: kustomize
     - command: helm completion bash
       file: helm
-    - command: container --generate-completion-script bash
-      file: container
     - command: just --completions bash
       file: just
     - command: mise completion bash --include-bash-completion-lib
@@ -40,6 +38,13 @@
       file: task
     - command: uv generate-shell-completion bash
       file: uv
+
+- name: Deploy container completion
+  ansible.builtin.shell:
+    executable: /bin/bash
+    cmd: container --generate-completion-script bash > {{ ansible_facts.user_dir }}/.local/share/bash-completion/completions/container
+  when: ansible_facts['system'] == 'Darwin'
+  changed_when: false
 
 - name: Install terraform completion shim
   ansible.builtin.copy:
