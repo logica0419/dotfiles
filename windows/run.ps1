@@ -1,12 +1,16 @@
 Write-Host "Deploying WSL host configuration`n"
 
 if (-not $env:USERPROFILE) {
-  throw "USERPROFILE is not set. Cannot deploy .wslconfig."
+  throw "USERPROFILE is not set."
 }
+
 $wslConfigUrl = "https://raw.githubusercontent.com/logica0419/dotfiles/main/windows/files/wslconfig"
 $wslConfigDestination = Join-Path $env:USERPROFILE ".wslconfig"
-
 Invoke-WebRequest -Uri $wslConfigUrl -OutFile $wslConfigDestination
+
+$gitConfigUrl = "https://raw.githubusercontent.com/logica0419/dotfiles/main/windows/files/gitconfig"
+$gitConfigDestination = Join-Path $env:USERPROFILE ".gitconfig"
+Invoke-WebRequest -Uri $gitConfigUrl -OutFile $gitConfigDestination
 
 Write-Host "Installing machine-scoped packages`n"
 
@@ -34,6 +38,7 @@ $machine_packages = @(
   "Yamaha.SteinbergUSBDriver"
   "Tailscale.Tailscale"
   "Figma.Figma"
+  "GitHub Desktop"
 )
 
 foreach ($package in $machine_packages) {
