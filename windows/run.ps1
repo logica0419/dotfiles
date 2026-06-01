@@ -1,12 +1,14 @@
-Write-Host "Deploying WSL host configuration`n"
-
 if (-not $env:USERPROFILE) {
   throw "USERPROFILE is not set."
 }
 
+Write-Host "Deploying WSL host configuration`n"
+
 $wslConfigUrl = "https://raw.githubusercontent.com/logica0419/dotfiles/main/windows/files/wslconfig"
 $wslConfigDestination = Join-Path $env:USERPROFILE ".wslconfig"
 Invoke-WebRequest -Uri $wslConfigUrl -OutFile $wslConfigDestination
+
+Write-Host "Deploying Git configuration`n"
 
 $gitConfigUrl = "https://raw.githubusercontent.com/logica0419/dotfiles/main/windows/files/gitconfig"
 $gitConfigDestination = Join-Path $env:USERPROFILE ".gitconfig"
