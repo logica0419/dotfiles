@@ -41,7 +41,6 @@ $machine_packages = @(
   "Tailscale.Tailscale"
   "Figma.Figma"
   "Git.Git"
-  "GitHub.GitHubDesktop"
 )
 
 foreach ($package in $machine_packages) {
