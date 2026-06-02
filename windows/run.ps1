@@ -40,7 +40,8 @@ $machine_packages = @(
   "Yamaha.SteinbergUSBDriver"
   "Tailscale.Tailscale"
   "Figma.Figma"
-  "GitHub Desktop"
+  "Git.Git"
+  "GitHub.GitHubDesktop"
 )
 
 foreach ($package in $machine_packages) {

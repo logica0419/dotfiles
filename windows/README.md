@@ -1,5 +1,14 @@
 # Windows
 
+## 下準備
+
+### ssh鍵を用意する
+
+Gitの署名用
+
+- `~/.ssh/id_ed25519.pub`
+  - Permission: 0644
+
 ## 実行
 
 PowerShellを管理者権限で起動し、以下のコマンドを実行
