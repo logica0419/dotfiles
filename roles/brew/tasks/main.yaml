@@ -42,4 +42,5 @@
           - oxlint
           - oxfmt
           - stylelint
+          - easyeda2kicad
         state: present
