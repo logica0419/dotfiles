@@ -2,4 +2,4 @@
 name = "dotfiles"
 version = "0.1.0"
 requires-python = "==3.14.*"
-dependencies = ["ansible==13.7.0", "ansible-lint==26.4.0"]
+dependencies = ["ansible==14.0.0", "ansible-lint==26.4.0"]
