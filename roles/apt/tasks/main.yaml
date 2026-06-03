@@ -11,3 +11,14 @@
         autoremove: true
         update_cache: true
         upgrade: dist
+
+- name: Install Homebrew dependencies
+  become: true
+  ansible.builtin.apt:
+    name:
+      - build-essential
+      - procps
+      - curl
+      - file
+      - git
+    state: present
