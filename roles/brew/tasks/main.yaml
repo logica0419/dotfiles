@@ -21,6 +21,8 @@
         name:
           - rustup
           - uv
+          - cmake
+          - ninja
           - llvm
           - git
           - gh
