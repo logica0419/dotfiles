@@ -2,4 +2,5 @@
 networkingMode=Mirrored
 swap=0
 [experimental]
+autoMemoryReclaim=gradual
 hostAddressLoopback=true
