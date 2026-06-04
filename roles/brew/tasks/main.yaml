@@ -15,6 +15,7 @@
           - k1LoW/tap
           - hashicorp/tap
           - oven-sh/bun
+          - tinygo-org/tools
           - terror/tap
     - name: Install Homebrew packages
       community.general.homebrew:
@@ -24,6 +25,7 @@
           - cmake
           - ninja
           - llvm
+          - tinygo
           - git
           - gh
           - htop
