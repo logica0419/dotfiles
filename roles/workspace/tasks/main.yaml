@@ -17,6 +17,9 @@
     dest: "{{ ansible_facts.user_dir }}/prj/{{ item.dest }}"
   failed_when: false
   with_items:
+    - repo: https://github.com/kait-cronos/sdplane-dev.git
+      dest: work/sdplane-development
+
     - repo: https://github.com/ictsc/ictsc-regalia.git
       dest: ictsc/ictsc-regalia
     - repo: https://github.com/ictsc/ictsc-drove.git
@@ -45,6 +48,8 @@
       dest: personal/playground
     - repo: https://github.com/logica0419/gwc2025-container-runtime
       dest: personal/gwc2025-container-runtime
+    - repo: https://github.com/logica0419/tinygo-rover-workshop.git
+      dest: personal/tinygo-rover-workshop
 
     - repo: https://github.com/hatahatack/score_plorer_v2.git
       dest: ajy/score_plorer_v2
@@ -53,6 +58,10 @@
       dest: oss/go
     - repo: https://go.googlesource.com/vscode-go
       dest: oss/vscode-go
+    - repo: https://github.com/logica0419/tinygo.git
+      dest: oss/tinygo
+    - repo: https://github.com/logica0419/drivers.git
+      dest: oss/drivers
     - repo: https://github.com/logica0419/kubernetes.git
       dest: oss/kubernetes
     - repo: https://github.com/logica0419/website.git
