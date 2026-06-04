@@ -69,6 +69,12 @@ foreach ($package in $user_packages) {
   winget install $package --scope user --accept-package-agreements --accept-source-agreements
 }
 
+Write-Host "`nCreating BlockList for Winget-AutoUpdate`n"
+
+$blockListUrl = "https://raw.githubusercontent.com/logica0419/dotfiles/main/windows/files/excluded_apps.txt"
+$blockListDestination = Join-Path $env:ProgramFiles "Winget-AutoUpdate\config\excluded_apps.txt"
+Invoke-WebRequest -Uri $blockListUrl -OutFile $blockListDestination
+
 Write-Host "`nSetting up an auto-upgrade script`n"
 
 $startupBatPath = Join-Path $env:APPDATA "Microsoft\Windows\Start Menu\Programs\Startup\winget_upgrade.bat"
