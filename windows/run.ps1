@@ -75,7 +75,7 @@ $blockListUrl = "https://raw.githubusercontent.com/logica0419/dotfiles/main/wind
 $blockListDestination = Join-Path $env:ProgramFiles "Winget-AutoUpdate\config\excluded_apps.txt"
 Invoke-WebRequest -Uri $blockListUrl -OutFile $blockListDestination
 
-Write-Host "`nSetting up an auto-upgrade script`n"
+Write-Host "Setting up an auto-upgrade script`n"
 
 $startupBatPath = Join-Path $env:APPDATA "Microsoft\Windows\Start Menu\Programs\Startup\winget_upgrade.bat"
 $startupBatLines = @(
