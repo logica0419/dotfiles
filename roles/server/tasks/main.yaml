@@ -169,6 +169,15 @@
       ansible.builtin.command: pwd
       register: server_dotfiles_dir
       changed_when: false
+    - name: Create config directories
+      ansible.builtin.file:
+        path: "{{ ansible_facts.user_dir }}/{{ item }}"
+        state: directory
+        mode: "0700"
+      loop:
+        - .config
+        - .config/systemd
+        - .config/systemd/user
     - name: Deploy updater service template
       ansible.builtin.template:
         src: updater.service.j2
