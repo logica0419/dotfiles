@@ -17,4 +17,5 @@
     - docker
     - role: git
       git_go_credentials_enabled: false
+    - workspace_sdplane
     - completion

@@ -1,0 +1,53 @@
+---
+- name: Update dotfiles repository
+  block:
+    - name: Get current workspace path
+      ansible.builtin.command: pwd
+      register: workspace_sdplane_dotfiles_dir
+      changed_when: false
+    - name: Pull dotfiles repository
+      ansible.builtin.git: # noqa: latest
+        repo: https://github.com/logica0419/dotfiles.git
+        dest: "{{ workspace_sdplane_dotfiles_dir.stdout }}"
+      failed_when: false
+
+- name: Clone Git repositories
+  ansible.builtin.git: # noqa: latest
+    repo: "{{ item.repo }}"
+    dest: "{{ ansible_facts.user_dir }}/prj/{{ item.dest }}"
+  failed_when: false
+  with_items:
+    - repo: https://github.com/kait-cronos/sdplane-dev.git
+      dest: work/sdplane-dev
+
+- name: Configure oxfmt settings
+  block:
+    - name: Create config directories
+      ansible.builtin.file:
+        path: "{{ ansible_facts.user_dir }}/{{ item }}"
+        state: directory
+        mode: "0700"
+      loop:
+        - .config
+        - .config/oxfmt
+    - name: Deploy oxfmt config file
+      ansible.builtin.copy:
+        src: .oxfmtrc.json
+        dest: "{{ ansible_facts.user_dir }}/.config/oxfmt/.oxfmtrc.json"
+        mode: "0600"
+
+- name: Configure clangd settings
+  block:
+    - name: Create config directories
+      ansible.builtin.file:
+        path: "{{ ansible_facts.user_dir }}/{{ item }}"
+        state: directory
+        mode: "0700"
+      loop:
+        - .config
+        - .config/clangd
+    - name: Deploy clangd config file
+      ansible.builtin.copy:
+        src: config.yaml
+        dest: "{{ ansible_facts.user_dir }}/.config/clangd/config.yaml"
+        mode: "0600"
