@@ -87,4 +87,4 @@ Macは手動インストールが必要なものがある
 
 - 各種フォント類
   - 特にcica
-- DockLock Lite
+- Amphetamine
