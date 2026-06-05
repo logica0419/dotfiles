@@ -14,7 +14,7 @@
 - name: Clone Git repositories
   ansible.builtin.git: # noqa: latest
     repo: "{{ item.repo }}"
-    dest: "{{ ansible_facts.user_dir }}/{{ item.dest }}"
+    dest: "{{ ansible_facts.user_dir }}/prj/{{ item.dest }}"
   failed_when: false
   with_items:
     - repo: https://github.com/kait-cronos/sdplane-dev.git
