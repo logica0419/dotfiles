@@ -1,3 +1,5 @@
 Host server
   Hostname logica-server.tailccba4.ts.net
   User logica0419
+
+Include conf.d/*.conf
