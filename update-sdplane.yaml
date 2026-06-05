@@ -1,0 +1,11 @@
+---
+- name: Update Packages
+  hosts: local
+  connection: local
+  roles:
+    - role: check_os
+      check_os_expected_system: Linux
+    - apt
+    - go
+    - youki
+    - update

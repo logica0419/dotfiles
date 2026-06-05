@@ -5,7 +5,8 @@
     dest: "{{ ansible_facts.user_dir }}/.gitconfig"
     mode: "0664"
 
-- name: Validate Go repository credentials
+- name: Configure Go repository credentials
+  when: git_go_credentials_enabled | default(true)
   block:
     - name: Get .gitcookies status
       ansible.builtin.stat:

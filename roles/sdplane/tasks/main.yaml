@@ -1,0 +1,50 @@
+---
+- name: Configure timezone to Asia/Tokyo
+  become: true
+  community.general.timezone:
+    name: Asia/Tokyo
+
+- name: Enable linger mode
+  ansible.builtin.command: loginctl enable-linger {{ ansible_user }}
+  changed_when: false
+
+- name: Configure updater service
+  block:
+    - name: Get current workspace path
+      ansible.builtin.command: pwd
+      register: sdplane_dotfiles_dir
+      changed_when: false
+    - name: Deploy updater service template
+      ansible.builtin.template:
+        src: updater.service.j2
+        dest: "{{ ansible_facts.user_dir }}/.config/systemd/user/updater.service"
+        mode: "0644"
+    - name: Deploy updater timer template
+      ansible.builtin.template:
+        src: updater.timer.j2
+        dest: "{{ ansible_facts.user_dir }}/.config/systemd/user/updater.timer"
+        mode: "0644"
+    - name: Enable and start updater timer
+      ansible.builtin.systemd_service:
+        name: updater.timer
+        enabled: true
+        state: started
+        scope: user
+        daemon_reload: true
+
+- name: Configure periodic reboot
+  become: true
+  block:
+    - name: Get reboot path
+      ansible.builtin.shell:
+        executable: /bin/bash
+        cmd: command -v reboot
+      register: sdplane_reboot_path
+      changed_when: false
+    - name: Configure reboot check cron
+      ansible.builtin.cron:
+        name: reboot server (update detection)
+        minute: 30
+        hour: 4
+        user: root
+        job: "[ -e /var/run/reboot-required ] && {{ sdplane_reboot_path.stdout }} 0"

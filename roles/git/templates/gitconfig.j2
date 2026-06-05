@@ -14,7 +14,9 @@ gpgsign = true
 editor = code --wait
 [pull]
 rebase = true
+{% if git_go_credentials_enabled | default(true) %}
 [http]
 cookiefile = {{ ansible_facts.user_dir }}/.gitcookies
+{% endif %}
 [init]
 defaultBranch = main

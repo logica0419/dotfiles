@@ -1,0 +1,10 @@
+[Unit]
+Description=Run server updater daily
+
+[Timer]
+OnCalendar=*-*-* 04:00:00
+Persistent=true
+Unit=updater.service
+
+[Install]
+WantedBy=timers.target

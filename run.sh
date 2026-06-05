@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ "$ENV" != "server" ] && [ "$ENV" != "wsl" ] && [ "$ENV" != "mac" ]; then
+if [ "$ENV" != "server" ] && [ "$ENV" != "wsl" ] && [ "$ENV" != "mac" ] && [ "$ENV" != "sdplane" ]; then
   echo "ENV must be set to server, wsl or mac"
   return 1
 fi
@@ -50,7 +50,7 @@ while :; do
   fi
 
   if command -v docker &>/dev/null && ! (docker ps &>/dev/null); then
-    if [ "$ENV" == "server" ]; then
+    if [ "$ENV" == "server" ] || [ "$ENV" == "sdplane" ]; then
       sudo reboot 0
     fi
     return 1
