@@ -48,6 +48,7 @@ curl -L https://raw.githubusercontent.com/logica0419/dotfiles/main/import.sh -o 
   - mac (MacOS環境用)
   - wsl (Ubuntu 26.04 on WSL2環境用)
   - server (Ubuntu 26.04 on 自宅サーバー用)
+  - sdplane (【お仕事】Ubuntu 24.04 on sdplane開発環境用)
 
 ## その他
 
