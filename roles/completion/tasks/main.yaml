@@ -14,7 +14,7 @@
   ansible.builtin.shell:
     executable: /bin/bash
     cmd: |
-      if command -v {{ item.command.split(' ')[0] }} >/dev/null 2>&1; then
+      if command -v {{ item.file }} >/dev/null 2>&1; then
         {{ item.command }} > {{ ansible_facts.user_dir }}/.local/share/bash-completion/completions/{{ item.file }}
       fi
   changed_when: false
