@@ -1,7 +1,6 @@
 Include /Users/logica0419/.colima/ssh_config
+Include conf.d/*.conf
 
 Host server
   Hostname logica-server.tailccba4.ts.net
   User logica0419
-
-Include conf.d/*.conf
