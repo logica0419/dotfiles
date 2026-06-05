@@ -8,6 +8,28 @@
   ansible.builtin.command: loginctl enable-linger {{ ansible_user }}
   changed_when: false
 
+- name: Install sdplane dependencies
+  become: true
+  ansible.builtin.apt:
+    name:
+      - build-essential
+      - cmake
+      - autotools-dev
+      - autoconf
+      - automake
+      - libtool
+      - pkg-config
+      - etckeeper
+      - tig
+      - bridge-utils
+      - iptables-persistent
+      - fail2ban
+      - dmidecode
+      - screen
+      - ripgrep
+    state: present
+    update_cache: true
+
 - name: Configure updater service
   block:
     - name: Get current workspace path
