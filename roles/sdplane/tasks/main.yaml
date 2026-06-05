@@ -27,6 +27,7 @@
       - dmidecode
       - screen
       - ripgrep
+      - dpdk-dev
       - libdpdk-dev
       - liburcu-dev
       - libpcap-dev
