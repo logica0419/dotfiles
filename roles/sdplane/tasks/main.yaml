@@ -27,6 +27,9 @@
       - dmidecode
       - screen
       - ripgrep
+      - libdpdk-dev
+      - liburcu-dev
+      - libpcap-dev
     state: present
     update_cache: true
 
