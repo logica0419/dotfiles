@@ -13,7 +13,10 @@
 - name: Deploy completion scripts
   ansible.builtin.shell:
     executable: /bin/bash
-    cmd: "{{ item.command }} > {{ ansible_facts.user_dir }}/.local/share/bash-completion/completions/{{ item.file }}"
+    cmd: |
+      if command -v {{ item.command.split(' ')[0] }} >/dev/null 2>&1; then
+        {{ item.command }} > {{ ansible_facts.user_dir }}/.local/share/bash-completion/completions/{{ item.file }}
+      fi
   changed_when: false
   loop:
     - command: docker completion bash
@@ -34,26 +37,17 @@
       file: mise
     - command: rustup completions bash
       file: rustup
+    - command: bun completions
+      file: bun
     - command: task --completion bash
       file: task
     - command: uv generate-shell-completion bash
       file: uv
-
-- name: Deploy container completion
-  ansible.builtin.shell:
-    executable: /bin/bash
-    cmd: container --generate-completion-script bash > {{ ansible_facts.user_dir }}/.local/share/bash-completion/completions/container
-  when: ansible_facts['system'] == 'Darwin'
-  changed_when: false
+    - command: container --generate-completion-script bash
+      file: container
 
 - name: Install terraform completion shim
   ansible.builtin.copy:
     dest: "{{ ansible_facts.user_dir }}/.local/share/bash-completion/completions/terraform"
     mode: "0644"
     content: complete -C "$(command -v terraform)" terraform
-
-- name: Deploy bun completion script
-  ansible.builtin.shell:
-    executable: /bin/bash
-    cmd: bun completions > "{{ ansible_facts.user_dir }}/.local/share/bash-completion/completions/bun"
-  changed_when: false
