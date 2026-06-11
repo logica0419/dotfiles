@@ -16,6 +16,6 @@
     - youki
     - docker
     - role: git
-      git_go_credentials_enabled: false
+      git_sdplane: true
     - workspace_sdplane
     - completion

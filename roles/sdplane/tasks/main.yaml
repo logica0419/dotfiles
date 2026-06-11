@@ -8,6 +8,23 @@
   ansible.builtin.command: loginctl enable-linger {{ ansible_user }}
   changed_when: false
 
+- name: Configure VS Code server settings
+  block:
+    - name: Create VS Code directories
+      ansible.builtin.file:
+        path: "{{ ansible_facts.user_dir }}/{{ item }}"
+        state: directory
+        mode: "0755"
+      loop:
+        - .vscode-server
+        - .vscode-server/data
+        - .vscode-server/data/Machine
+    - name: Deploy VS Code settings
+      ansible.builtin.template:
+        src: settings.json.j2
+        dest: "{{ ansible_facts.user_dir }}/.vscode-server/data/Machine/settings.json"
+        mode: "0644"
+
 - name: Install sdplane dependencies
   become: true
   ansible.builtin.apt:

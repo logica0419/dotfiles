@@ -6,7 +6,7 @@
     mode: "0664"
 
 - name: Configure Go repository credentials
-  when: git_go_credentials_enabled | default(true)
+  when: not git_sdplane
   block:
     - name: Get .gitcookies status
       ansible.builtin.stat:
