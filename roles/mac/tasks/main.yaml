@@ -57,6 +57,7 @@
       - devtoys
       - kicad
       - balenaetcher
+      - ollama-app
 
       # 音楽系
       - freac
