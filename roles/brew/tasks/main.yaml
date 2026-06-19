@@ -18,6 +18,12 @@
           - oven-sh/bun
           - tinygo-org/tools
           - terror/tap
+    - name: Trust Homebrew tap
+      ansible.builtin.command: brew trust {{ item }}
+      changed_when: false
+      loop:
+        - tinygo-org/tools/tinygo
+        - terror/tap/just-lsp
     - name: Install Homebrew packages
       community.general.homebrew:
         name:
