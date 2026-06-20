@@ -5,6 +5,9 @@
       community.general.homebrew_tap:
         name:
           - socktainer/tap
+    - name: Trust socktainer tap
+      ansible.builtin.command: brew trust socktainer/tap
+      changed_when: false
     - name: Install Homebrew packages
       community.general.homebrew:
         name:
