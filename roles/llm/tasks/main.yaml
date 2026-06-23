@@ -1,0 +1,8 @@
+---
+- name: Install rtk
+  community.general.homebrew:
+    name: rtk
+    state: present
+- name: Configure rtk
+  ansible.builtin.command: rtk init -g --copilot
+  changed_when: false

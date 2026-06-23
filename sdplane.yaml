@@ -9,6 +9,7 @@
     - sdplane
     - brew
     - rc
+    - llm
     - go
     - rust
     - python

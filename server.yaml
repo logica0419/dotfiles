@@ -9,6 +9,7 @@
     - server
     - brew
     - rc
+    - llm
     - go
     - rust
     - python

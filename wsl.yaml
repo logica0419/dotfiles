@@ -10,6 +10,7 @@
     - brew
     - role: rc
       rc_browser_path: "/usr/bin/chrome"
+    - llm
     - go
     - rust
     - python
