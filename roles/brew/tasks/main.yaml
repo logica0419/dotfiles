@@ -24,6 +24,11 @@
       loop:
         - tinygo-org/tools/tinygo
         - terror/tap/just-lsp
+        - hashicorp/tap/terraform
+        - terraform-linters/tap/tflint
+        - oven-sh/bun/bun
+        - k1low/tap/tbls
+        - ycd/tap/dstp
     - name: Install Homebrew packages
       community.general.homebrew:
         name:
@@ -32,7 +37,7 @@
           - cmake
           - ninja
           - llvm
-          - tinygo
+          - tinygo-org/tools/tinygo
           - git
           - gh
           - htop
@@ -42,8 +47,8 @@
           - hashicorp/tap/terraform
           - terraform-linters/tap/tflint
           - direnv
-          - dstp
-          - tbls
+          - ycd/tap/dstp
+          - k1low/tap/tbls
           - hadolint
           - go-task
           - just
