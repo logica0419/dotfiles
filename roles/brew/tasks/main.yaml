@@ -18,7 +18,7 @@
           - oven-sh/bun
           - tinygo-org/tools
           - terror/tap
-    - name: Trust Homebrew tap
+    - name: Trust tap formulas
       ansible.builtin.command: brew trust {{ item }}
       changed_when: false
       loop:
