@@ -72,7 +72,7 @@ foreach ($package in $user_packages) {
 Write-Host "`nCreating BlockList for Winget-AutoUpdate`n"
 
 $blockListUrl = "https://raw.githubusercontent.com/logica0419/dotfiles/main/windows/files/excluded_apps.txt"
-$blockListDestination = Join-Path $env:ProgramFiles "Winget-AutoUpdate\config\excluded_apps.txt"
+$blockListDestination = Join-Path $env:ProgramFiles "Winget-AutoUpdate\excluded_apps.txt"
 Invoke-WebRequest -Uri $blockListUrl -OutFile $blockListDestination
 
 Write-Host "Setting up an auto-upgrade script`n"
