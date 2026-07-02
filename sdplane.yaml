@@ -16,6 +16,7 @@
     - mise
     - youki
     - docker
+    - k8s
     - role: git
       git_sdplane: true
     - workspace_sdplane
