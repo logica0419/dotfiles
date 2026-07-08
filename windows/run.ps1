@@ -41,6 +41,7 @@ $machine_packages = @(
   "Tailscale.Tailscale"
   "Figma.Figma"
   "Git.Git"
+  "Mozilla.Thunderbird.ja"
 )
 
 foreach ($package in $machine_packages) {
