@@ -70,6 +70,7 @@
       - xnconvert
 
       # SNS・通信系
+      - thunderbird
       - discord
       - mattermost
       - signal
