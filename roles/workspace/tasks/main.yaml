@@ -17,6 +17,15 @@
     dest: "{{ ansible_facts.user_dir }}/prj/{{ item.dest }}"
   failed_when: false
   with_items:
+    - repo: https://github.com/gopherconjp/.github.git
+      dest: gopherconjp/.github
+    - repo: https://github.com/gopherconjp/gophercon.jp.git
+      dest: gopherconjp/gophercon.jp
+    - repo: https://github.com/gopherconjp/portal.gophercon.jp.git
+      dest: gopherconjp/portal.gophercon.jp
+    - repo: https://github.com/gopherconjp/email-notifier.git
+      dest: gopherconjp/email-notifier
+
     - repo: https://github.com/ictsc/ictsc-regalia.git
       dest: ictsc/ictsc-regalia
     - repo: https://github.com/ictsc/ictsc-drove.git
