@@ -23,4 +23,4 @@ jobs:
       - name: Sync environment
         run: uv sync
       - name: Ansible Lint
-        run: uv run ansible-lint -s --exclude ./.github/ --exclude ./.github/workflows/
+        run: uv run ansible-lint -s --exclude .github/* --exclude .github/workflows/*
