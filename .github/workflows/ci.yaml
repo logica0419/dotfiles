@@ -2,19 +2,24 @@ name: CI
 
 on:
   push:
-    branches:
-      - "main"
+    branches: [main]
   pull_request:
+
+permissions:
+  contents: read
 
 jobs:
   lint:
     name: Ansible Lint
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout
-        uses: actions/checkout@v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - name: Install uv
-        uses: astral-sh/setup-uv@v10.0.0
+        uses: astral-sh/setup-uv@ae62891fec2bb8e7d6c99fc78c9fec3a63790f8d # v10.0.0
       - name: Sync environment
         run: uv sync
       - name: Ansible Lint

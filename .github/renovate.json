@@ -4,6 +4,16 @@
   "prHourlyLimit": 0,
   "prConcurrentLimit": 0,
   "labels": ["dependencies"],
+  "customManagers": [
+    {
+      "description": "Track the pinned ghalint version in actions-ci.yaml",
+      "customType": "regex",
+      "managerFilePatterns": ["/^\\.github/workflows/actions-ci\\.yaml$/"],
+      "matchStrings": ["GHALINT_VERSION: (?<currentValue>v?\\d+\\.\\d+\\.\\d+)"],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "suzuki-shunsuke/ghalint"
+    }
+  ],
   "packageRules": [
     {
       "description": "Auto merge all dependencies",
