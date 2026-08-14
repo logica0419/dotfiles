@@ -53,6 +53,9 @@
           - ycd/tap/dstp
           - k1low/tap/tbls
           - hadolint
+          - actionlint
+          - ghalint
+          - zizmor
           - go-task
           - just
           - just-lsp
