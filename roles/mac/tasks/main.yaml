@@ -57,6 +57,7 @@
       - devtoys
       - kicad
       - balenaetcher
+      - utm
 
       # 音楽系
       - freac
@@ -68,6 +69,7 @@
       - figma
       - obs
       - xnconvert
+      - inkscapefix
 
       # SNS・通信系
       - thunderbird

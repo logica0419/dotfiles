@@ -46,7 +46,6 @@
           - htop
           - jq
           - yq
-          - inkscape
           - shfmt
           - hashicorp/tap/terraform
           - terraform-linters/tap/tflint
