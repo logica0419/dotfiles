@@ -22,3 +22,9 @@
       - file
       - git
     state: present
+
+- name: Install incscape
+  become: true
+  ansible.builtin.apt:
+    name: inkscape
+    state: present
