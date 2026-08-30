@@ -25,6 +25,8 @@
       dest: gopherconjp/portal.gophercon.jp
     - repo: https://github.com/gopherconjp/email-notifier.git
       dest: gopherconjp/email-notifier
+    - repo: https://github.com/gopherconjp/actions-toolkit.git
+      dest: gopherconjp/actions-toolkit
 
     - repo: https://github.com/ictsc/ictsc-regalia.git
       dest: ictsc/ictsc-regalia
