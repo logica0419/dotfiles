@@ -46,6 +46,9 @@
           - htop
           - jq
           - yq
+          - imagemagick
+          - webp
+          - libtiff
           - shfmt
           - hashicorp/tap/terraform
           - terraform-linters/tap/tflint
