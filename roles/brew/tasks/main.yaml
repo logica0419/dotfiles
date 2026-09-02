@@ -43,6 +43,7 @@
           - tinygo-org/tools/tinygo
           - git
           - gh
+          - coderabbit
           - htop
           - jq
           - yq
