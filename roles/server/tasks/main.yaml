@@ -163,6 +163,26 @@
         - hybrid-sleep.target
       notify: Restart systemd-logind
 
+- name: Configure log rotation
+  become: true
+  block:
+    - name: Add logrotate su directive
+      ansible.builtin.lineinfile:
+        path: /etc/logrotate.d/rsyslog
+        insertafter: "^{"
+        line: "\tsu root syslog"
+    - name: Create journald config directory
+      ansible.builtin.file:
+        path: /etc/systemd/journald.conf.d
+        state: directory
+        mode: "0755"
+    - name: Deploy journald size limit
+      ansible.builtin.copy:
+        src: journald-size.conf
+        dest: /etc/systemd/journald.conf.d/journald-size.conf
+        mode: "0644"
+      notify: Restart systemd-journald
+
 - name: Configure updater service
   block:
     - name: Get current workspace path
