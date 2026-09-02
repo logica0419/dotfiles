@@ -47,6 +47,7 @@
         - github.com/bobg/mingo/cmd/mingo
         - golang.org/x/review/git-codereview
         - github.com/spf13/cobra-cli
+        - github.com/sago35/tinygo-autocmpl
     - name: Deploy golangci-lint alias
       ansible.builtin.file:
         path: "{{ ansible_facts.user_dir }}/go/bin/golangci-lint-v2"

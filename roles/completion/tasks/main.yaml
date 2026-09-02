@@ -37,6 +37,8 @@
       file: mise
     - command: rustup completions bash
       file: rustup
+    - command: rustup completions bash cargo
+      file: cargo
     - command: bun completions
       file: bun
     - command: task --completion bash
@@ -45,6 +47,26 @@
       file: uv
     - command: container --generate-completion-script bash
       file: container
+    - command: youki completion --shell bash
+      file: youki
+    - command: npm completion
+      file: npm
+    - command: golangci-lint completion bash
+      file: golangci-lint
+    - command: dlv completion bash
+      file: dlv
+    - command: yq completion bash
+      file: yq
+    - command: tbls completion bash
+      file: tbls
+    - command: ghalint completion bash
+      file: ghalint
+    - command: zizmor --completions bash
+      file: zizmor
+    - command: tailscale completion bash
+      file: tailscale
+    - command: tinygo-autocmpl --completion-script-bash
+      file: tinygo
 
 - name: Install terraform completion shim
   ansible.builtin.copy:
