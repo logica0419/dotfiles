@@ -42,6 +42,7 @@ $machine_packages = @(
   "Figma.Figma"
   "Git.Git"
   "Mozilla.Thunderbird.ja"
+  "Microsoft.PowerToys"
 )
 
 foreach ($package in $machine_packages) {
