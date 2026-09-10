@@ -50,6 +50,8 @@ foreach ($package in $machine_packages) {
   winget install $package --scope machine --accept-package-agreements --accept-source-agreements
 }
 
+winget upgrade --all --scope machine --accept-package-agreements --accept-source-agreements
+
 Write-Host "`nInstalling user-scoped packages`n"
 
 $user_packages = @(
@@ -70,6 +72,8 @@ foreach ($package in $user_packages) {
   Write-Host "Installing $package"
   winget install $package --scope user --accept-package-agreements --accept-source-agreements
 }
+
+winget upgrade --all --scope user --accept-package-agreements --accept-source-agreements
 
 Write-Host "`nCreating BlockList for Winget-AutoUpdate`n"
 
