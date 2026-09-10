@@ -12,3 +12,4 @@ Romanitho.Winget-AutoUpdate
 KnifMelti.WAU-Settings-GUI
 
 WavesAudio.WavesCentral
+Nvidia.PhysX
