@@ -1,0 +1,16 @@
+language: "en-US"
+
+reviews:
+  profile: assertive
+  request_changes_workflow: true
+
+  path_filters:
+    - "!.github/skills/**"
+    - "!.github/instructions/**"
+    - "!.github/copilot-instructions.md"
+
+  auto_review:
+    enabled: true
+    drafts: false
+    ignore_usernames:
+      - "renovate[bot]"
