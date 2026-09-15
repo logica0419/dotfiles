@@ -6,3 +6,53 @@
 - name: Configure rtk
   ansible.builtin.command: rtk init -g --copilot
   changed_when: false
+
+- name: Deploy Copilot skills
+  block:
+    - name: Create Copilot skills directories
+      ansible.builtin.file:
+        path: "{{ ansible_facts.user_dir }}/{{ item }}"
+        state: directory
+        mode: "0700"
+      loop:
+        - .copilot
+        - .copilot/skills
+        - .copilot/skills/cleanup-merged-branch
+        - .copilot/skills/parallel-worktree
+        - .copilot/skills/git-commit-and-pr
+        - .copilot/skills/coderabbit-review-loop
+        - .copilot/skills/instruction-maintenance
+    - name: Deploy Copilot skills files
+      ansible.builtin.copy:
+        src: "skills/{{ item }}/SKILL.md"
+        dest: "{{ ansible_facts.user_dir }}/.copilot/skills/{{ item }}/SKILL.md"
+        mode: "0644"
+      loop:
+        - cleanup-merged-branch
+        - parallel-worktree
+        - git-commit-and-pr
+        - coderabbit-review-loop
+        - instruction-maintenance
+
+- name: Deploy Copilot instructions
+  block:
+    - name: Create Copilot instructions directories
+      ansible.builtin.file:
+        path: "{{ ansible_facts.user_dir }}/{{ item }}"
+        state: directory
+        mode: "0700"
+      loop:
+        - .copilot
+        - .copilot/instructions
+    - name: Deploy Copilot instructions files
+      ansible.builtin.copy:
+        src: "instructions/{{ item }}"
+        dest: "{{ ansible_facts.user_dir }}/.copilot/instructions/{{ item }}"
+        mode: "0644"
+      loop:
+        - comment-style.instructions.md
+        - minimal-diff.instructions.md
+        - string-yaml-style.instructions.md
+        - ansible-style.instructions.md
+        - shell-style.instructions.md
+        - instruction-style.instructions.md
