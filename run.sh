@@ -1,4 +1,5 @@
 #!/bin/bash
+# No set -eu -o pipefail: sourced with return and retried in a while loop.
 
 if [ "$ENV" != "server" ] && [ "$ENV" != "wsl" ] && [ "$ENV" != "mac" ] && [ "$ENV" != "sdplane" ]; then
   echo "ENV must be set to server, wsl or mac"
