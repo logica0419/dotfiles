@@ -8,6 +8,7 @@ reviews:
     - "!.github/skills/**"
     - "!.github/instructions/**"
     - "!.github/copilot-instructions.md"
+    - "!roles/llm/files/**"
 
   auto_review:
     enabled: true
