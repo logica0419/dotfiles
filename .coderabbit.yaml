@@ -9,6 +9,7 @@ reviews:
     - "!.github/instructions/**"
     - "!.github/copilot-instructions.md"
     - "!roles/llm/files/**"
+    - "!roles/**/AGENTS.md"
 
   auto_review:
     enabled: true
