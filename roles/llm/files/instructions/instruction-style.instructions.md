@@ -29,3 +29,4 @@ applyTo: "**/*.instructions.md, **/SKILL.md, **/AGENTS.md"
 ## Procedure
 
 - Follow the `/instruction-maintenance` skill procedure.
+- After editing, re-read each changed file and condense without changing meaning.
