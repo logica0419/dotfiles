@@ -2,6 +2,18 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
+eval "$({{ check_os_brew_base_path }}/bin/brew shellenv)"
+
+if [ -f "{{ ansible_facts.user_dir }}/.cargo/env" ]; then
+  . "{{ ansible_facts.user_dir }}/.cargo/env"
+fi
+
+if [ -f "{{ ansible_facts.user_dir }}/.config/environment.d/env.conf" ]; then
+  set -a
+  . "{{ ansible_facts.user_dir }}/.config/environment.d/env.conf"
+  set +a
+fi
+
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
@@ -97,4 +109,7 @@ fi
 # . /etc/bash_completion
 #fi
 
-eval "$(mise activate bash)"
+if command -v mise >/dev/null 2>&1; then
+  eval "$(mise activate bash)"
+fi
+

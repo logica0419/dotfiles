@@ -29,8 +29,8 @@
   when: ansible_facts.system == "Linux"
   block:
     - name: Deploy .bashrc to root home
-      ansible.builtin.copy:
-        src: bashrc-root
+      ansible.builtin.template:
+        src: bashrc-root.j2
         dest: /root/.bashrc
         mode: "0644"
     - name: Deploy .profile to root home
