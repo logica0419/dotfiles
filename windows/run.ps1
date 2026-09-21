@@ -133,7 +133,7 @@ $aeMcpJson = @'
 {
   "servers": {
     "after-effects": {
-      "command": "node",
+      "command": "C:\\Program Files\\nodejs\\node.exe",
       "args": [
         "${workspaceFolder}/dist/index.js"
       ]
@@ -154,14 +154,6 @@ Write-Host "Setting up an auto-upgrade script`n"
 $startupBatPath = Join-Path $env:APPDATA "Microsoft\Windows\Start Menu\Programs\Startup\winget_upgrade.bat"
 $startupBatLines = @(
   "@echo off"
-  "for %%P in ("
-) + ($user_packages | ForEach-Object { "`t$_" }) + @(
-  ") do ("
-  "`techo Upgrading %%P..."
-  "`twinget upgrade --id %%P --scope user --accept-package-agreements --accept-source-agreements"
-  ")"
-
-  "winget upgrade --all --scope user --accept-package-agreements --accept-source-agreements"
 
   "echo Updating dotfiles..."
   "if exist `"$dotfilesDir`" git -C `"$dotfilesDir`" pull --ff-only"
@@ -172,6 +164,15 @@ $startupBatLines = @(
   "if exist `"$aeMcpDir`" call npm install"
   "if exist `"$aeMcpDir`" call npm run build"
   "if exist `"$aeMcpDir`" popd"
+
+  "for %%P in ("
+) + ($user_packages | ForEach-Object { "`t$_" }) + @(
+  ") do ("
+  "`techo Upgrading %%P..."
+  "`twinget upgrade --id %%P --scope user --accept-package-agreements --accept-source-agreements"
+  ")"
+
+  "winget upgrade --all --scope user --accept-package-agreements --accept-source-agreements"
 )
 
 Set-Content -Path $startupBatPath -Value ($startupBatLines -join "`r`n") -Encoding ascii
