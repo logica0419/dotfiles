@@ -162,6 +162,16 @@ $startupBatLines = @(
   ")"
 
   "winget upgrade --all --scope user --accept-package-agreements --accept-source-agreements"
+
+  "echo Updating dotfiles..."
+  "if exist `"$dotfilesDir`" git -C `"$dotfilesDir`" pull --ff-only"
+
+  "echo Updating after-effects-mcp..."
+  "if exist `"$aeMcpDir`" git -C `"$aeMcpDir`" pull --ff-only"
+  "if exist `"$aeMcpDir`" pushd `"$aeMcpDir`""
+  "if exist `"$aeMcpDir`" call npm install"
+  "if exist `"$aeMcpDir`" call npm run build"
+  "if exist `"$aeMcpDir`" popd"
 )
 
 Set-Content -Path $startupBatPath -Value ($startupBatLines -join "`r`n") -Encoding ascii
