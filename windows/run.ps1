@@ -41,6 +41,8 @@ $machine_packages = @(
   "Tailscale.Tailscale"
   "Figma.Figma"
   "Git.Git"
+  "GitHub.cli"
+  "OpenJS.NodeJS.LTS"
   "Mozilla.Thunderbird.ja"
   "Microsoft.PowerToys"
 )
@@ -74,6 +76,72 @@ foreach ($package in $user_packages) {
 }
 
 winget upgrade --all --scope user --accept-package-agreements --accept-source-agreements
+
+Write-Host "`nAuthenticating GitHub CLI`n"
+
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User") + ";" + $env:Path
+
+if (Get-Command gh -ErrorAction SilentlyContinue) {
+  gh auth status 2>$null
+  if ($LASTEXITCODE -ne 0) {
+    gh auth login
+  }
+} else {
+  Write-Warning "gh not found on Path; skipping gh auth login."
+}
+
+Write-Host "`nCloning dotfiles`n"
+
+$dotfilesDir = Join-Path $env:USERPROFILE "dotfiles"
+if (-not (Test-Path $dotfilesDir)) {
+  git clone https://github.com/logica0419/dotfiles.git $dotfilesDir
+} else {
+  git -C $dotfilesDir pull --ff-only
+}
+
+Write-Host "`nSetting up After Effects MCP`n"
+
+$adobeDir = Join-Path ([Environment]::GetFolderPath("MyDocuments")) "Adobe"
+$aeMcpDir = Join-Path $adobeDir "after-effects-mcp"
+
+if (-not (Test-Path $adobeDir)) {
+  New-Item -ItemType Directory -Path $adobeDir | Out-Null
+}
+
+if (-not (Test-Path $aeMcpDir)) {
+  git clone https://github.com/ishu86/after-effects-mcp.git $aeMcpDir
+} else {
+  git -C $aeMcpDir pull --ff-only
+}
+
+Push-Location $aeMcpDir
+npm install
+npm run build
+Pop-Location
+
+$aeInstallDir = Get-ChildItem (Join-Path $env:ProgramFiles "Adobe") -Directory -Filter "Adobe After Effects*" -ErrorAction SilentlyContinue | Select-Object -First 1
+if ($aeInstallDir) {
+  Write-Output "" | cmd /c "`"$aeMcpDir\scripts\install-cep.bat`""
+}
+
+$aeMcpVscodeDir = Join-Path $aeMcpDir ".vscode"
+if (-not (Test-Path $aeMcpVscodeDir)) {
+  New-Item -ItemType Directory -Path $aeMcpVscodeDir | Out-Null
+}
+$aeMcpJsonPath = Join-Path $aeMcpVscodeDir "mcp.json"
+$aeMcpJson = @'
+{
+  "servers": {
+    "after-effects": {
+      "command": "node",
+      "args": [
+        "${workspaceFolder}/dist/index.js"
+      ]
+    }
+  }
+}
+'@
+Set-Content -Path $aeMcpJsonPath -Value $aeMcpJson -Encoding utf8
 
 Write-Host "`nCreating BlockList for Winget-AutoUpdate`n"
 
