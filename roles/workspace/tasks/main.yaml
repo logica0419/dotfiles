@@ -28,6 +28,31 @@
     - repo: https://github.com/gopherconjp/actions-toolkit.git
       dest: gopherconjp/actions-toolkit
 
+    - repo: https://go.googlesource.com/go
+      dest: oss/go
+    - repo: https://go.googlesource.com/vscode-go
+      dest: oss/vscode-go
+    - repo: https://github.com/logica0419/tinygo.git
+      dest: oss/tinygo
+    - repo: https://github.com/logica0419/drivers.git
+      dest: oss/drivers
+    - repo: https://github.com/logica0419/kubernetes.git
+      dest: oss/kubernetes
+    - repo: https://github.com/logica0419/website.git
+      dest: oss/k8s-website
+    - repo: https://github.com/logica0419/etcd
+      dest: oss/etcd
+    - repo: https://github.com/logica0419/raft
+      dest: oss/raft
+    - repo: https://github.com/logica0419/youki
+      dest: oss/youki
+    - repo: https://github.com/logica0419/runc
+      dest: oss/runc
+    - repo: https://github.com/logica0419/external-secrets
+      dest: oss/external-secrets
+    - repo: https://github.com/logica0419/syndep.git
+      dest: oss/syndep
+
     - repo: https://github.com/ictsc/ictsc-regalia.git
       dest: ictsc/ictsc-regalia
     - repo: https://github.com/ictsc/ictsc-drove.git
@@ -61,29 +86,6 @@
 
     - repo: https://github.com/hatahatack/score_plorer_v2.git
       dest: ajy/score_plorer_v2
-
-    - repo: https://go.googlesource.com/go
-      dest: oss/go
-    - repo: https://go.googlesource.com/vscode-go
-      dest: oss/vscode-go
-    - repo: https://github.com/logica0419/tinygo.git
-      dest: oss/tinygo
-    - repo: https://github.com/logica0419/drivers.git
-      dest: oss/drivers
-    - repo: https://github.com/logica0419/kubernetes.git
-      dest: oss/kubernetes
-    - repo: https://github.com/logica0419/website.git
-      dest: oss/k8s-website
-    - repo: https://github.com/logica0419/etcd
-      dest: oss/etcd
-    - repo: https://github.com/logica0419/raft
-      dest: oss/raft
-    - repo: https://github.com/logica0419/youki
-      dest: oss/youki
-    - repo: https://github.com/logica0419/runc
-      dest: oss/runc
-    - repo: https://github.com/logica0419/external-secrets
-      dest: oss/external-secrets
 
 - name: Configure oxfmt settings
   block:
