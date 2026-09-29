@@ -5,10 +5,12 @@ description: Run CodeRabbit reviews until no findings remain. Use when the user 
 
 # CodeRabbit Review Loop
 
-Run before creating a PR to raise code quality. Only run when explicitly asked.
+Only run when explicitly asked.
 
-1. Ensure a feature branch (create/switch if needed), record HEAD as `<loop-base>`, then commit the worktree (keep local, never push).
+1. Ensure feature branch, record HEAD as `<loop-base>`, commit worktree (keep local, never push).
 2. Run `coderabbit review --agent --base-commit <last reviewed>` (first: `<loop-base>`).
-3. Ask the user on design decisions; ask before adding invalid findings to `.coderabbit.yaml` `path_instructions`. Config changes apply only after merging to main; verify with `@coderabbitai configuration`.
-4. Fix valid findings, run the project's check/lint/format commands, commit; repeat until `findings: 0`.
-5. `git reset <loop-base>` (mixed, keep worktree), notify and wait, then recommit granularly.
+3. Triage each finding: fix if valid; always ask if fix adds complexity.
+4. Ask with summary, fix cost, keep-simple risk, `accept fix` vs `keep simple + suppress`, and recommendation (default `keep simple` when risk is low).
+5. On `keep simple`: ask before adding one concise English `path_instructions` entry with narrow glob. Config applies after merging to main; verify with `@coderabbitai configuration`.
+6. Fix accepted findings, run check/lint/format, commit; repeat until `findings: 0`.
+7. `git reset <loop-base>` (mixed, keep worktree), notify and wait, then recommit granularly.
