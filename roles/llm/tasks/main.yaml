@@ -56,3 +56,6 @@
         - ansible-style.instructions.md
         - shell-style.instructions.md
         - instruction-style.instructions.md
+        - code-structure.instructions.md
+        - quote-style.instructions.md
+        - typescript-style.instructions.md

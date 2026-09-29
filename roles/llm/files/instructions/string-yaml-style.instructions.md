@@ -6,6 +6,6 @@ applyTo: "**/*.yaml, **/*.yml"
 
 # String and YAML Style
 
-- Use `yaml` extensions, not `yml`; double quotes by default, single only for special characters or reserved keywords.
+- Use `yaml` extensions, not `yml`; quoting follows quote-style.
 - Preserve indentation and line-break width; keep one notation per purpose; avoid extra YAML symbols.
 - For long strings prefer `>-` or `|` over escaping.
