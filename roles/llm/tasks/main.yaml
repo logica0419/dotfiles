@@ -7,25 +7,25 @@
   ansible.builtin.command: rtk init -g --copilot
   changed_when: false
 
-- name: Deploy Copilot skills
+- name: Deploy agent skills
   block:
-    - name: Create Copilot skills directories
+    - name: Create agent skills directories
       ansible.builtin.file:
         path: "{{ ansible_facts.user_dir }}/{{ item }}"
         state: directory
         mode: "0700"
       loop:
-        - .copilot
-        - .copilot/skills
-        - .copilot/skills/cleanup-merged-branch
-        - .copilot/skills/parallel-worktree
-        - .copilot/skills/git-commit-and-pr
-        - .copilot/skills/coderabbit-review-loop
-        - .copilot/skills/instruction-maintenance
-    - name: Deploy Copilot skills files
+        - .agents
+        - .agents/skills
+        - .agents/skills/cleanup-merged-branch
+        - .agents/skills/parallel-worktree
+        - .agents/skills/git-commit-and-pr
+        - .agents/skills/coderabbit-review-loop
+        - .agents/skills/instruction-maintenance
+    - name: Deploy agent skills files
       ansible.builtin.copy:
         src: "skills/{{ item }}/SKILL.md"
-        dest: "{{ ansible_facts.user_dir }}/.copilot/skills/{{ item }}/SKILL.md"
+        dest: "{{ ansible_facts.user_dir }}/.agents/skills/{{ item }}/SKILL.md"
         mode: "0644"
       loop:
         - cleanup-merged-branch
@@ -33,6 +33,17 @@
         - git-commit-and-pr
         - coderabbit-review-loop
         - instruction-maintenance
+    - name: Install explainer skills
+      ansible.builtin.shell:
+        executable: /bin/bash
+        cmd: |
+          set -eu -o pipefail
+          if ! command -v bunx >/dev/null 2>&1; then
+            echo "bunx not found" >&2
+            exit 1
+          fi
+          bunx --bun skills add mizchi/explainer --skill '*' -g -a github-copilot -y
+      changed_when: false
 
 - name: Deploy Copilot instructions
   block:
