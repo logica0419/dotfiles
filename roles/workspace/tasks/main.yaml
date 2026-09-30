@@ -19,73 +19,60 @@
   with_items:
     - repo: https://github.com/gopherconjp/.github.git
       dest: gopherconjp/.github
+    - repo: https://github.com/gopherconjp/email-notifier.git
+      dest: gopherconjp/email-notifier
     - repo: https://github.com/gopherconjp/gophercon.jp.git
       dest: gopherconjp/gophercon.jp
     - repo: https://github.com/gopherconjp/portal.gophercon.jp.git
       dest: gopherconjp/portal.gophercon.jp
-    - repo: https://github.com/gopherconjp/email-notifier.git
-      dest: gopherconjp/email-notifier
-    - repo: https://github.com/gopherconjp/actions-toolkit.git
-      dest: gopherconjp/actions-toolkit
 
     - repo: https://go.googlesource.com/go
-      dest: oss/go
+      dest: contrib/go
     - repo: https://go.googlesource.com/vscode-go
-      dest: oss/vscode-go
+      dest: contrib/vscode-go
     - repo: https://github.com/logica0419/tinygo.git
-      dest: oss/tinygo
+      dest: contrib/tinygo
     - repo: https://github.com/logica0419/drivers.git
-      dest: oss/drivers
+      dest: contrib/drivers
     - repo: https://github.com/logica0419/kubernetes.git
-      dest: oss/kubernetes
-    - repo: https://github.com/logica0419/website.git
-      dest: oss/k8s-website
+      dest: contrib/kubernetes
     - repo: https://github.com/logica0419/etcd
-      dest: oss/etcd
+      dest: contrib/etcd
     - repo: https://github.com/logica0419/raft
-      dest: oss/raft
+      dest: contrib/raft
     - repo: https://github.com/logica0419/youki
-      dest: oss/youki
+      dest: contrib/youki
     - repo: https://github.com/logica0419/runc
-      dest: oss/runc
+      dest: contrib/runc
     - repo: https://github.com/logica0419/external-secrets
-      dest: oss/external-secrets
-    - repo: https://github.com/logica0419/syndep.git
+      dest: contrib/external-secrets
+
+    - repo: https://github.com/logica-oss/syndep.git
       dest: oss/syndep
+    - repo: https://github.com/logica-oss/actions-toolkit.git
+      dest: oss/actions-toolkit
 
     - repo: https://github.com/ictsc/ictsc-regalia.git
       dest: ictsc/ictsc-regalia
-    - repo: https://github.com/ictsc/ictsc-drove.git
-      dest: ictsc/ictsc-drove
 
-    - repo: https://github.com/nekko-lab/kakko
-      dest: nekko-lab/kakko
-
-    - repo: https://github.com/logica0419/zenn-article.git
-      dest: personal/zenn-article
-    - repo: https://github.com/logica0419/slides.git
-      dest: personal/slides
     - repo: https://github.com/logica0419/proposals.git
       dest: personal/proposals
     - repo: https://github.com/logica0419/con-pro.git
       dest: personal/con-pro
     - repo: https://github.com/logica0419/compiler.git
       dest: personal/compiler
-    - repo: https://github.com/logica0419/logica0419.dev.git
-      dest: personal/logica0419.dev
-    - repo: https://github.com/logica0419/coding-kubernetes.git
-      dest: personal/coding-kubernetes
-    - repo: https://github.com/logica0419/etsecd.git
-      dest: personal/etsecd
     - repo: https://github.com/logica0419/playground.git
       dest: personal/playground
+    - repo: https://github.com/logica0419/logica0419.dev.git
+      dest: personal/logica0419.dev
+    - repo: https://github.com/logica0419/etsecd.git
+      dest: personal/etsecd
     - repo: https://github.com/logica0419/coding-container-runtime.git
       dest: personal/coding-container-runtime
+    - repo: https://github.com/logica0419/coding-kubernetes.git
+      dest: personal/coding-kubernetes
     - repo: https://github.com/logica0419/tinygo-rover-workshop.git
       dest: personal/tinygo-rover-workshop
-
-    - repo: https://github.com/hatahatack/score_plorer_v2.git
-      dest: ajy/score_plorer_v2
 
 - name: Configure oxfmt settings
   block:
@@ -126,7 +113,7 @@
         executable: /bin/bash
         cmd: |
           set -o pipefail
-          {{ ansible_facts.user_dir }}/prj/oss/go/bin/go version | cut -d " " -f 3 | cut -c 3-6
+          {{ ansible_facts.user_dir }}/prj/contrib/go/bin/go version | cut -d " " -f 3 | cut -c 3-6
       register: workspace_go_built
       changed_when: false
       failed_when: false
@@ -135,40 +122,40 @@
         executable: /bin/bash
         cmd: |
           set -o pipefail
-          cat {{ ansible_facts.user_dir }}/prj/oss/go/src/go.mod | grep "go 1." | cut -d " " -f 2
+          cat {{ ansible_facts.user_dir }}/prj/contrib/go/src/go.mod | grep "go 1." | cut -d " " -f 2
       register: workspace_go_required
       changed_when: false
       failed_when: false
     - name: Build Go from source
       ansible.builtin.command:
         cmd: ./make.bash
-        chdir: "{{ ansible_facts.user_dir }}/prj/oss/go/src"
+        chdir: "{{ ansible_facts.user_dir }}/prj/contrib/go/src"
       changed_when: false
       when: workspace_go_built.stdout != workspace_go_required.stdout
     - name: Deploy .envrc file
       ansible.builtin.copy:
         src: .envrc
-        dest: "{{ ansible_facts.user_dir }}/prj/oss/go/.envrc"
+        dest: "{{ ansible_facts.user_dir }}/prj/contrib/go/.envrc"
         mode: "0664"
     - name: Run direnv allow
       ansible.builtin.command:
         cmd: "direnv allow"
-        chdir: "{{ ansible_facts.user_dir }}/prj/oss/go"
+        chdir: "{{ ansible_facts.user_dir }}/prj/contrib/go"
       changed_when: false
     - name: Deploy Git exclude file
       ansible.builtin.copy:
         src: exclude
-        dest: "{{ ansible_facts.user_dir }}/prj/oss/go/.git/info/exclude"
+        dest: "{{ ansible_facts.user_dir }}/prj/contrib/go/.git/info/exclude"
         mode: "0664"
     - name: Create VS Code directory
       ansible.builtin.file:
-        path: "{{ ansible_facts.user_dir }}/prj/oss/go/.vscode"
+        path: "{{ ansible_facts.user_dir }}/prj/contrib/go/.vscode"
         state: directory
         mode: "0755"
     - name: Deploy VS Code settings file
       ansible.builtin.copy:
         src: go-settings.jsonc
-        dest: "{{ ansible_facts.user_dir }}/prj/oss/go/.vscode/settings.json"
+        dest: "{{ ansible_facts.user_dir }}/prj/contrib/go/.vscode/settings.json"
         mode: "0664"
 
 - name: Configure vscode-go repository
@@ -177,10 +164,10 @@
       ansible.builtin.shell:
         executable: /bin/bash
         cmd: git update-index --skip-worktree .vscode/*
-        chdir: "{{ ansible_facts.user_dir }}/prj/oss/vscode-go"
+        chdir: "{{ ansible_facts.user_dir }}/prj/contrib/vscode-go"
       changed_when: false
     - name: Deploy VS Code settings file
       ansible.builtin.copy:
         src: vscode-go-settings.jsonc
-        dest: "{{ ansible_facts.user_dir }}/prj/oss/vscode-go/.vscode/settings.json"
+        dest: "{{ ansible_facts.user_dir }}/prj/contrib/vscode-go/.vscode/settings.json"
         mode: "0664"
