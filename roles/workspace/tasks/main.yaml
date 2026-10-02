@@ -106,6 +106,22 @@
         dest: "{{ ansible_facts.user_dir }}/.config/clangd/config.yaml"
         mode: "0600"
 
+- name: Configure markdownlint settings
+  block:
+    - name: Create config directories
+      ansible.builtin.file:
+        path: "{{ ansible_facts.user_dir }}/{{ item }}"
+        state: directory
+        mode: "0700"
+      loop:
+        - .config
+        - .config/markdownlint
+    - name: Deploy markdownlint config file
+      ansible.builtin.copy:
+        src: .markdownlint.json
+        dest: "{{ ansible_facts.user_dir }}/.config/markdownlint/.markdownlint.json"
+        mode: "0600"
+
 - name: Configure Go repository
   block:
     - name: Get built Go version
