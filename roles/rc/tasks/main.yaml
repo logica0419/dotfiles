@@ -43,8 +43,8 @@
 - name: Configure rc files for current user
   block:
     - name: Deploy .bashrc to home directory
-      ansible.builtin.copy:
-        src: bashrc
+      ansible.builtin.template:
+        src: bashrc.j2
         dest: "{{ ansible_facts.user_dir }}/.bashrc"
         mode: "0644"
       register: rc_bashrc_result

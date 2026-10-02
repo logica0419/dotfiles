@@ -1,23 +1,4 @@
 # ~/.profile: executed by the command interpreter for login shells.
-{% if rc_browser_path is defined %}
-export BROWSER="{{ rc_browser_path }}"
-{% endif %}
-
-# Homebrew environment variables (PATH, MANPATH, INFOPATH, etc.)
-eval "$({{ check_os_brew_base_path }}/bin/brew shellenv)"
-
-# Rust and Cargo
-if [ -f "{{ ansible_facts.user_dir }}/.cargo/env" ]; then
-  . "{{ ansible_facts.user_dir }}/.cargo/env"
-fi
-
-# Shared environment variables for services and shell startup
-if [ -f "{{ ansible_facts.user_dir }}/.config/environment.d/env.conf" ]; then
-  set -a
-  . "{{ ansible_facts.user_dir }}/.config/environment.d/env.conf"
-  set +a
-fi
-
-if [ -f ~/.bashrc ]; then
-  . ~/.bashrc
+if [ -n "$BASH_VERSION" ] && [ -f "$HOME/.bashrc" ]; then
+  . "$HOME/.bashrc"
 fi

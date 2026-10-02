@@ -30,7 +30,7 @@ while :; do
   )
 
   # shellcheck source=/dev/null
-  source ~/.profile
+  source ~/.bashrc
 
   if [ "$ENV" == "server" ] && command -v tailscale &>/dev/null && ! (tailscale status &>/dev/null); then
     sudo tailscale up
