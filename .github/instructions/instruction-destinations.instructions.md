@@ -10,4 +10,5 @@ Follow the global `/instruction-maintenance` skill procedure with these dotfiles
 - Other repositories → `roles/llm/files/` (`instructions/` or `skills/`), then ask the user to re-run dotfiles.
 - Shared instructions → `.github/instructions/*.instructions.md`.
 - One area → the corresponding `AGENTS.md` (`roles/<role>/` or `windows/`).
-- Write `applyTo` as a string (arrays are invalid); join patterns with commas.
+- Write `applyTo` as a double-quoted single-line string (single quotes, trailing comments, and CR are unsupported by sync); join patterns with commas.
+- Avoid commas inside `{…}` brace groups in `applyTo`; sync splits on every comma.
