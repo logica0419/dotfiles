@@ -42,7 +42,7 @@ while :; do
     systemctl --user restart code-tunnel &>/dev/null
   fi
 
-  if [ "$ENV" == "wsl" ] && ! (sudo systemctl status &>/dev/null); then
+  if [ "$ENV" == "wsl" ] && ! (systemctl is-system-running --quiet &>/dev/null); then
     return 1
   fi
 
