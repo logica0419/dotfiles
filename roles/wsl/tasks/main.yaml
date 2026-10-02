@@ -81,6 +81,14 @@
         dest: "{{ ansible_facts.user_dir }}/.vscode-server/data/Machine/settings.json"
         mode: "0644"
 
+# systemd-binfmt fails on WSL2 because binfmt_misc is read-only.
+- name: Mask binfmt service
+  become: true
+  ansible.builtin.systemd_service:
+    name: systemd-binfmt.service
+    masked: true
+    daemon_reload: true
+
 - name: Configure updater service
   become: true
   block:
@@ -93,9 +101,8 @@
         src: updater.service.j2
         dest: /etc/systemd/system/updater.service
         mode: "0644"
-    - name: Enable and restart updater service
+    - name: Enable updater service
       ansible.builtin.systemd_service:
         name: updater.service
         enabled: true
         daemon_reload: true
-        state: restarted
