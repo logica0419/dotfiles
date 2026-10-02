@@ -82,12 +82,18 @@
         mode: "0644"
 
 # systemd-binfmt fails on WSL2 because binfmt_misc is read-only.
-- name: Mask binfmt service
+- name: Configure binfmt service
   become: true
-  ansible.builtin.systemd_service:
-    name: systemd-binfmt.service
-    masked: true
-    daemon_reload: true
+  block:
+    - name: Mask binfmt service
+      ansible.builtin.systemd_service:
+        name: systemd-binfmt.service
+        masked: true
+        daemon_reload: true
+    - name: Clear binfmt failed state
+      ansible.builtin.command: systemctl reset-failed systemd-binfmt.service
+      changed_when: false
+      failed_when: false
 
 - name: Configure updater service
   become: true
