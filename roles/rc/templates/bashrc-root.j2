@@ -5,9 +5,21 @@
 eval "$({{ check_os_brew_base_path }}/bin/brew shellenv)"
 
 if [ -f "{{ ansible_facts.user_dir }}/.config/environment.d/env.conf" ]; then
+  # Preserve entries inherited from the parent process such as WSL Windows paths.
+  _rc_prev_path="$PATH"
+
   set -a
   . "{{ ansible_facts.user_dir }}/.config/environment.d/env.conf"
   set +a
+
+  PATH="$PATH:$_rc_prev_path"
+
+  _rc_deduped_path="$(printf "%s" "$PATH" | awk -v RS=: 'length && !seen[$0]++' | paste -sd: -)"
+  if [ -n "$_rc_deduped_path" ]; then
+    PATH="$_rc_deduped_path"
+  fi
+
+  unset _rc_prev_path _rc_deduped_path
 fi
 
 # If not running interactively, don't do anything
