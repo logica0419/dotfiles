@@ -18,11 +18,13 @@
           - oven-sh/bun
           - tinygo-org/tools
           - terror/tap
-    - name: Fix trust store directory permissions
-      ansible.builtin.command: chmod go-w {{ ansible_facts.user_dir }}/.homebrew
-      changed_when: false
+    - name: Create trust store directory
+      ansible.builtin.file:
+        path: "{{ ansible_facts.user_dir }}/.homebrew"
+        state: directory
+        mode: "0755"
     - name: Trust tap formulas
-      ansible.builtin.command: brew trust {{ item }}
+      ansible.builtin.command: "{{ check_os_brew_base_path }}/bin/brew trust {{ item }}"
       changed_when: false
       loop:
         - tinygo-org/tools/tinygo
