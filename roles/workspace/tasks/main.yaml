@@ -26,27 +26,6 @@
     - repo: https://github.com/gopherconjp/portal.gophercon.jp.git
       dest: gopherconjp/portal.gophercon.jp
 
-    - repo: https://go.googlesource.com/go
-      dest: contrib/go
-    - repo: https://go.googlesource.com/vscode-go
-      dest: contrib/vscode-go
-    - repo: https://github.com/logica0419/tinygo.git
-      dest: contrib/tinygo
-    - repo: https://github.com/logica0419/drivers.git
-      dest: contrib/drivers
-    - repo: https://github.com/logica0419/kubernetes.git
-      dest: contrib/kubernetes
-    - repo: https://github.com/logica0419/etcd
-      dest: contrib/etcd
-    - repo: https://github.com/logica0419/raft
-      dest: contrib/raft
-    - repo: https://github.com/logica0419/youki
-      dest: contrib/youki
-    - repo: https://github.com/logica0419/runc
-      dest: contrib/runc
-    - repo: https://github.com/logica0419/external-secrets
-      dest: contrib/external-secrets
-
     - repo: https://github.com/logica-oss/syndep.git
       dest: oss/syndep
     - repo: https://github.com/logica-oss/actions-toolkit.git
@@ -73,6 +52,27 @@
       dest: personal/coding-kubernetes
     - repo: https://github.com/logica0419/tinygo-rover-workshop.git
       dest: personal/tinygo-rover-workshop
+
+    - repo: https://go.googlesource.com/go
+      dest: contrib/go
+    - repo: https://go.googlesource.com/vscode-go
+      dest: contrib/vscode-go
+    - repo: https://github.com/logica0419/tinygo.git
+      dest: contrib/tinygo
+    - repo: https://github.com/logica0419/drivers.git
+      dest: contrib/drivers
+    - repo: https://github.com/logica0419/kubernetes.git
+      dest: contrib/kubernetes
+    - repo: https://github.com/logica0419/etcd
+      dest: contrib/etcd
+    - repo: https://github.com/logica0419/raft
+      dest: contrib/raft
+    - repo: https://github.com/logica0419/youki
+      dest: contrib/youki
+    - repo: https://github.com/logica0419/runc
+      dest: contrib/runc
+    - repo: https://github.com/logica0419/external-secrets
+      dest: contrib/external-secrets
 
 - name: Configure tool settings
   block:
