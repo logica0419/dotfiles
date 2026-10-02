@@ -1,8 +1,18 @@
 #!/bin/bash
 # No set -eu -o pipefail: sourced with return and retried in a while loop.
 
+if [ "$PWD" != "$HOME/dotfiles" ]; then
+  echo "Error: run.sh must be run in $HOME/dotfiles (current: $PWD)" >&2
+  return 1
+fi
+
+if [ ! -f "$HOME/.ssh/id_ed25519" ] || [ ! -f "$HOME/.ssh/id_ed25519.pub" ]; then
+  echo "Error: $HOME/.ssh/id_ed25519 and $HOME/.ssh/id_ed25519.pub are required" >&2
+  return 1
+fi
+
 if [ "$ENV" != "server" ] && [ "$ENV" != "wsl" ] && [ "$ENV" != "mac" ] && [ "$ENV" != "sdplane" ]; then
-  echo "ENV must be set to server, wsl or mac"
+  echo "Error: ENV must be set to server, wsl, mac, or sdplane" >&2
   return 1
 fi
 
