@@ -5,7 +5,7 @@
   roles:
     - role: check_os
       check_os_expected_system: Darwin
+    - llm
     - go
     - update
     - workspace
-    - llm

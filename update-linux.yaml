@@ -6,8 +6,8 @@
     - role: check_os
       check_os_expected_system: Linux
     - apt
+    - llm
     - go
     - youki
     - update
     - workspace
-    - llm
