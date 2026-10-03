@@ -1,6 +1,6 @@
 [wsl2]
-memory=24GB
-swap=16GB
+memory=28GB
+swap=0
 networkingMode=Mirrored
 [experimental]
 autoMemoryReclaim=gradual
