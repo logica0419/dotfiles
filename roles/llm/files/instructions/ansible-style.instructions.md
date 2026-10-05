@@ -18,12 +18,18 @@ applyTo: "**/*.yaml, **/*.yml"
 
 - Keep `name` to 2-6 words starting with a verb (e.g., Install, Deploy, Configure); reuse same-purpose names, avoid redundant prefixes, omit clear context, fix shared phrases to one spelling.
 
-## Structure
+## Blocks and OS differences
 
 - Group related tasks in a `block` without blank lines; set shared `become` at block level.
 - Express OS differences via `include_tasks` or `vars`; reference `ansible_facts.<fact_name>`.
-- Add `changed_when` / `failed_when` where applicable; prefer `notify` + handler over `when: <reg>.changed`.
+
+## Fields and change detection
+
 - Keep field order: `name` -> `become` / `when` -> module -> args -> `changed_when` / `failed_when` -> `register` -> `notify` (`state` right after `name` for packages).
+- Add `changed_when` / `failed_when` where applicable; prefer `notify` + handler over `when: <reg>.changed`.
+
+## Files, templates, and directories
+
 - Create nested directories parent-first; loop related directories in one `ansible.builtin.file` task; avoid `recurse`.
 - Use `templates` for variable expansion, else `files`; keep `content` to one line; keep `noqa` minimal with a clear reason.
 

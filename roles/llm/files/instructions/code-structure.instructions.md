@@ -5,14 +5,25 @@ description: "Keep module boundaries and function scope tight. Use when splittin
 
 # Code Structure
 
+## Module boundaries
+
 - Place domain knowledge in one module; keep dependents thin.
-- Keep one concern per file; split only when a second concern emerges.
-- Keep public surface minimal; expose only cross-module callers.
-- Remove pass-through wrappers; call the real function directly.
-- Share literals via one constant; avoid duplicating names or values.
 - Keep structures flat; avoid single-field wrapper objects.
-- Split only at a meaningful unit of work; do not extract a function that has just one caller doing only wrapping.
+- Share literals via one constant; avoid duplicating names or values.
+
+## File granularity
+
+- Keep one concern per file; split only when a second concern emerges.
 - Merge files that cover a similar range; avoid one-function files. Group by direction of conversion when both directions share parsing (e.g. frontmatter structure vs. `applyTo`/`paths`/glob conversion).
 - Keep the current file layout unchanged unless asked for a new split; respect intentional blank-line choices such as compact `ParsePaths`-style loops.
-- Separate processing blocks with one blank line: guard clause, setup, main loop, and return each get breathing room. Keep `switch` directly attached to its first `case`, and separate remaining `case` blocks with one blank line.
+
+## Functions and exports
+
+- Keep public surface minimal; expose only cross-module callers.
+- Remove pass-through wrappers; call the real function directly.
+- Split only at a meaningful unit of work; do not extract a function that has just one caller doing only wrapping.
 - Keep single-purpose helpers inline when inlining removes indirection without growing the caller (e.g. one-line `Trim` chains, `filepath.Join` + `ToSlash` pairs); extract only when the helper names a distinct decision such as quote handling or symlink escape checks.
+
+## Layout and blank lines
+
+- Separate processing blocks with one blank line: guard clause, setup, main loop, and return each get breathing room. Keep `switch` directly attached to its first `case`, and separate remaining `case` blocks with one blank line.
