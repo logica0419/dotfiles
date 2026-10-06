@@ -77,6 +77,10 @@
       dest: contrib/runc
     - repo: https://github.com/logica0419/external-secrets
       dest: contrib/external-secrets
+    - repo: https://github.com/logica0419/its.git
+      dest: contrib/its
+    - repo: https://github.com/logica0419/mingo.git
+      dest: contrib/mingo
 
 - name: Configure tool settings
   block:
