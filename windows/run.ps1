@@ -57,12 +57,13 @@ winget upgrade --all --scope machine --accept-package-agreements --accept-source
 Write-Host "`nInstalling user-scoped packages`n"
 
 $user_packages = @(
-  "OpenWhisperSystems.Signal"
-  "DevToys-app.DevToys"
   "Discord.Discord"
   "XPFCC4CD725961" # LINE
   "SlackTechnologies.Slack"
+  "OpenWhisperSystems.Signal"
   "Microsoft.VisualStudioCode"
+  "DevToys-app.DevToys"
+  "Spotify.Spotify"
   "File-New-Project.EarTrumpet"
   "Canonical.Ubuntu"
   "Microsoft.AppInstaller"
