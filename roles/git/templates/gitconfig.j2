@@ -3,12 +3,14 @@ helper = !{{ check_os_brew_base_path }}/bin/gh auth git-credential
 [credential "https://gist.github.com"]
 helper = !{{ check_os_brew_base_path }}/bin/gh auth git-credential
 [user]
-name = Takuto Nagami
-email = logica0419@gmail.com
+name = {{ git_user_name }}
+email = {{ git_user_email }}
 {% if not git_sdplane %}
 signingkey = {{ ansible_facts.user_dir }}/.ssh/id_ed25519.pub
 [gpg]
 format = ssh
+[gpg "ssh"]
+allowedSignersFile = {{ ansible_facts.user_dir }}/.ssh/allowed_signers
 [commit]
 gpgsign = true
 [http]
