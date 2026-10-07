@@ -13,4 +13,4 @@ Only run when explicitly asked.
 4. Summarize findings, then ask fix cost and keep-simple risk, and present `accept fix` vs `keep simple + suppress` with recommendation (default `keep simple` when risk is low).
 5. On `keep simple`: ask before adding one concise English `path_instructions` entry with narrow glob. Config applies after merging to main; verify with `@coderabbitai configuration`.
 6. Fix accepted findings, run check/lint/format, commit; repeat until `findings: 0`.
-7. `git reset --mixed <review-base>` (reset all unpushed commits, keep worktree), notify and wait, then recommit granularly.
+7. If `origin/<branch>..HEAD` is non-empty (pushed PR follow-ups exist), stop before reset and wait; never reset pushed commits. Otherwise `git reset --mixed <review-base>` (reset all unpushed commits, keep worktree), notify and wait, then recommit granularly.
