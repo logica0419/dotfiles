@@ -21,7 +21,7 @@ description: "Keep module boundaries and function scope tight. Use when splittin
 
 - Keep public surface minimal; expose only cross-module callers.
 - Remove pass-through wrappers; call the real function directly.
-- Split only at a meaningful unit of work; do not extract a function that has just one caller doing only wrapping.
+- Split only at a meaningful unit of work; do not extract a function that has just one caller doing only wrapping. A thin helper shared by multiple callers to remove duplication is allowed.
 - Keep single-purpose helpers inline when inlining removes indirection without growing the caller (e.g. one-line `Trim` chains, `filepath.Join` + `ToSlash` pairs); extract only when the helper names a distinct decision such as quote handling or symlink escape checks.
 
 ## Layout and blank lines
