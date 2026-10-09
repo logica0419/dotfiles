@@ -51,6 +51,7 @@
       - microsoft-office
       - google-chrome
       - tailscale-app
+      - betterdisplay
 
       # エンジニアリング系
       - visual-studio-code
