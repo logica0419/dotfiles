@@ -24,6 +24,11 @@ description: "Keep module boundaries and function scope tight. Use when splittin
 - Split only at a meaningful unit of work; do not extract a function that has just one caller doing only wrapping. A thin helper shared by multiple callers to remove duplication is allowed.
 - Keep single-purpose helpers inline when inlining removes indirection without growing the caller (e.g. one-line `Trim` chains, `filepath.Join` + `ToSlash` pairs); extract only when the helper names a distinct decision such as quote handling or symlink escape checks.
 
+## Refactoring safety
+
+- Separate moving code from changing it: a rename, a move, and a behaviour fix in one step leave the fix unverifiable.
+- Report a logic fix only with evidence the old code was wrong — a runnable snippet, a failing test, an observed value; otherwise state it as a rename.
+
 ## Layout and blank lines
 
 - Separate processing blocks with one blank line: guard clause, setup, main loop, and return each get breathing room. Keep `switch` directly attached to its first `case`, and separate remaining `case` blocks with one blank line.

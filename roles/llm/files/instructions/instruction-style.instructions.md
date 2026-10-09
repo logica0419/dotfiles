@@ -16,7 +16,7 @@ applyTo: "**/*.instructions.md, **/SKILL.md, **/AGENTS.md"
 
 ## What to write
 
-- Write only preferences surrounding code cannot reveal; keep as concise as possible without changing meaning.
+- Write only what holds beyond the project that recorded it and cannot be read off the code or looked up: a personal convention, never a language or tool specification. Look a specification up when it is needed.
 - Keep one concern per file; prefer short examples.
 - Do not append obvious, duplicated, procedural, or non-decision-improving content.
 

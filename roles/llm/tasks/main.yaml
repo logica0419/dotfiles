@@ -68,6 +68,7 @@
         - shell-style.instructions.md
         - instruction-style.instructions.md
         - code-structure.instructions.md
+        - naming-style.instructions.md
         - quote-style.instructions.md
         - typescript-style.instructions.md
         - git-safety.instructions.md
