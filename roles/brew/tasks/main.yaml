@@ -70,5 +70,6 @@
           - oxlint
           - oxfmt
           - stylelint
+          - trivy
           - easyeda2kicad
         state: present
