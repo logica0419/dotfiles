@@ -9,7 +9,7 @@ Only run on explicit request.
 
 1. Merged branch PR → run `cleanup-merged-branch` first.
 2. On `main` → devise branch from the changes; ask for confirmation only if the current branch cannot be determined from the context. Otherwise confirm current branch.
-3. One commit per focused change (feature/fix/refactor/move/asset/chore), imperative, no prefix. Within a refactor, split by the unit a reviewer would revert (per package or module), keep a cross-cutting rename in its own trailing commit, and verify each commit builds on its own.
+3. One commit per focused change (feature/fix/refactor/move/asset/chore), imperative, no prefix. Within a refactor, split by the unit a reviewer would revert (per package or module), keep a cross-cutting rename in its own trailing commit, and verify each commit builds on its own. Commit production code and its tests as separate commits.
 4. Match VS Code git behavior: `-s` (`git.alwaysSignOff`), `-S` (`commit.enableCommitSigning`, `commit.gpgsign=true`, `gpg.format=ssh`, `user.signingkey`). Stage explicitly; no Smart Commit (`git.enableSmartCommit`).
 5. Commit; stop here without explicit push request. When a file is held back, say so and name what the tree depends on it for.
 6. Push only on explicit request (`git push -u origin <branch>`); on failure or invalid branch → error. If the branch name is invalid, respond with an error message indicating the branch name is not recognized.
