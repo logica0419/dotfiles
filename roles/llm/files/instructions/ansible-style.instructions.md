@@ -16,7 +16,8 @@ applyTo: "**/*.yaml, **/*.yml"
 
 ## Task names
 
-- Keep `name` to 2-6 words starting with a verb (e.g., Install, Deploy, Configure); reuse same-purpose names, avoid redundant prefixes, omit clear context, fix shared phrases to one spelling.
+- Keep `name` to 2-6 space-separated words starting with a verb (`Install`, `Deploy`, `Configure`).
+- Reuse one name for the same purpose, settle a repeated phrase on one spelling, and drop a prefix that only repeats clear context.
 
 ## Blocks and OS differences
 
@@ -35,6 +36,5 @@ applyTo: "**/*.yaml, **/*.yml"
 
 ## Shell tasks
 
-- Check command existence with `command -v ... >/dev/null 2>&1` using `ansible.builtin.shell` (not `ansible.builtin.command`, which lacks shell builtins); keep idempotent with explicit exit codes per shell-style.
-- Prefer POSIX form; set `args.executable: /bin/bash` only for Bash-specific syntax.
-- See [shell-style](./shell-style.instructions.md) for embedded shell code.
+- Use `ansible.builtin.shell`, not `ansible.builtin.command`, when the check needs a shell builtin.
+- Prefer POSIX form; set `args.executable: /bin/bash` only for Bash-specific syntax. Embedded shell code follows shell-style.

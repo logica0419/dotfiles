@@ -13,22 +13,21 @@ description: "Keep module boundaries and function scope tight. Use when splittin
 
 ## File granularity
 
-- Keep one concern per file; split only when a second concern emerges.
-- Merge files that cover a similar range; avoid one-function files. Group by direction of conversion when both directions share parsing (e.g. frontmatter structure vs. `applyTo`/`paths`/glob conversion).
-- Keep the current file layout unchanged unless asked for a new split; respect intentional blank-line choices such as compact `ParsePaths`-style loops.
+- Keep one concern per file; split only when a second concern emerges, and merge files covering a similar range.
+- Group by direction of conversion when both directions share parsing.
+- Keep the current layout unchanged unless a split is asked for, and respect intentional blank-line choices.
 
 ## Functions and exports
 
-- Keep public surface minimal; expose only cross-module callers.
-- Remove pass-through wrappers; call the real function directly.
-- Split only at a meaningful unit of work; do not extract a function that has just one caller doing only wrapping. A thin helper shared by multiple callers to remove duplication is allowed.
-- Keep single-purpose helpers inline when inlining removes indirection without growing the caller (e.g. one-line `Trim` chains, `filepath.Join` + `ToSlash` pairs); extract only when the helper names a distinct decision such as quote handling or symlink escape checks.
+- Keep the public surface minimal; expose only cross-module callers, and remove pass-through wrappers.
+- Split at a meaningful unit of work: a thin helper several callers share to drop duplication qualifies, a one-caller wrapper does not.
+- Keep a single-purpose helper inline when inlining removes indirection without growing the caller; extract only when the helper names a distinct decision such as quote handling or symlink escape checks.
 
 ## Refactoring safety
 
 - Separate moving code from changing it: a rename, a move, and a behaviour fix in one step leave the fix unverifiable.
 - Report a logic fix only with evidence the old code was wrong — a runnable snippet, a failing test, an observed value; otherwise state it as a rename.
 
-## Layout and blank lines
+## Layout
 
-- Separate processing blocks with one blank line: guard clause, setup, main loop, and return each get breathing room. Keep `switch` directly attached to its first `case`, and separate remaining `case` blocks with one blank line.
+- Put one blank line between the guard clause, setup, main loop, and return.

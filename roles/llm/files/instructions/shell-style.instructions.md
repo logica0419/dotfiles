@@ -15,10 +15,11 @@ if ! command -v git >/dev/null 2>&1; then
 fi
 ```
 
-## Idempotency and failure behavior
+## Idempotency and failure
 
-- Prefer idempotency with explicit exit codes.
+- Make a script safe to re-run; on an unmet precondition, write the reason to stderr and exit non-zero.
 
 ## Command checks and suppression
 
-- Use `command -v` checks and `>/dev/null 2>&1` suppression; add `-e` / `-u` / `-o pipefail` as needed. Bash-only `&>/dev/null` requires Bash via `args.executable`.
+- Check with `command -v ... >/dev/null 2>&1`; set `-e` / `-u` / `-o pipefail` as needed.
+- Bash-only syntax such as `&>/dev/null` needs `args.executable: /bin/bash`.
