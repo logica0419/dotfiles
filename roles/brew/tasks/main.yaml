@@ -59,7 +59,6 @@
           - go-task
           - just
           - just-lsp
-          - mise
           - oven-sh/bun/bun
           - oxlint
           - oxfmt

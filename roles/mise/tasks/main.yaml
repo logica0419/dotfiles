@@ -1,4 +1,9 @@
 ---
+- name: Install mise package
+  community.general.homebrew:
+    name: mise
+    state: present
+
 - name: Install latest Node.js
   ansible.builtin.shell: |
     set -e
