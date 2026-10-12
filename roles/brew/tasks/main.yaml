@@ -66,6 +66,7 @@
           - just-lsp
           - mise
           - oven-sh/bun/bun
+          - ghcup
           - oxlint
           - oxfmt
           - stylelint
