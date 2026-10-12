@@ -1,5 +1,5 @@
 ---
-- name: Install uv
+- name: Install uv package
   community.general.homebrew:
     name: uv
     state: present

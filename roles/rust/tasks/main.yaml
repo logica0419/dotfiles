@@ -1,5 +1,5 @@
 ---
-- name: Install Rustup
+- name: Install Rustup package
   community.general.homebrew:
     name: rustup
     state: present

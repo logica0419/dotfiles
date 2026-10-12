@@ -29,7 +29,7 @@
         - name: Install latest Go package
           ansible.builtin.include_tasks: "{{ ansible_facts.system | lower }}.yaml"
 
-- name: Install TinyGo
+- name: Install TinyGo package
   block:
     - name: Register TinyGo tap
       community.general.homebrew_tap:
