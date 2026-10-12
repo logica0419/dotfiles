@@ -1,0 +1,14 @@
+---
+- name: Install GHCup
+  community.general.homebrew:
+    name: ghcup
+    state: present
+
+- name: Install Haskell components
+  ansible.builtin.command: "ghcup install {{ item }} latest --set"
+  changed_when: false
+  loop:
+    - ghc
+    - cabal
+    - hls
+    - stack

@@ -15,6 +15,7 @@
     - rust
     - python
     - mise
+    - haskell
     - youki
     - docker
     - k8s

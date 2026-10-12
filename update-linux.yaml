@@ -8,6 +8,7 @@
     - apt
     - llm
     - go
+    - haskell
     - youki
     - update
     - workspace

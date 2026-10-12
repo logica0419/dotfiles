@@ -7,5 +7,6 @@
       check_os_expected_system: Darwin
     - llm
     - go
+    - haskell
     - update
     - workspace

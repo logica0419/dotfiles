@@ -13,6 +13,7 @@
     - rust
     - python
     - mise
+    - haskell
     - docker
     - k8s
     - git
