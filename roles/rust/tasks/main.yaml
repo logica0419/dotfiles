@@ -1,4 +1,9 @@
 ---
+- name: Install Rustup
+  community.general.homebrew:
+    name: rustup
+    state: present
+
 - name: Install Rust components
   ansible.builtin.command: rustup update
   changed_when: false

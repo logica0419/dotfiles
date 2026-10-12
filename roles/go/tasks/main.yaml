@@ -29,6 +29,19 @@
         - name: Install latest Go package
           ansible.builtin.include_tasks: "{{ ansible_facts.system | lower }}.yaml"
 
+- name: Install TinyGo
+  block:
+    - name: Register TinyGo tap
+      community.general.homebrew_tap:
+        name: tinygo-org/tools
+    - name: Trust TinyGo formula
+      ansible.builtin.command: "{{ check_os_brew_base_path }}/bin/brew trust tinygo-org/tools/tinygo"
+      changed_when: false
+    - name: Install TinyGo package
+      community.general.homebrew:
+        name: tinygo-org/tools/tinygo
+        state: present
+
 - name: Install Go tools suite
   block:
     - name: Install Go tools packages

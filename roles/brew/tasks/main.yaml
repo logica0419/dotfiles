@@ -16,7 +16,6 @@
           - hashicorp/tap
           - terraform-linters/tap
           - oven-sh/bun
-          - tinygo-org/tools
           - terror/tap
     - name: Create trust store directory
       ansible.builtin.file:
@@ -27,7 +26,6 @@
       ansible.builtin.command: "{{ check_os_brew_base_path }}/bin/brew trust {{ item }}"
       changed_when: false
       loop:
-        - tinygo-org/tools/tinygo
         - terror/tap/just-lsp
         - hashicorp/tap/terraform
         - terraform-linters/tap/tflint
@@ -37,12 +35,9 @@
     - name: Install Homebrew packages
       community.general.homebrew:
         name:
-          - rustup
-          - uv
           - cmake
           - ninja
           - llvm
-          - tinygo-org/tools/tinygo
           - git
           - gh
           - coderabbit
@@ -66,7 +61,6 @@
           - just-lsp
           - mise
           - oven-sh/bun/bun
-          - ghcup
           - oxlint
           - oxfmt
           - stylelint
