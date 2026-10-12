@@ -6,6 +6,13 @@
     mise use -g node@latest
   changed_when: false
 
+- name: Install latest jactionlint
+  ansible.builtin.shell: |
+    set -e
+    mise install jactionlint@latest
+    mise use -g jactionlint@latest
+  changed_when: false
+
 - name: Update npm package manager
   ansible.builtin.command: npm install -g npm@latest
   changed_when: false
