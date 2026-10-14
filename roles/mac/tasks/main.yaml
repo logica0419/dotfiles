@@ -82,7 +82,9 @@
 
       # ゲーム系
       - steam
-    state: present
+    state: upgraded
+    install_options:
+      - "force"
 
 - name: Configure updater service
   block:
