@@ -4,8 +4,8 @@
     name: rustup
     state: present
 
-- name: Install Rust components
-  ansible.builtin.command: rustup update
+- name: Install Rust toolchain
+  ansible.builtin.command: rustup toolchain install stable
   changed_when: false
 
 - name: Configure rustfmt settings
