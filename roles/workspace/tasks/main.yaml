@@ -32,6 +32,8 @@
       dest: oss/actions-toolkit
     - repo: https://github.com/logica-oss/synac.git
       dest: oss/synac
+    - repo: https://github.com/logica-oss/go-tidy-all.git
+      dest: oss/go-tidy-all
     - repo: https://github.com/logica-oss/pkg-json-order.git
       dest: oss/pkg-json-order
 
