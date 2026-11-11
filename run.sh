@@ -11,8 +11,8 @@ if [ ! -f "$HOME/.ssh/id_ed25519" ] || [ ! -f "$HOME/.ssh/id_ed25519.pub" ]; the
   return 1
 fi
 
-if [ "$ENV" != "server" ] && [ "$ENV" != "wsl" ] && [ "$ENV" != "mac" ] && [ "$ENV" != "sdplane" ]; then
-  echo "Error: ENV must be set to server, wsl, mac, or sdplane" >&2
+if [ "$ENV" != "server" ] && [ "$ENV" != "server_ca" ] && [ "$ENV" != "wsl" ] && [ "$ENV" != "mac" ] && [ "$ENV" != "sdplane" ]; then
+  echo "Error: ENV must be set to server, server_ca, wsl, mac, or sdplane" >&2
   return 1
 fi
 
@@ -61,7 +61,7 @@ while :; do
   fi
 
   if command -v docker &>/dev/null && ! (docker ps &>/dev/null); then
-    if [ "$ENV" == "server" ] || [ "$ENV" == "sdplane" ]; then
+    if [ "$ENV" == "server" ] || [ "$ENV" == "server_ca" ] || [ "$ENV" == "sdplane" ]; then
       sudo reboot 0
     fi
     return 1

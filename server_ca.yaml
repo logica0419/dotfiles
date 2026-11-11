@@ -1,0 +1,22 @@
+---
+- name: Run Playbook for Server
+  hosts: local
+  connection: local
+  roles:
+    - role: check_os
+      check_os_expected_system: Linux
+    - apt
+    - server_ca
+    - brew
+    - rc
+    - llm
+    - go
+    - rust
+    - python
+    - mise
+    - youki
+    - docker
+    - role: git
+      git_sdplane: true
+    - workspace_ca
+    - completion
