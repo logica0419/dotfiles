@@ -9,6 +9,7 @@
           - krew
           - kustomize
           - helm
+          - kubebuilder
         state: present
     - name: Install kubectl plugins
       ansible.builtin.command: kubectl krew install oidc-login tree
