@@ -1,0 +1,52 @@
+---
+- name: Update dotfiles repository
+  block:
+    - name: Get current workspace path
+      ansible.builtin.command: pwd
+      register: workspace_ca_dotfiles_dir
+      changed_when: false
+    - name: Pull dotfiles repository
+      ansible.builtin.git: # noqa: latest
+        repo: https://github.com/logica0419/dotfiles.git
+        dest: "{{ workspace_ca_dotfiles_dir.stdout }}"
+      failed_when: false
+
+- name: Clone Git repositories
+  ansible.builtin.git: # noqa: latest
+    repo: "{{ item.repo }}"
+    dest: "{{ ansible_facts.user_dir }}/prj/{{ item.dest }}"
+  failed_when: false
+  with_items:
+    - repo: https://github.com/cycloud-io/sdk-go.git
+      dest: sdk-go
+    - repo: https://github.com/cycloud-io/apis.git
+      dest: apis
+    - repo: https://github.com/cycloud-io/cycloud-vpc-cni-k8s.git
+      dest: cycloud-vpc-cni-k8s
+    - repo: https://github.com/cycloud-io/cluster-api-provider-compute.git
+      dest: cluster-api-provider-compute
+
+- name: Configure tool settings
+  block:
+    - name: Create config directories
+      ansible.builtin.file:
+        path: "{{ ansible_facts.user_dir }}/{{ item }}"
+        state: directory
+        mode: "0700"
+      loop:
+        - .config
+        - .config/oxfmt
+        - .config/clangd
+        - .config/markdownlint
+    - name: Deploy config files
+      ansible.builtin.copy:
+        src: "{{ item.src }}"
+        dest: "{{ ansible_facts.user_dir }}/{{ item.dest }}"
+        mode: "0600"
+      loop:
+        - src: .oxfmtrc.json
+          dest: .config/oxfmt/.oxfmtrc.json
+        - src: config.yaml
+          dest: .config/clangd/config.yaml
+        - src: .markdownlint.json
+          dest: .config/markdownlint/.markdownlint.json
