@@ -65,4 +65,5 @@
           - stylelint
           - trivy
           - easyeda2kicad
+          - bitwarden-cli
         state: present
