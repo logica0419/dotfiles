@@ -58,13 +58,14 @@
         label: "{{ item.path }}"
       register: ssh_pubkeys_stat
     - name: Derive missing public keys
-      ansible.builtin.command: ssh-keygen -y -f "{{ item.item.path }}"
-      loop: "{{ ssh_keys_stat.results }}"
+      ansible.builtin.command: ssh-keygen -y -f "{{ item.path }}"
+      loop: "{{ ssh_keys }}"
       loop_control:
-        label: "{{ item.item.path }}"
+        label: "{{ item.path }}"
+        index_var: ssh_pubkey_index
       register: ssh_pubkey_derive_results
       changed_when: false
-      when: not ssh_pubkeys_stat.results[ansible_loop.index0].stat.exists
+      when: not ssh_pubkeys_stat.results[ssh_pubkey_index].stat.exists
     - name: Deploy derived public keys
       ansible.builtin.copy:
         dest: "{{ item.item.path }}.pub"

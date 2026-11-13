@@ -58,6 +58,7 @@ while :; do
     if [ -n "${BW_SESSION:-}" ]; then
       export BW_SESSION
     fi
+    RESULT=1
   fi
 
   if [ "$ENV" == "wsl" ] && ! (systemctl is-system-running --quiet &> /dev/null); then
