@@ -6,10 +6,11 @@
     - role: check_os
       check_os_expected_system: Linux
     - apt
-    - wsl
     - brew
     - role: rc
       rc_browser_path: "/usr/bin/chrome"
+    - ssh
+    - wsl
     - llm
     - go
     - rust
