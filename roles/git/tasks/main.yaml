@@ -6,7 +6,6 @@
     mode: "0664"
 
 - name: Generate SSH allowed signers file
-  when: not git_sdplane
   block:
     - name: Create SSH directory
       ansible.builtin.file:
@@ -15,14 +14,14 @@
         mode: "0700"
     - name: Get SSH signing key status
       ansible.builtin.stat:
-        path: "{{ ansible_facts.user_dir }}/.ssh/id_ed25519.pub"
+        path: "{{ git_signing_key_path }}"
       register: git_signing_key_stat
     - name: Generate allowed signers from signing key
       when: git_signing_key_stat.stat.exists
       block:
         - name: Read SSH signing key
           ansible.builtin.slurp:
-            src: "{{ ansible_facts.user_dir }}/.ssh/id_ed25519.pub"
+            src: "{{ git_signing_key_path }}"
           register: git_signing_key_slurp
         - name: Generate allowed signers entry
           ansible.builtin.set_fact:
@@ -37,7 +36,6 @@
             content: "{{ git_allowed_signers_entry }}"
 
 - name: Configure Go repository credentials
-  when: not git_sdplane
   block:
     - name: Get .gitcookies status
       ansible.builtin.stat:
