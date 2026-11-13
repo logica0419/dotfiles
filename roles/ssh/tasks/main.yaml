@@ -31,16 +31,8 @@
             executable: /bin/bash
             cmd: |
               set -o pipefail
-              tmpfile="$(mktemp -p {{ ansible_facts.user_dir }}/.ssh)"
-              trap 'rm -f "$tmpfile"' EXIT
-              {{ check_os_brew_base_path }}/bin/bw get notes "{{ item.item.bitwarden_item }}" > "$tmpfile"
-              if [ ! -s "$tmpfile" ] || ! ssh-keygen -y -f "$tmpfile" > /dev/null 2>&1; then
-                rm -f "$tmpfile"
-                exit 1
-              fi
-              chmod 600 "$tmpfile"
-              mv "$tmpfile" "{{ item.item.path }}"
-              trap - EXIT
+              {{ check_os_brew_base_path }}/bin/bw get notes "{{ item.item.bitwarden_item }}" > "{{ item.item.path }}"
+              chmod 600 "{{ item.item.path }}"
           loop: "{{ ssh_keys_stat.results }}"
           loop_control:
             label: "{{ item.item.path }}"
@@ -59,24 +51,13 @@
 
 - name: Derive SSH public keys
   block:
-    - name: Get SSH public key statuses
-      ansible.builtin.stat:
-        path: "{{ item.path }}.pub"
-      loop: "{{ ssh_keys }}"
-      loop_control:
-        label: "{{ item.path }}"
-      register: ssh_pubkeys_stat
-    - name: Derive missing public keys
+    - name: Derive SSH public keys
       ansible.builtin.command: ssh-keygen -y -f "{{ item.path }}"
       loop: "{{ ssh_keys }}"
       loop_control:
         label: "{{ item.path }}"
-        index_var: ssh_pubkey_index
       register: ssh_pubkey_derive_results
       changed_when: false
-      when: >-
-        not ssh_pubkeys_stat.results[ssh_pubkey_index].stat.exists
-        or ssh_keys_stat.results[ssh_pubkey_index].changed | default(false)
     - name: Deploy derived public keys
       ansible.builtin.copy:
         dest: "{{ item.item.path }}.pub"
@@ -86,12 +67,3 @@
       loop_control:
         label: "{{ item.item.path }}"
       when: item.rc is defined and item.rc == 0
-
-- name: Ensure SSH public key permissions
-  ansible.builtin.file:
-    path: "{{ item.path }}.pub"
-    mode: "0644"
-  loop: "{{ ssh_keys }}"
-  loop_control:
-    label: "{{ item.path }}"
-  failed_when: false
