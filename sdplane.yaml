@@ -6,9 +6,10 @@
     - role: check_os
       check_os_expected_system: Linux
     - apt
-    - sdplane
     - brew
     - rc
+    - ssh
+    - sdplane
     - llm
     - go
     - rust
