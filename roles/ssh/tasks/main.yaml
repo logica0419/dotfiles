@@ -31,30 +31,49 @@
             executable: /bin/bash
             cmd: |
               set -o pipefail
-              {{ check_os_brew_base_path }}/bin/bw get notes "{{ item.item.bitwarden_item }}" > "{{ item.item.path }}"
+              tmpfile="$(mktemp)"
+              trap 'rm -f "$tmpfile"' EXIT
+              {{ check_os_brew_base_path }}/bin/bw get notes "{{ item.item.bitwarden_item }}" > "$tmpfile"
+              if [ ! -s "$tmpfile" ] || ! ssh-keygen -y -f "$tmpfile" > /dev/null 2>&1; then
+                rm -f "$tmpfile"
+                exit 1
+              fi
+              cat "$tmpfile" > "{{ item.item.path }}"
               chmod 600 "{{ item.item.path }}"
+              rm -f "$tmpfile"
           loop: "{{ ssh_keys_stat.results }}"
           loop_control:
             label: "{{ item.item.path }}"
           changed_when: true
           no_log: true
           when: not item.stat.exists
-        - name: Derive public keys from private keys
-          ansible.builtin.command: ssh-keygen -y -f "{{ item.path }}"
-          loop: "{{ ssh_keys }}"
-          loop_control:
-            label: "{{ item.path }}"
-          register: ssh_pubkey_derive_results
-          changed_when: false
-        - name: Deploy derived public keys
-          ansible.builtin.copy:
-            dest: "{{ item.item.path }}.pub"
-            content: "{{ item.stdout }}\n"
-            mode: "0644"
-          loop: "{{ ssh_pubkey_derive_results.results }}"
-          loop_control:
-            label: "{{ item.item.path }}"
-          when: item.rc is defined and item.rc == 0
+
+- name: Derive SSH public keys
+  block:
+    - name: Get SSH public key statuses
+      ansible.builtin.stat:
+        path: "{{ item.path }}.pub"
+      loop: "{{ ssh_keys }}"
+      loop_control:
+        label: "{{ item.path }}"
+      register: ssh_pubkeys_stat
+    - name: Derive missing public keys
+      ansible.builtin.command: ssh-keygen -y -f "{{ item.item.path }}"
+      loop: "{{ ssh_keys_stat.results }}"
+      loop_control:
+        label: "{{ item.item.path }}"
+      register: ssh_pubkey_derive_results
+      changed_when: false
+      when: not ssh_pubkeys_stat.results[ansible_loop.index0].stat.exists
+    - name: Deploy derived public keys
+      ansible.builtin.copy:
+        dest: "{{ item.item.path }}.pub"
+        content: "{{ item.stdout }}\n"
+        mode: "0644"
+      loop: "{{ ssh_pubkey_derive_results.results }}"
+      loop_control:
+        label: "{{ item.item.path }}"
+      when: item.rc is defined and item.rc == 0
 
 - name: Ensure SSH key permissions
   ansible.builtin.file:

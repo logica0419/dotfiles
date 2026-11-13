@@ -47,18 +47,21 @@ while :; do
     systemctl --user restart code-tunnel &> /dev/null
   fi
 
-  if [ "$ENV" == "wsl" ] && ! (systemctl is-system-running --quiet &> /dev/null); then
-    return 1
-  fi
-
-  if { [ ! -f "$HOME/.ssh/id_ed25519" ] || [ ! -f "$HOME/.ssh/id_ed25519.pub" ] ||
-    [ ! -f "$HOME/.ssh/id_ed25519_signing" ] || [ ! -f "$HOME/.ssh/id_ed25519_signing.pub" ]; } &&
-    ! bw status 2> /dev/null | grep -q '"status":"unlocked"'; then
+  if { [ ! -f "$HOME/.ssh/id_ed25519" ] \
+    || [ ! -f "$HOME/.ssh/id_ed25519.pub" ] \
+    || [ ! -f "$HOME/.ssh/id_ed25519_signing" ] \
+    || [ ! -f "$HOME/.ssh/id_ed25519_signing.pub" ]; } \
+    && ! bw status 2> /dev/null | grep -q '"status":"unlocked"'; then
+    echo "Bitwarden login required for SSH key provisioning"
     bw login || true
     BW_SESSION="$(bw unlock --raw 2> /dev/null || true)"
     if [ -n "${BW_SESSION:-}" ]; then
       export BW_SESSION
     fi
+  fi
+
+  if [ "$ENV" == "wsl" ] && ! (systemctl is-system-running --quiet &> /dev/null); then
+    return 1
   fi
 
   if command -v gh &> /dev/null && ! (gh auth status &> /dev/null); then
