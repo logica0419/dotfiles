@@ -19,6 +19,6 @@
     - docker
     - k8s
     - role: git
-      git_sdplane: true
+      git_go_cookies_enabled: false
     - workspace_ca
     - completion

@@ -2,3 +2,4 @@
 git_user_name: "Takuto Nagami"
 git_user_email: "logica0419@gmail.com"
 git_signing_key_path: "{{ ansible_facts.user_dir }}/.ssh/id_ed25519_signing.pub"
+git_go_cookies_enabled: true
