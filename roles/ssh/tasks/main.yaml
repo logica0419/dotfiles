@@ -18,7 +18,7 @@
       when: ssh_keys_stat.results | selectattr('stat.exists', 'equalto', false) | list | length > 0
       block:
         - name: Get Bitwarden status
-          ansible.builtin.command: "{{ check_os_brew_base_path }}/bin/bw status"
+          ansible.builtin.command: bw status
           register: ssh_bw_status
           changed_when: false
           failed_when: false
@@ -32,7 +32,9 @@
             cmd: |
               set -o pipefail
               umask 077
-              if ! {{ check_os_brew_base_path }}/bin/bw get notes "{{ item.item.bitwarden_item }}" > "{{ item.item.path }}"; then
+              if ! bw get item "{{ item.item.bitwarden_item }}" \
+                | jq -jr 'if .sshKey.privateKey != null and .sshKey.privateKey != "" then .sshKey.privateKey else .notes // "" end' \
+                > "{{ item.item.path }}"; then
                 rm -f "{{ item.item.path }}"
                 exit 1
               fi

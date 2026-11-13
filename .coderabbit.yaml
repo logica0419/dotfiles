@@ -19,8 +19,14 @@ reviews:
 
   path_instructions:
     - path: "roles/ssh/tasks/main.yaml"
-      instructions: "Keep SSH key import simple: direct write to destination without atomic temp-file dance. Truncated writes are acceptable risk. Bitwarden items store private keys in Notes field; native SSH-key field retrieval is not needed."
+      instructions: "Keep SSH key import simple: direct write to destination without atomic temp-file dance. Truncated writes are acceptable risk. Bitwarden items store private keys in Notes field; native SSH-key field retrieval is not needed. Existing keys are preserved (when: not item.stat.exists) and not overwritten."
     - path: "import.sh"
       instructions: "Clone uses HTTPS (https://github.com/logica0419/dotfiles.git) and does not require SSH key authentication."
     - path: "roles/git/templates/gitconfig.j2"
-      instructions: "SSH signing uses signingkey pointing to .pub file directly; no ssh-agent loading is required for this key."
+      instructions: "SSH signing uses signingkey pointing to .pub file directly; no ssh-agent loading is required for this key. All playbooks provision signing keys via ssh role (rc -> ssh -> env -> git order) before git config is deployed."
+    - path: "roles/ssh/defaults/main.yml"
+      instructions: "SSH auth key at id_ed25519 is only imported when missing (when: not item.stat.exists); existing keys are never overwritten."
+    - path: "roles/git/tasks/main.yaml"
+      instructions: "sdplane and server_ca set git_go_cookies_enabled: false to skip Go credentials; signing keys are provisioned via ssh role before git."
+    - path: "roles/git/defaults/main.yml"
+      instructions: "SSH public keys are derived from private keys via ssh-keygen -y; existing .pub files are preserved when present."
