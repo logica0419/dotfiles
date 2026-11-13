@@ -5,8 +5,7 @@ helper = !{{ check_os_brew_base_path }}/bin/gh auth git-credential
 [user]
 name = {{ git_user_name }}
 email = {{ git_user_email }}
-{% if not git_sdplane %}
-signingkey = {{ ansible_facts.user_dir }}/.ssh/id_ed25519.pub
+signingkey = {{ git_signing_key_path }}
 [gpg]
 format = ssh
 [gpg "ssh"]
@@ -15,7 +14,6 @@ allowedSignersFile = {{ ansible_facts.user_dir }}/.ssh/allowed_signers
 gpgsign = true
 [http]
 cookiefile = {{ ansible_facts.user_dir }}/.gitcookies
-{% endif %}
 [core]
 editor = code --wait
 [pull]

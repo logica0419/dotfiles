@@ -1,0 +1,6 @@
+---
+ssh_keys:
+  - path: "{{ ansible_facts.user_dir }}/.ssh/id_ed25519_signing"
+    bitwarden_item: "SSH Signing Key"
+  - path: "{{ ansible_facts.user_dir }}/.ssh/id_ed25519"
+    bitwarden_item: "SSH Auth Key"

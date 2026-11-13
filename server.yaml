@@ -6,9 +6,10 @@
     - role: check_os
       check_os_expected_system: Linux
     - apt
-    - server
     - brew
     - rc
+    - ssh
+    - server
     - llm
     - go
     - rust

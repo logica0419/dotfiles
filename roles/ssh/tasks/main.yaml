@@ -1,0 +1,74 @@
+---
+- name: Create SSH directory
+  ansible.builtin.file:
+    path: "{{ ansible_facts.user_dir }}/.ssh"
+    state: directory
+    mode: "0700"
+
+- name: Provision SSH keys from Bitwarden
+  block:
+    - name: Get SSH key statuses
+      ansible.builtin.stat:
+        path: "{{ item.path }}"
+      loop: "{{ ssh_keys }}"
+      loop_control:
+        label: "{{ item.path }}"
+      register: ssh_keys_stat
+    - name: Import missing keys from Bitwarden
+      when: ssh_keys_stat.results | selectattr('stat.exists', 'equalto', false) | list | length > 0
+      block:
+        - name: Get Bitwarden status
+          ansible.builtin.command: "{{ check_os_brew_base_path }}/bin/bw status"
+          register: ssh_bw_status
+          changed_when: false
+          failed_when: false
+        - name: Fail when Bitwarden is not logged in
+          ansible.builtin.fail:
+            msg: "Bitwarden is not logged in. Run 'bw login' and 'bw unlock --raw' then export BW_SESSION, or place SSH keys manually."
+          when: ssh_bw_status.rc != 0 or (ssh_bw_status.stdout | from_json).status != "unlocked"
+        - name: Import SSH private keys from Bitwarden
+          ansible.builtin.shell:
+            executable: /bin/bash
+            cmd: |
+              set -o pipefail
+              {{ check_os_brew_base_path }}/bin/bw get notes "{{ item.item.bitwarden_item }}" > "{{ item.item.path }}"
+              chmod 600 "{{ item.item.path }}"
+          loop: "{{ ssh_keys_stat.results }}"
+          loop_control:
+            label: "{{ item.item.path }}"
+          changed_when: true
+          no_log: true
+          when: not item.stat.exists
+        - name: Derive public keys from private keys
+          ansible.builtin.command: ssh-keygen -y -f "{{ item.path }}"
+          loop: "{{ ssh_keys }}"
+          loop_control:
+            label: "{{ item.path }}"
+          register: ssh_pubkey_derive_results
+          changed_when: false
+        - name: Deploy derived public keys
+          ansible.builtin.copy:
+            dest: "{{ item.item.path }}.pub"
+            content: "{{ item.stdout }}\n"
+            mode: "0644"
+          loop: "{{ ssh_pubkey_derive_results.results }}"
+          loop_control:
+            label: "{{ item.item.path }}"
+          when: item.rc is defined and item.rc == 0
+
+- name: Ensure SSH key permissions
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    mode: "0600"
+  loop: "{{ ssh_keys }}"
+  loop_control:
+    label: "{{ item.path }}"
+
+- name: Ensure SSH public key permissions
+  ansible.builtin.file:
+    path: "{{ item.path }}.pub"
+    mode: "0644"
+  loop: "{{ ssh_keys }}"
+  loop_control:
+    label: "{{ item.path }}"
+  failed_when: false
