@@ -35,6 +35,10 @@
                 rm -f "{{ item.item.path }}"
                 exit 1
               fi
+              if ! ssh-keygen -y -f "{{ item.item.path }}" > /dev/null 2>&1; then
+                rm -f "{{ item.item.path }}"
+                exit 1
+              fi
               chmod 600 "{{ item.item.path }}"
           loop: "{{ ssh_keys_stat.results }}"
           loop_control:
@@ -54,13 +58,22 @@
 
 - name: Derive SSH public keys
   block:
+    - name: Get SSH public key statuses
+      ansible.builtin.stat:
+        path: "{{ item.path }}.pub"
+      loop: "{{ ssh_keys }}"
+      loop_control:
+        label: "{{ item.path }}"
+      register: ssh_pubkeys_stat
     - name: Derive SSH public keys
       ansible.builtin.command: ssh-keygen -y -f "{{ item.path }}"
       loop: "{{ ssh_keys }}"
       loop_control:
         label: "{{ item.path }}"
+        index_var: ssh_pubkey_index
       register: ssh_pubkey_derive_results
       changed_when: false
+      when: not ssh_pubkeys_stat.results[ssh_pubkey_index].stat.exists
     - name: Deploy derived public keys
       ansible.builtin.copy:
         dest: "{{ item.item.path }}.pub"
