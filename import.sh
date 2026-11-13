@@ -6,15 +6,10 @@ if [ "$PWD" != "$HOME" ]; then
   exit 1
 fi
 
-if [ ! -f "$HOME/.ssh/id_ed25519" ] || [ ! -f "$HOME/.ssh/id_ed25519.pub" ]; then
-  echo "Error: $HOME/.ssh/id_ed25519 and $HOME/.ssh/id_ed25519.pub are required" >&2
-  exit 1
-fi
-
-if ! command -v git &>/dev/null; then
+if ! command -v git &> /dev/null; then
   echo "Installing git"
   sudo apt-get update
-  sudo apt-get install git -y &>/dev/null
+  sudo apt-get install git -y &> /dev/null
 fi
 
 if [ -e dotfiles ]; then

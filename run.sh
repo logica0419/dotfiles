@@ -6,26 +6,21 @@ if [ "$PWD" != "$HOME/dotfiles" ]; then
   return 1
 fi
 
-if [ ! -f "$HOME/.ssh/id_ed25519" ] || [ ! -f "$HOME/.ssh/id_ed25519.pub" ]; then
-  echo "Error: $HOME/.ssh/id_ed25519 and $HOME/.ssh/id_ed25519.pub are required" >&2
-  return 1
-fi
-
 if [ "$ENV" != "server" ] && [ "$ENV" != "server_ca" ] && [ "$ENV" != "wsl" ] && [ "$ENV" != "mac" ] && [ "$ENV" != "sdplane" ]; then
   echo "Error: ENV must be set to server, server_ca, wsl, mac, or sdplane" >&2
   return 1
 fi
 
-if ! command -v uv &>/dev/null; then
+if ! command -v uv &> /dev/null; then
   echo "Installing uv"
-  curl -LsSf https://astral.sh/uv/install.sh | sh &>/dev/null
+  curl -LsSf https://astral.sh/uv/install.sh | sh &> /dev/null
   export PATH=$PATH:$HOME/.local/bin
 fi
-uv sync &>/dev/null
+uv sync &> /dev/null
 
-if [ "$ENV" != "mac" ] && ! command -v unbuffer &>/dev/null; then
-  sudo apt-get update &>/dev/null
-  sudo apt-get install expect -y &>/dev/null
+if [ "$ENV" != "mac" ] && ! command -v unbuffer &> /dev/null; then
+  sudo apt-get update &> /dev/null
+  sudo apt-get install expect -y &> /dev/null
 fi
 
 while :; do
@@ -35,32 +30,42 @@ while :; do
     unbuffer uv run ansible-playbook -v -i inventory "$ENV".yaml | tee /tmp/ansible.log
   fi
   RESULT=$(
-    grep -q "failed=0" </tmp/ansible.log
+    grep -q "failed=0" < /tmp/ansible.log
     echo $?
   )
 
   # shellcheck source=/dev/null
   source ~/.bashrc
 
-  if [ "$ENV" == "server" ] && command -v tailscale &>/dev/null && ! (tailscale status &>/dev/null); then
+  if [ "$ENV" == "server" ] && command -v tailscale &> /dev/null && ! (tailscale status &> /dev/null); then
     sudo tailscale up
   fi
 
-  if [ "$ENV" == "server" ] && command -v code &>/dev/null && ! (systemctl --user status code-tunnel &>/dev/null); then
+  if [ "$ENV" == "server" ] && command -v code &> /dev/null && ! (systemctl --user status code-tunnel &> /dev/null); then
     code tunnel service install
-    systemctl --user daemon-reload &>/dev/null
-    systemctl --user restart code-tunnel &>/dev/null
+    systemctl --user daemon-reload &> /dev/null
+    systemctl --user restart code-tunnel &> /dev/null
   fi
 
-  if [ "$ENV" == "wsl" ] && ! (systemctl is-system-running --quiet &>/dev/null); then
+  if [ "$ENV" == "wsl" ] && ! (systemctl is-system-running --quiet &> /dev/null); then
     return 1
   fi
 
-  if command -v gh &>/dev/null && ! (gh auth status &>/dev/null); then
+  if { [ ! -f "$HOME/.ssh/id_ed25519" ] || [ ! -f "$HOME/.ssh/id_ed25519.pub" ] ||
+    [ ! -f "$HOME/.ssh/id_ed25519_signing" ] || [ ! -f "$HOME/.ssh/id_ed25519_signing.pub" ]; } &&
+    ! bw status 2> /dev/null | grep -q '"status":"unlocked"'; then
+    bw login || true
+    BW_SESSION="$(bw unlock --raw 2> /dev/null || true)"
+    if [ -n "${BW_SESSION:-}" ]; then
+      export BW_SESSION
+    fi
+  fi
+
+  if command -v gh &> /dev/null && ! (gh auth status &> /dev/null); then
     gh auth login -p https -w
   fi
 
-  if command -v docker &>/dev/null && ! (docker ps &>/dev/null); then
+  if command -v docker &> /dev/null && ! (docker ps &> /dev/null); then
     if [ "$ENV" == "server" ] || [ "$ENV" == "server_ca" ] || [ "$ENV" == "sdplane" ]; then
       sudo reboot 0
     fi
@@ -76,4 +81,4 @@ while :; do
   fi
 done
 
-rm -f "$HOME/.local/bin/uv" "$HOME/.local/bin/uvx" &>/dev/null
+rm -f "$HOME/.local/bin/uv" "$HOME/.local/bin/uvx" &> /dev/null
