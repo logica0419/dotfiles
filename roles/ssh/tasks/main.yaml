@@ -31,22 +31,31 @@
             executable: /bin/bash
             cmd: |
               set -o pipefail
-              tmpfile="$(mktemp)"
+              tmpfile="$(mktemp -p {{ ansible_facts.user_dir }}/.ssh)"
               trap 'rm -f "$tmpfile"' EXIT
               {{ check_os_brew_base_path }}/bin/bw get notes "{{ item.item.bitwarden_item }}" > "$tmpfile"
               if [ ! -s "$tmpfile" ] || ! ssh-keygen -y -f "$tmpfile" > /dev/null 2>&1; then
                 rm -f "$tmpfile"
                 exit 1
               fi
-              cat "$tmpfile" > "{{ item.item.path }}"
-              chmod 600 "{{ item.item.path }}"
-              rm -f "$tmpfile"
+              chmod 600 "$tmpfile"
+              mv "$tmpfile" "{{ item.item.path }}"
+              trap - EXIT
           loop: "{{ ssh_keys_stat.results }}"
           loop_control:
             label: "{{ item.item.path }}"
           changed_when: true
           no_log: true
           when: not item.stat.exists
+
+- name: Ensure SSH private key permissions
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    mode: "0600"
+  loop: "{{ ssh_keys }}"
+  loop_control:
+    label: "{{ item.path }}"
+  failed_when: false
 
 - name: Derive SSH public keys
   block:
@@ -65,7 +74,9 @@
         index_var: ssh_pubkey_index
       register: ssh_pubkey_derive_results
       changed_when: false
-      when: not ssh_pubkeys_stat.results[ssh_pubkey_index].stat.exists
+      when: >-
+        not ssh_pubkeys_stat.results[ssh_pubkey_index].stat.exists
+        or ssh_keys_stat.results[ssh_pubkey_index].changed | default(false)
     - name: Deploy derived public keys
       ansible.builtin.copy:
         dest: "{{ item.item.path }}.pub"
@@ -75,14 +86,6 @@
       loop_control:
         label: "{{ item.item.path }}"
       when: item.rc is defined and item.rc == 0
-
-- name: Ensure SSH key permissions
-  ansible.builtin.file:
-    path: "{{ item.path }}"
-    mode: "0600"
-  loop: "{{ ssh_keys }}"
-  loop_control:
-    label: "{{ item.path }}"
 
 - name: Ensure SSH public key permissions
   ansible.builtin.file:

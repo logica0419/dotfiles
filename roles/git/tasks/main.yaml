@@ -36,6 +36,7 @@
             content: "{{ git_allowed_signers_entry }}"
 
 - name: Configure Go repository credentials
+  when: git_go_cookies_enabled
   block:
     - name: Get .gitcookies status
       ansible.builtin.stat:
