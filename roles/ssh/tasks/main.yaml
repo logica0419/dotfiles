@@ -31,7 +31,10 @@
             executable: /bin/bash
             cmd: |
               set -o pipefail
-              {{ check_os_brew_base_path }}/bin/bw get notes "{{ item.item.bitwarden_item }}" > "{{ item.item.path }}"
+              if ! {{ check_os_brew_base_path }}/bin/bw get notes "{{ item.item.bitwarden_item }}" > "{{ item.item.path }}"; then
+                rm -f "{{ item.item.path }}"
+                exit 1
+              fi
               chmod 600 "{{ item.item.path }}"
           loop: "{{ ssh_keys_stat.results }}"
           loop_control:
