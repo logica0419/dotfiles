@@ -31,6 +31,7 @@
             executable: /bin/bash
             cmd: |
               set -o pipefail
+              umask 077
               if ! {{ check_os_brew_base_path }}/bin/bw get notes "{{ item.item.bitwarden_item }}" > "{{ item.item.path }}"; then
                 rm -f "{{ item.item.path }}"
                 exit 1
