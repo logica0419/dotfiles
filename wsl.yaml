@@ -22,4 +22,5 @@
     - k8s
     - git
     - workspace
+    - workspace_go
     - completion

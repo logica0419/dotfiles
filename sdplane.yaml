@@ -21,5 +21,13 @@
     - k8s
     - role: git
       git_go_cookies_enabled: false
-    - workspace_sdplane
+    - role: workspace
+      vars:
+        workspace_repos:
+          - repo: https://github.com/kait-cronos/sdplane-dev.git
+            dest: sdplane-dev
+          - repo: https://github.com/kait-cronos/libsdplane-dev.git
+            dest: libsdplane-dev
+          - repo: https://github.com/yasuhironet/lthread.git
+            dest: lthread
     - completion

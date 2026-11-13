@@ -20,5 +20,15 @@
     - k8s
     - role: git
       git_go_cookies_enabled: false
-    - workspace_ca
+    - role: workspace
+      vars:
+        workspace_repos:
+          - repo: https://github.com/cycloud-io/sdk-go.git
+            dest: sdk-go
+          - repo: https://github.com/cycloud-io/apis.git
+            dest: apis
+          - repo: https://github.com/cycloud-io/cycloud-vpc-cni-k8s.git
+            dest: cycloud-vpc-cni-k8s
+          - repo: https://github.com/cycloud-io/cluster-api-provider-compute.git
+            dest: cluster-api-provider-compute
     - completion
