@@ -16,3 +16,11 @@ reviews:
     drafts: false
     ignore_usernames:
       - "renovate[bot]"
+
+  path_instructions:
+    - path: "roles/ssh/tasks/main.yaml"
+      instructions: "Keep SSH key import simple: direct write to destination without atomic temp-file dance. Truncated writes are acceptable risk. Bitwarden items store private keys in Notes field; native SSH-key field retrieval is not needed."
+    - path: "import.sh"
+      instructions: "Clone uses HTTPS (https://github.com/logica0419/dotfiles.git) and does not require SSH key authentication."
+    - path: "roles/git/templates/gitconfig.j2"
+      instructions: "SSH signing uses signingkey pointing to .pub file directly; no ssh-agent loading is required for this key."
