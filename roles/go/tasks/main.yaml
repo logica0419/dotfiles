@@ -56,6 +56,7 @@
         - github.com/go-delve/delve/cmd/dlv
         - github.com/golangci/golangci-lint/v2/cmd/golangci-lint
 
+        - github.com/sivchari/gopls-lazy/cmd/gopls-lazy
         - github.com/nao1215/gup
         - github.com/bobg/mingo/cmd/mingo
         - golang.org/x/review/git-codereview
