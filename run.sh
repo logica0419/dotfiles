@@ -24,6 +24,17 @@ if [ "$ENV" != "mac" ] && ! command -v unbuffer &> /dev/null; then
 fi
 
 while :; do
+  if { [ ! -f "$HOME/.ssh/id_ed25519" ] \
+    || [ ! -f "$HOME/.ssh/id_ed25519_signing" ]; } \
+    && ! bw status 2> /dev/null | grep -q '"status":"unlocked"'; then
+    echo "Bitwarden login required for SSH key provisioning"
+    bw login || true
+    BW_SESSION="$(bw unlock --raw 2> /dev/null || true)"
+    if [ -n "${BW_SESSION:-}" ]; then
+      export BW_SESSION
+    fi
+  fi
+
   if [ "$ENV" == "mac" ]; then
     script -q /tmp/ansible.log uv run ansible-playbook -v -i inventory "$ENV".yaml
   else
@@ -45,20 +56,6 @@ while :; do
     code tunnel service install
     systemctl --user daemon-reload &> /dev/null
     systemctl --user restart code-tunnel &> /dev/null
-  fi
-
-  if { [ ! -f "$HOME/.ssh/id_ed25519" ] \
-    || [ ! -f "$HOME/.ssh/id_ed25519.pub" ] \
-    || [ ! -f "$HOME/.ssh/id_ed25519_signing" ] \
-    || [ ! -f "$HOME/.ssh/id_ed25519_signing.pub" ]; } \
-    && ! bw status 2> /dev/null | grep -q '"status":"unlocked"'; then
-    echo "Bitwarden login required for SSH key provisioning"
-    bw login || true
-    BW_SESSION="$(bw unlock --raw 2> /dev/null || true)"
-    if [ -n "${BW_SESSION:-}" ]; then
-      export BW_SESSION
-    fi
-    RESULT=1
   fi
 
   if [ "$ENV" == "wsl" ] && ! (systemctl is-system-running --quiet &> /dev/null); then
