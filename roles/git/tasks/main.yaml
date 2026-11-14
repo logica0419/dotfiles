@@ -27,12 +27,26 @@
           ansible.builtin.slurp:
             src: "{{ git_signing_key_path }}"
           register: git_signing_key_slurp
+        - name: Get legacy signing key status
+          ansible.builtin.stat:
+            path: "{{ ansible_facts.user_dir }}/.ssh/id_ed25519.pub"
+          register: git_legacy_signing_key_stat
+        - name: Read legacy SSH signing key
+          when: git_legacy_signing_key_stat.stat.exists
+          ansible.builtin.slurp:
+            src: "{{ ansible_facts.user_dir }}/.ssh/id_ed25519.pub"
+          register: git_legacy_signing_key_slurp
         - name: Generate allowed signers entry
           ansible.builtin.set_fact:
-            git_allowed_signers_entry: |
+            git_allowed_signers_entry: |-
               {{ git_user_email }} {{ git_signing_key_fields[0] }} {{ git_signing_key_fields[1] }}
+              {% if git_legacy_signing_key_stat.stat.exists
+                and git_legacy_signing_key_slurp.content is defined -%}
+              {{ git_user_email }} {{ git_legacy_signing_key_fields[0] }} {{ git_legacy_signing_key_fields[1] }}
+              {%- endif %}
           vars:
             git_signing_key_fields: "{{ (git_signing_key_slurp.content | b64decode).split() }}"
+            git_legacy_signing_key_fields: "{{ (git_legacy_signing_key_slurp.content | b64decode).split() }}"
         - name: Deploy allowed signers file
           ansible.builtin.copy:
             dest: "{{ ansible_facts.user_dir }}/.ssh/allowed_signers"

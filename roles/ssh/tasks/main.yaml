@@ -33,7 +33,9 @@
             cmd: |
               set -o pipefail
               umask 077
-              if ! bw get notes "{{ item.item.bitwarden_item }}" > "{{ item.item.path }}"; then
+              if ! bw get item "{{ item.item.bitwarden_item }}" \
+                | jq -r 'if .sshKey.privateKey != null and .sshKey.privateKey != "" then .sshKey.privateKey else .notes // "" end' \
+                > "{{ item.item.path }}"; then
                 rm -f "{{ item.item.path }}"
                 exit 1
               fi
@@ -75,7 +77,9 @@
         index_var: ssh_pubkey_index
       register: ssh_pubkey_derive_results
       changed_when: false
-      when: not ssh_pubkeys_stat.results[ssh_pubkey_index].stat.exists
+      when: >-
+        not ssh_pubkeys_stat.results[ssh_pubkey_index].stat.exists
+        or ssh_keys_stat.results[ssh_pubkey_index].changed | default(false)
     - name: Deploy derived public keys
       ansible.builtin.copy:
         dest: "{{ item.item.path }}.pub"
