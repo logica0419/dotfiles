@@ -47,8 +47,6 @@ while :; do
 
   # shellcheck source=/dev/null
   source ~/.bashrc
-  # Ensure brew bin is on PATH for next loop's bw check (fresh hosts)
-  export PATH="$HOME/.linuxbrew/bin:$HOME/.homebrew/bin:/opt/homebrew/bin:/home/linuxbrew/.linuxbrew/bin:$PATH"
 
   if [ "$ENV" == "server" ] && command -v tailscale &> /dev/null && ! (tailscale status &> /dev/null); then
     sudo tailscale up

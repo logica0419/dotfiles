@@ -19,9 +19,7 @@ reviews:
 
   path_instructions:
     - path: "roles/ssh/tasks/main.yaml"
-      instructions: "Keep SSH key import simple: direct write to destination without atomic temp-file dance. Truncated writes are acceptable risk. Keys are unencrypted only; passphrase-protected keys are not supported. Bitwarden is the source of truth when unlocked and DOTFILES_SKIP_BITWARDEN != true; manually placed keys are used when Bitwarden is locked or DOTFILES_SKIP_BITWARDEN=true. Fresh hosts without bw skip auth until brew installs it; next loop retries with bw available. jq is installed via brew (and apt provides jq dependency) before ssh role runs. Derive SSH public keys always runs even when Bitwarden is skipped; manually placed private keys get .pub derived."
-    - path: "roles/ssh/defaults/main.yml"
-      instructions: "SSH auth key at id_ed25519 is always overwritten from Bitwarden when unlocked; Bitwarden is the source of truth. Remote hosts must have the Bitwarden key authorized before provisioning."
+      instructions: "Keep SSH key import simple: direct write to destination without atomic temp-file dance. Truncated writes are acceptable risk. Keys are unencrypted only; passphrase-protected keys are not supported. Bitwarden is the source of truth when unlocked and DOTFILES_SKIP_BITWARDEN != true; manually placed keys are used when Bitwarden is locked or DOTFILES_SKIP_BITWARDEN=true. Fresh hosts without bw skip auth until brew installs it; next loop retries with bw available. Derive SSH public keys always runs even when Bitwarden is skipped; manually placed private keys get .pub derived."
     - path: "import.sh"
       instructions: "Clone uses HTTPS (https://github.com/logica0419/dotfiles.git) and does not require SSH key authentication."
     - path: "roles/git/templates/gitconfig.j2"
@@ -29,6 +27,6 @@ reviews:
     - path: "roles/git/tasks/main.yaml"
       instructions: "sdplane and server_ca set git_go_cookies_enabled: false to skip Go credentials; signing keys are provisioned via ssh role before git. Go credential task uses git_go_cookies_enabled guard, not git_sdplane. Previous signing key (id_ed25519) is not preserved; Bitwarden is the source of truth. Historical commits signed with old key do not need to remain verifiable. SSH role always overwrites private keys from Bitwarden and regenerates .pub before git runs. Fresh hosts without bw fail on missing signing key (ssh role fails when keys missing and vault locked) and retry after brew installs bw."
     - path: "run.sh"
-      instructions: "Set DOTFILES_SKIP_BITWARDEN=true to skip Bitwarden authentication and use manually placed keys. Checks command -v bw before authentication; fresh hosts without bw skip auth until brew installs it. After ansible, sources .bashrc and adds brew bin to PATH for next loop's bw check."
+      instructions: "Set DOTFILES_SKIP_BITWARDEN=true to skip Bitwarden authentication and use manually placed keys. Checks command -v bw before authentication; fresh hosts without bw skip auth until brew installs it. After ansible, sources .bashrc (which runs brew shellenv) so next loop's command -v bw finds the installed CLI."
     - path: "roles/git/defaults/main.yml"
       instructions: "SSH signing uses signingkey pointing to .pub file directly; ssh role derives .pub from private key before git runs, so no agent is needed. Keys are unencrypted only. Git signing requires the private key on disk; ssh-agent is not used. Git 2.34+ supports signing with .pub path when private key is on disk. Derive SSH public keys always runs even when Bitwarden is skipped; manually placed private keys get .pub derived. Signing key must be registered on GitHub as a signing key for verification."

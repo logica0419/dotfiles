@@ -26,13 +26,44 @@
       when:
         - ssh_import_keys_stat.results | selectattr('stat.exists', 'equalto', false) | list | length > 0
         - ssh_bw_status.rc != 0 or (ssh_bw_status.stdout | from_json).status != "unlocked"
-    - name: Sync Bitwarden vault
+    - name: Check jq availability
+      ansible.builtin.command: command -v jq
+      register: ssh_jq_status
+      changed_when: false
+      failed_when: false
+      check_mode: false
       when:
         - lookup('env', 'DOTFILES_SKIP_BITWARDEN') != "true"
         - ssh_bw_status.rc == 0 and (ssh_bw_status.stdout | from_json).status == "unlocked"
+    - name: Fail when jq is not available
+      ansible.builtin.fail:
+        msg: "jq is required for SSH key provisioning but not found. Install jq via brew or apt."
+      when:
+        - lookup('env', 'DOTFILES_SKIP_BITWARDEN') != "true"
+        - ssh_bw_status.rc == 0 and (ssh_bw_status.stdout | from_json).status == "unlocked"
+        - ssh_jq_status.rc != 0
+    - name: Sync Bitwarden vault
       ansible.builtin.command: bw sync
       register: ssh_bw_sync_result
       changed_when: false
+      when:
+        - lookup('env', 'DOTFILES_SKIP_BITWARDEN') != "true"
+        - ssh_bw_status.rc == 0 and (ssh_bw_status.stdout | from_json).status == "unlocked"
+    - name: Backup existing SSH private keys
+      ansible.builtin.copy:
+        src: "{{ item.item.path }}"
+        dest: "{{ item.item.path }}.bak"
+        remote_src: true
+        mode: "0600"
+      loop: "{{ ssh_import_keys_stat.results }}"
+      loop_control:
+        label: "{{ item.item.path }}"
+      when:
+        - lookup('env', 'DOTFILES_SKIP_BITWARDEN') != "true"
+        - ssh_bw_status.rc == 0 and (ssh_bw_status.stdout | from_json).status == "unlocked"
+        - ssh_bw_sync_result.rc == 0
+        - item.stat.exists
+      failed_when: false
     - name: Import SSH private keys from Bitwarden
       when:
         - lookup('env', 'DOTFILES_SKIP_BITWARDEN') != "true"
