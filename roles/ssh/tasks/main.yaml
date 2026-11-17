@@ -86,4 +86,6 @@
       loop: "{{ ssh_pubkey_derive_results.results }}"
       loop_control:
         label: "{{ item.item.path }}"
-      when: item.rc is defined and item.rc == 0
+      when:
+        - not item.skipped | default(false)
+        - item.rc is defined and item.rc == 0
