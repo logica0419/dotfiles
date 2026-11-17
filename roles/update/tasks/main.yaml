@@ -36,6 +36,18 @@
   ansible.builtin.command: mise upgrade --bump
   changed_when: false
 
+- name: Update gh extensions
+  block:
+    - name: Get gh auth status
+      ansible.builtin.command: gh auth status
+      register: update_gh_auth
+      changed_when: false
+      failed_when: update_gh_auth.rc not in [0, 1]
+    - name: Update gh extensions
+      ansible.builtin.command: gh extension upgrade --all
+      changed_when: false
+      when: update_gh_auth.rc == 0
+
 - name: Prune Docker components
   ansible.builtin.shell: |
     set -e
