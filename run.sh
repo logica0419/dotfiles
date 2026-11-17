@@ -24,11 +24,10 @@ if [ "$ENV" != "mac" ] && ! command -v unbuffer &> /dev/null; then
 fi
 
 while :; do
-  if [ "${DOTFILES_SKIP_BITWARDEN:-}" != "true" ] \
-    && ! bw status 2> /dev/null | grep -q '"status":"unlocked"'; then
-    echo "Bitwarden login required for SSH key provisioning"
+  if [ "${DOTFILES_SKIP_BITWARDEN:-}" != "true" ] &&
+    ! bw status 2> /dev/null | grep -q '"status":"unlocked"'; then
     bw login || true
-    BW_SESSION="$(bw unlock --raw 2> /dev/null || true)"
+    BW_SESSION="$(bw unlock --raw || true)"
     if [ -n "${BW_SESSION:-}" ]; then
       export BW_SESSION
     fi
