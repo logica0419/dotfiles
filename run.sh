@@ -24,9 +24,7 @@ if [ "$ENV" != "mac" ] && ! command -v unbuffer &> /dev/null; then
 fi
 
 while :; do
-  if { [ ! -f "$HOME/.ssh/id_ed25519" ] \
-    || [ ! -f "$HOME/.ssh/id_ed25519_signing" ]; } \
-    && ! bw status 2> /dev/null | grep -q '"status":"unlocked"'; then
+  if ! bw status 2> /dev/null | grep -q '"status":"unlocked"'; then
     echo "Bitwarden login required for SSH key provisioning"
     bw login || true
     BW_SESSION="$(bw unlock --raw 2> /dev/null || true)"
