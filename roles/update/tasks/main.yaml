@@ -36,6 +36,10 @@
   ansible.builtin.command: mise upgrade --bump
   changed_when: false
 
+- name: Update gh extensions
+  ansible.builtin.command: gh extension upgrade --all
+  changed_when: false
+
 - name: Prune Docker components
   ansible.builtin.shell: |
     set -e
