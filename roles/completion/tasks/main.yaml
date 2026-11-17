@@ -51,6 +51,8 @@
       file: youki
     - command: npm completion
       file: npm
+    - command: pnpm completion bash
+      file: pnpm
     - command: golangci-lint completion bash
       file: golangci-lint
     - command: dlv completion bash
