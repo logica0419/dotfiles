@@ -27,12 +27,17 @@
         - ssh_import_keys_stat.results | selectattr('stat.exists', 'equalto', false) | list | length > 0
         - ssh_bw_status.rc != 0 or (ssh_bw_status.stdout | from_json).status != "unlocked"
     - name: Sync Bitwarden vault
-      when: ssh_bw_status.rc == 0 and (ssh_bw_status.stdout | from_json).status == "unlocked"
+      when:
+        - lookup('env', 'DOTFILES_SKIP_BITWARDEN') != "true"
+        - ssh_bw_status.rc == 0 and (ssh_bw_status.stdout | from_json).status == "unlocked"
       ansible.builtin.command: bw sync
+      register: ssh_bw_sync_result
       changed_when: false
-      failed_when: false
     - name: Import SSH private keys from Bitwarden
-      when: ssh_bw_status.rc == 0 and (ssh_bw_status.stdout | from_json).status == "unlocked"
+      when:
+        - lookup('env', 'DOTFILES_SKIP_BITWARDEN') != "true"
+        - ssh_bw_status.rc == 0 and (ssh_bw_status.stdout | from_json).status == "unlocked"
+        - ssh_bw_sync_result.rc == 0
       ansible.builtin.shell:
         executable: /bin/bash
         cmd: |
@@ -44,11 +49,11 @@
             rm -f "{{ item.path }}"
             exit 1
           fi
+          chmod 600 "{{ item.path }}" || { rm -f "{{ item.path }}"; exit 1; }
           if ! ssh-keygen -y -f "{{ item.path }}" > /dev/null 2>&1; then
             rm -f "{{ item.path }}"
             exit 1
           fi
-          chmod 600 "{{ item.path }}"
       loop: "{{ ssh_keys }}"
       loop_control:
         label: "{{ item.path }}"

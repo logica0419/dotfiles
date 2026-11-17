@@ -24,7 +24,8 @@ if [ "$ENV" != "mac" ] && ! command -v unbuffer &> /dev/null; then
 fi
 
 while :; do
-  if ! bw status 2> /dev/null | grep -q '"status":"unlocked"'; then
+  if [ "${DOTFILES_SKIP_BITWARDEN:-}" != "true" ] \
+    && ! bw status 2> /dev/null | grep -q '"status":"unlocked"'; then
     echo "Bitwarden login required for SSH key provisioning"
     bw login || true
     BW_SESSION="$(bw unlock --raw 2> /dev/null || true)"
@@ -32,6 +33,7 @@ while :; do
       export BW_SESSION
     fi
   fi
+  export DOTFILES_SKIP_BITWARDEN
 
   if [ "$ENV" == "mac" ]; then
     script -q /tmp/ansible.log uv run ansible-playbook -v -i inventory "$ENV".yaml

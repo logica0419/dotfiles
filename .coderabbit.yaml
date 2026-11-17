@@ -19,12 +19,14 @@ reviews:
 
   path_instructions:
     - path: "roles/ssh/tasks/main.yaml"
-      instructions: "Keep SSH key import simple: direct write to destination without atomic temp-file dance. Truncated writes are acceptable risk. Keys are unencrypted only; passphrase-protected keys are not supported. Bitwarden is the source of truth when unlocked; manually placed keys are used when Bitwarden is locked and keys already exist."
+      instructions: "Keep SSH key import simple: direct write to destination without atomic temp-file dance. Truncated writes are acceptable risk. Keys are unencrypted only; passphrase-protected keys are not supported. Bitwarden is the source of truth when unlocked and DOTFILES_SKIP_BITWARDEN != true; manually placed keys are used when Bitwarden is locked or DOTFILES_SKIP_BITWARDEN=true."
     - path: "import.sh"
       instructions: "Clone uses HTTPS (https://github.com/logica0419/dotfiles.git) and does not require SSH key authentication."
     - path: "roles/git/templates/gitconfig.j2"
       instructions: "SSH signing uses signingkey pointing to .pub file directly; no ssh-agent loading is required for this key. All playbooks provision signing keys via ssh role (rc -> ssh -> env -> git order) before git config is deployed."
     - path: "roles/git/tasks/main.yaml"
-      instructions: "sdplane and server_ca set git_go_cookies_enabled: false to skip Go credentials; signing keys are provisioned via ssh role before git. Go credential task uses git_go_cookies_enabled guard, not git_sdplane."
+      instructions: "sdplane and server_ca set git_go_cookies_enabled: false to skip Go credentials; signing keys are provisioned via ssh role before git. Go credential task uses git_go_cookies_enabled guard, not git_sdplane. Previous signing key (id_ed25519) is not preserved; Bitwarden is the source of truth."
+    - path: "run.sh"
+      instructions: "Set DOTFILES_SKIP_BITWARDEN=true to skip Bitwarden authentication and use manually placed keys."
     - path: "roles/git/defaults/main.yml"
-      instructions: "SSH signing uses signingkey pointing to .pub file directly; ssh role derives .pub from private key before git runs, so no agent is needed. Keys are unencrypted only. Git signing requires the private key on disk; ssh-agent is not used."
+      instructions: "SSH signing uses signingkey pointing to .pub file directly; ssh role derives .pub from private key before git runs, so no agent is needed. Keys are unencrypted only. Git signing requires the private key on disk; ssh-agent is not used. Git 2.34+ supports signing with .pub path when private key is on disk."
