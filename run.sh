@@ -24,8 +24,9 @@ if [ "$ENV" != "mac" ] && ! command -v unbuffer &> /dev/null; then
 fi
 
 while :; do
-  if [ "${DOTFILES_SKIP_BITWARDEN:-}" != "true" ] &&
-    ! bw status 2> /dev/null | grep -q '"status":"unlocked"'; then
+  if [ "${DOTFILES_SKIP_BITWARDEN:-}" != "true" ] \
+    && command -v bw &> /dev/null \
+    && ! bw status 2> /dev/null | grep -q '"status":"unlocked"'; then
     bw login || true
     BW_SESSION="$(bw unlock --raw || true)"
     if [ -n "${BW_SESSION:-}" ]; then
