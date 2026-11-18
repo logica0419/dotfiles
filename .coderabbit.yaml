@@ -30,3 +30,7 @@ reviews:
       instructions: "Checks command -v bw before authentication; fresh hosts without bw skip auth until brew installs it. After ansible, sources .bashrc (which runs brew shellenv) so next loop's command -v bw finds the installed CLI. Bitwarden is mandatory; no manual fallback when locked."
     - path: "roles/git/defaults/main.yml"
       instructions: "SSH signing uses signingkey pointing to .pub file directly; ssh role derives .pub from private key before git runs, so no agent is needed. Keys are unencrypted only. Git signing requires the private key on disk; ssh-agent is not used. Git 2.34+ supports signing with .pub path when private key is on disk. Derive runs after Bitwarden import; no manual fallback when locked. Signing key must be registered on GitHub as a signing key for verification."
+    - path: "roles/workspace_go/tasks/main.yaml"
+      instructions: "workspace_go files (.envrc, exclude, go-settings.jsonc, vscode-go-settings.jsonc) are in roles/workspace_go/files/; guarded by workspace_repos selection for contrib/go and contrib/vscode-go."
+    - path: "update-sdplane.yaml"
+      instructions: "workspace role uses workspace_repos with repo/dest schema; sdplane entries map to prj/sdplane-dev, prj/libsdplane-dev, prj/lthread."
