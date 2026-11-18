@@ -1,0 +1,68 @@
+---
+- name: Configure Go repository
+  when: "'contrib/go' in (workspace_repos | map(attribute='dest') | list)"
+  block:
+    - name: Get built Go version
+      ansible.builtin.shell:
+        executable: /bin/bash
+        cmd: |
+          set -o pipefail
+          {{ ansible_facts.user_dir }}/prj/contrib/go/bin/go version | cut -d " " -f 3 | cut -c 3-6
+      register: workspace_go_built
+      changed_when: false
+      failed_when: false
+    - name: Get required Go version
+      ansible.builtin.shell:
+        executable: /bin/bash
+        cmd: |
+          set -o pipefail
+          cat {{ ansible_facts.user_dir }}/prj/contrib/go/src/go.mod | grep "go 1." | cut -d " " -f 2
+      register: workspace_go_required
+      changed_when: false
+      failed_when: false
+    - name: Build Go from source
+      ansible.builtin.command:
+        cmd: ./make.bash
+        chdir: "{{ ansible_facts.user_dir }}/prj/contrib/go/src"
+      changed_when: false
+      when: workspace_go_built.stdout != workspace_go_required.stdout
+    - name: Deploy .envrc file
+      ansible.builtin.copy:
+        src: .envrc
+        dest: "{{ ansible_facts.user_dir }}/prj/contrib/go/.envrc"
+        mode: "0664"
+    - name: Run direnv allow
+      ansible.builtin.command:
+        cmd: "direnv allow"
+        chdir: "{{ ansible_facts.user_dir }}/prj/contrib/go"
+      changed_when: false
+    - name: Deploy Git exclude file
+      ansible.builtin.copy:
+        src: exclude
+        dest: "{{ ansible_facts.user_dir }}/prj/contrib/go/.git/info/exclude"
+        mode: "0664"
+    - name: Create VS Code directory
+      ansible.builtin.file:
+        path: "{{ ansible_facts.user_dir }}/prj/contrib/go/.vscode"
+        state: directory
+        mode: "0755"
+    - name: Deploy VS Code settings file
+      ansible.builtin.copy:
+        src: go-settings.jsonc
+        dest: "{{ ansible_facts.user_dir }}/prj/contrib/go/.vscode/settings.json"
+        mode: "0664"
+
+- name: Configure vscode-go repository
+  when: "'contrib/vscode-go' in (workspace_repos | map(attribute='dest') | list)"
+  block:
+    - name: Configure .vscode skip-worktree # noqa: command-instead-of-module
+      ansible.builtin.shell:
+        executable: /bin/bash
+        cmd: git update-index --skip-worktree .vscode/*
+        chdir: "{{ ansible_facts.user_dir }}/prj/contrib/vscode-go"
+      changed_when: false
+    - name: Deploy VS Code settings file
+      ansible.builtin.copy:
+        src: vscode-go-settings.jsonc
+        dest: "{{ ansible_facts.user_dir }}/prj/contrib/vscode-go/.vscode/settings.json"
+        mode: "0664"
