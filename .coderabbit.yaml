@@ -33,4 +33,4 @@ reviews:
     - path: "roles/workspace_go/tasks/main.yaml"
       instructions: "workspace_go files (.envrc, exclude, go-settings.jsonc, vscode-go-settings.jsonc) are in roles/workspace_go/files/; guarded by workspace_repos selection for contrib/go and contrib/vscode-go."
     - path: "update-sdplane.yaml"
-      instructions: "workspace role uses workspace_repos with repo/dest schema; sdplane entries map to prj/sdplane-dev, prj/libsdplane-dev, prj/lthread."
+      instructions: "workspace role uses workspace_repos with repo/dest schema; dest is relative to prj/ (task prepends {{ ansible_facts.user_dir }}/prj/), so sdplane entries correctly map to prj/sdplane-dev, prj/libsdplane-dev, prj/lthread."
