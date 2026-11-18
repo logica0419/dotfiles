@@ -1,0 +1,2 @@
+---
+server_base_update_playbook: update-linux.yaml
