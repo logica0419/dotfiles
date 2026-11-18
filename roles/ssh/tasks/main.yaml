@@ -1,0 +1,106 @@
+---
+- name: Create SSH directory
+  ansible.builtin.file:
+    path: "{{ ansible_facts.user_dir }}/.ssh"
+    state: directory
+    mode: "0700"
+
+- name: Provision SSH keys from Bitwarden
+  block:
+    - name: Get Bitwarden status
+      ansible.builtin.command: bw status
+      register: ssh_bw_status
+      changed_when: false
+      failed_when: false
+      check_mode: false
+    - name: Fail when Bitwarden is not logged in
+      ansible.builtin.fail:
+        msg: "Bitwarden is not logged in. Run 'bw login' and 'bw unlock --raw' then export BW_SESSION."
+      when: ssh_bw_status.rc != 0 or (ssh_bw_status.stdout | from_json).status != "unlocked"
+    - name: Provision from Bitwarden when unlocked
+      block:
+        - name: Check jq availability
+          ansible.builtin.command: jq --version
+          changed_when: false
+          check_mode: false
+        - name: Sync Bitwarden vault
+          ansible.builtin.command: bw sync
+          register: ssh_bw_sync_result
+          changed_when: false
+        - name: Get SSH key statuses for backup decision
+          ansible.builtin.stat:
+            path: "{{ item.path }}"
+          loop: "{{ ssh_keys }}"
+          loop_control:
+            label: "{{ item.path }}"
+          register: ssh_import_keys_stat
+        - name: Backup existing SSH private keys
+          ansible.builtin.copy:
+            src: "{{ item.item.path }}"
+            dest: "{{ item.item.path }}.bak"
+            remote_src: true
+            mode: "0600"
+          loop: "{{ ssh_import_keys_stat.results }}"
+          loop_control:
+            label: "{{ item.item.path }}"
+          when: item.stat.exists
+        - name: Import SSH private keys from Bitwarden
+          when: ssh_bw_sync_result.rc == 0
+          ansible.builtin.shell:
+            executable: /bin/bash
+            cmd: |
+              set -o pipefail
+              umask 077
+
+              if ! bw get item "{{ item.bitwarden_item }}" | jq -re '.sshKey.privateKey // empty' > "{{ item.path }}"; then
+                rm -f "{{ item.path }}"
+                exit 1
+              fi
+              chmod 600 "{{ item.path }}" || { rm -f "{{ item.path }}"; exit 1; }
+
+              if ! ssh-keygen -y -f "{{ item.path }}" > /dev/null 2>&1; then
+                rm -f "{{ item.path }}"
+                exit 1
+              fi
+          loop: "{{ ssh_keys }}"
+          loop_control:
+            label: "{{ item.path }}"
+          changed_when: true
+          no_log: true
+        - name: Remove SSH private key backups
+          ansible.builtin.file:
+            path: "{{ item.path }}.bak"
+            state: absent
+          loop: "{{ ssh_keys }}"
+          loop_control:
+            label: "{{ item.path }}"
+
+- name: Ensure SSH private key permissions
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    mode: "0600"
+  loop: "{{ ssh_keys }}"
+  loop_control:
+    label: "{{ item.path }}"
+  failed_when: false
+
+- name: Derive SSH public keys
+  block:
+    - name: Derive SSH public keys
+      ansible.builtin.command: ssh-keygen -y -f "{{ item.path }}"
+      loop: "{{ ssh_keys }}"
+      loop_control:
+        label: "{{ item.path }}"
+      register: ssh_pubkey_derive_results
+      changed_when: false
+    - name: Deploy derived public keys
+      ansible.builtin.copy:
+        dest: "{{ item.item.path }}.pub"
+        content: "{{ item.stdout }}\n"
+        mode: "0644"
+      loop: "{{ ssh_pubkey_derive_results.results }}"
+      loop_control:
+        label: "{{ item.item.path }}"
+      when:
+        - not item.skipped | default(false)
+        - item.rc == 0

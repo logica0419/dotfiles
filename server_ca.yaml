@@ -6,9 +6,10 @@
     - role: check_os
       check_os_expected_system: Linux
     - apt
-    - server_ca
     - brew
     - rc
+    - ssh
+    - server_ca
     - llm
     - go
     - rust
@@ -18,6 +19,6 @@
     - docker
     - k8s
     - role: git
-      git_sdplane: true
+      git_go_cookies_enabled: false
     - workspace_ca
     - completion

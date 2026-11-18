@@ -6,8 +6,9 @@
     - role: check_os
       check_os_expected_system: Darwin
     - brew
-    - mac
     - rc
+    - ssh
+    - mac
     - llm
     - go
     - rust
