@@ -22,8 +22,6 @@
         mode: "0644"
 
 - name: Configure updater service
-  vars:
-    server_base_update_playbook: "{{ server_base_update_playbook | default('update-linux.yaml') }}"
   block:
     - name: Get current workspace path
       ansible.builtin.command: pwd
