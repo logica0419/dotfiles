@@ -4,23 +4,23 @@
     name: mise
     state: present
 
-- name: Install latest Node.js
-  ansible.builtin.shell: |
-    set -e
-    mise install node@latest
-    mise use -g node@latest
-  changed_when: false
-
-- name: Install latest pnpm
-  ansible.builtin.shell: |
-    set -e
-    mise install pnpm@latest
-    mise use -g pnpm@latest
-  changed_when: false
-
-- name: Update npm package manager
-  ansible.builtin.command: npm install -g npm@latest
-  changed_when: false
+- name: Install JS tooling
+  block:
+    - name: Install latest Node.js
+      ansible.builtin.shell: |
+        set -e
+        mise install node@latest
+        mise use -g node@latest
+      changed_when: false
+    - name: Update npm package manager
+      ansible.builtin.command: npm install -g npm@latest
+      changed_when: false
+    - name: Install latest pnpm
+      ansible.builtin.shell: |
+        set -e
+        mise install pnpm@latest
+        mise use -g pnpm@latest
+      changed_when: false
 
 - name: Install latest jactionlint
   ansible.builtin.shell: |
