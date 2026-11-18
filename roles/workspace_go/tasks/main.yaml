@@ -1,5 +1,6 @@
 ---
 - name: Configure Go repository
+  when: "'contrib/go' in (workspace_repos | map(attribute='dest') | list)"
   block:
     - name: Get built Go version
       ansible.builtin.shell:
@@ -52,6 +53,7 @@
         mode: "0664"
 
 - name: Configure vscode-go repository
+  when: "'contrib/vscode-go' in (workspace_repos | map(attribute='dest') | list)"
   block:
     - name: Configure .vscode skip-worktree # noqa: command-instead-of-module
       ansible.builtin.shell:
