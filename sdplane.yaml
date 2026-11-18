@@ -9,6 +9,9 @@
     - brew
     - rc
     - ssh
+    - role: server_base
+      vars:
+        server_base_update_playbook: update-sdplane.yaml
     - sdplane
     - llm
     - go

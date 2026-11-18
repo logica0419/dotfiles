@@ -9,7 +9,9 @@
     - brew
     - rc
     - ssh
-    - server_ca
+    - role: server_base
+      vars:
+        server_base_update_playbook: update-server-ca.yaml
     - llm
     - go
     - rust

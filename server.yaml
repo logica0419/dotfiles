@@ -9,6 +9,7 @@
     - brew
     - rc
     - ssh
+    - server_base
     - server
     - llm
     - go
