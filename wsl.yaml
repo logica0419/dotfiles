@@ -9,8 +9,8 @@
     - brew
     - role: rc
       rc_browser_path: "/usr/bin/chrome"
-    - ssh
     - wsl
+    - ssh
     - llm
     - go
     - rust

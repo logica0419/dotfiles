@@ -6,12 +6,12 @@
 
 ## 下準備
 
-### ssh鍵を用意する
+### SSH鍵
 
-- `~/.ssh/id_ed25519`
-  - Permission: 0600
-- `~/.ssh/id_ed25519.pub`
-  - Permission: 0644
+Bitwardenに以下のアイテムをSSH Keyタイプで登録
+
+- `SSH Signing Key`: Git署名用 (長期利用)
+- `SSH Auth Key`: 認証用 (使い捨て可)
 
 ### sudoがパスワード無しで通るようにする
 
@@ -48,6 +48,7 @@ curl -L https://raw.githubusercontent.com/logica0419/dotfiles/main/import.sh -o 
   - mac (MacOS環境用)
   - wsl (Ubuntu 26.04 on WSL2環境用)
   - server (Ubuntu 26.04 on 自宅サーバー用)
+  - server_ca (【お仕事】Ubuntu 24.04 on CAインターン開発環境用)
   - sdplane (【お仕事】Ubuntu 24.04 on sdplane開発環境用)
 
 ## その他
