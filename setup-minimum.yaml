@@ -1,5 +1,5 @@
 ---
-# Minimum setup: roles below this line are required, others are optional.
+# Minimum setup template: roles below this line are required, others are optional.
 - name: Run Minimum Setup
   hosts: local
   connection: local
