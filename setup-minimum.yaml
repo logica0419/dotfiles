@@ -10,6 +10,7 @@
     - brew
     - rc
     - ssh
+    - server_base
     - llm
     - git
     - workspace
