@@ -16,25 +16,25 @@
         upgrade_all: true
       when: ansible_facts.system == "Darwin"
 
-- name: Update Go packages
-  ansible.builtin.command: gup update
+- name: Update tool packages
+  ansible.builtin.shell:
+    executable: /bin/bash
+    cmd: |
+      if command -v {{ item.check }} >/dev/null 2>&1; then
+        {{ item.command }}
+      fi
   changed_when: false
-
-- name: Update Rust toolchain
-  ansible.builtin.command: rustup update
-  changed_when: false
-
-- name: Update Krew packages
-  ansible.builtin.command: kubectl-krew upgrade
-  changed_when: false
-
-- name: Update Python packages
-  ansible.builtin.command: uv tool upgrade --all
-  changed_when: false
-
-- name: Update mise packages
-  ansible.builtin.command: mise upgrade --bump
-  changed_when: false
+  loop:
+    - command: gup update
+      check: gup
+    - command: rustup update
+      check: rustup
+    - command: kubectl-krew upgrade
+      check: kubectl-krew
+    - command: uv tool upgrade --all
+      check: uv
+    - command: mise upgrade --bump
+      check: mise
 
 - name: Update gh extensions
   block:
@@ -51,7 +51,9 @@
 - name: Prune Docker components
   ansible.builtin.shell: |
     set -e
-    docker image prune -a -f
-    docker volume prune -a -f
-    docker network prune -f
+    if command -v docker >/dev/null 2>&1; then
+      docker image prune -a -f
+      docker volume prune -a -f
+      docker network prune -f
+    fi
   changed_when: false
