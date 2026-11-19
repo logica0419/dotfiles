@@ -14,6 +14,14 @@
         server_base_update_playbook: update-sdplane.yaml
     - sdplane
     - llm
+    - go
+    - rust
+    - python
+    - mise
+    - haskell
+    - youki
+    - docker
+    - k8s
     - role: git
       git_go_cookies_enabled: false
     - role: workspace
