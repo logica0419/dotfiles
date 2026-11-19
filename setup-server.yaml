@@ -1,5 +1,5 @@
 ---
-- name: Run Playbook for Server
+- name: Run Playbook for Home Lab
   hosts: local
   connection: local
   roles:
