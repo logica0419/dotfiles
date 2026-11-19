@@ -134,10 +134,6 @@
             dest: "{{ ansible_facts.user_dir }}/.vscode-server/data/Machine/settings.json"
             mode: "0644"
 
-- name: Enable linger mode
-  ansible.builtin.command: loginctl enable-linger {{ ansible_user }}
-  changed_when: false
-
 - name: Disable sleep mode
   become: true
   block:
