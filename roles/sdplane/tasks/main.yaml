@@ -1,8 +1,4 @@
 ---
-- name: Enable linger mode
-  ansible.builtin.command: loginctl enable-linger {{ ansible_user }}
-  changed_when: false
-
 - name: Install sdplane dependencies
   become: true
   ansible.builtin.apt:

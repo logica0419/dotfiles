@@ -4,6 +4,10 @@
   community.general.timezone:
     name: Asia/Tokyo
 
+- name: Enable linger mode
+  ansible.builtin.command: loginctl enable-linger {{ ansible_user }}
+  changed_when: false
+
 - name: Configure VS Code server settings
   block:
     - name: Create VS Code directories
