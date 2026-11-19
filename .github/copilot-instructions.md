@@ -5,7 +5,7 @@ Ansible-based dotfiles repository for Mac, WSL, and server.
 ## Build and Test
 
 ```bash
-uv run ansible-lint -s --exclude .github/* --exclude .github/workflows/*
+uv run ansible-lint -s --exclude .github/* --exclude .github/workflows/* --exclude .coderabbit.yaml
 ```
 
 Run the target playbook plus `ansible-lint` after Ansible changes.

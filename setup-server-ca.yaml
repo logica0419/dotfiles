@@ -1,5 +1,5 @@
 ---
-- name: Run Playbook for Server
+- name: Run Playbook for CA Internship Dev Environment
   hosts: local
   connection: local
   roles:
@@ -9,11 +9,11 @@
     - brew
     - rc
     - ssh
-    - server_ca
+    - role: server_base
+      vars:
+        server_base_update_playbook: update-server-ca.yaml
     - llm
     - go
-    - rust
-    - python
     - mise
     - youki
     - docker

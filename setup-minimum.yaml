@@ -1,5 +1,6 @@
 ---
-- name: Run Playbook for Server
+# Minimum setup: roles below this line are required, others are optional.
+- name: Run Minimum Setup
   hosts: local
   connection: local
   roles:
@@ -9,17 +10,7 @@
     - brew
     - rc
     - ssh
-    - server
     - llm
-    - go
-    - rust
-    - python
-    - mise
-    - haskell
-    - youki
-    - docker
-    - k8s
     - git
     - workspace
-    - workspace_go
     - completion

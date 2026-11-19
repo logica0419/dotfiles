@@ -7,9 +7,6 @@
       check_os_expected_system: Linux
     - apt
     - llm
-    - go
-    - haskell
-    - youki
     - update
     - role: workspace
       vars:

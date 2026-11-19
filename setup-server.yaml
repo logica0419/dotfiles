@@ -1,0 +1,26 @@
+---
+- name: Run Playbook for Home Lab
+  hosts: local
+  connection: local
+  roles:
+    - role: check_os
+      check_os_expected_system: Linux
+    - apt
+    - brew
+    - rc
+    - ssh
+    - server_base
+    - server
+    - llm
+    - go
+    - rust
+    - python
+    - mise
+    - haskell
+    - youki
+    - docker
+    - k8s
+    - git
+    - workspace
+    - workspace_go
+    - completion

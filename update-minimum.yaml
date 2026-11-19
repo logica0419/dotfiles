@@ -1,0 +1,12 @@
+---
+# Minimum update: roles below this line are required, others are optional.
+- name: Update Minimum Packages
+  hosts: local
+  connection: local
+  roles:
+    - role: check_os
+      check_os_expected_system: Linux
+    - apt
+    - llm
+    - update
+    - workspace

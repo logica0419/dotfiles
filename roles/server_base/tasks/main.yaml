@@ -25,7 +25,7 @@
   block:
     - name: Get current workspace path
       ansible.builtin.command: pwd
-      register: server_ca_dotfiles_dir
+      register: server_base_dotfiles_dir
       changed_when: false
     - name: Create config directories
       ansible.builtin.file:
@@ -61,7 +61,7 @@
       ansible.builtin.shell:
         executable: /bin/bash
         cmd: command -v reboot
-      register: server_ca_reboot_path
+      register: server_base_reboot_path
       changed_when: false
     - name: Configure reboot check cron
       ansible.builtin.cron:
@@ -69,4 +69,4 @@
         minute: 30
         hour: 4
         user: root
-        job: "[ -e /var/run/reboot-required ] && {{ server_ca_reboot_path.stdout }} 0"
+        job: "[ -e /var/run/reboot-required ] && {{ server_base_reboot_path.stdout }} 0"

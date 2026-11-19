@@ -7,7 +7,7 @@
         executable: /bin/bash
         cmd: |
           set -o pipefail
-          {{ ansible_facts.user_dir }}/prj/contrib/go/bin/go version | cut -d " " -f 3 | cut -c 3-6
+          {{ ansible_facts.user_dir }}/prj/contrib/go/bin/go version | grep -oE 'go1\.[0-9]+' | head -n 1 | cut -c 3-
       register: workspace_go_built
       changed_when: false
       failed_when: false
