@@ -1,5 +1,5 @@
 ---
-# Minimum update: roles below this line are required, others are optional.
+# Minimum update template: roles below this line are required, others are optional.
 - name: Update Minimum Packages
   hosts: local
   connection: local
