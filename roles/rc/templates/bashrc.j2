@@ -139,8 +139,12 @@ if ! shopt -oq posix; then
   fi
 fi
 
-eval "$(direnv hook bash)"
-eval "$(mise activate bash)"
+if command -v direnv >/dev/null 2>&1; then
+  eval "$(direnv hook bash)"
+fi
+if command -v mise >/dev/null 2>&1; then
+  eval "$(mise activate bash)"
+fi
 
 {% if rc_browser_path is defined %}
 export BROWSER="{{ rc_browser_path }}"
