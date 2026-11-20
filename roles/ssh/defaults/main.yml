@@ -4,3 +4,4 @@ ssh_keys:
     bitwarden_item: "SSH Signing Key"
   - path: "{{ ansible_facts.user_dir }}/.ssh/id_ed25519"
     bitwarden_item: "SSH Auth Key"
+    authorized_keys: true
