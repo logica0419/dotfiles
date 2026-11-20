@@ -105,7 +105,9 @@
       loop: "{{ ssh_pubkey_derive_results.results }}"
       loop_control:
         label: "{{ item.item.path }}"
-      when: item.rc == 0
+      when:
+        - not item.skipped | default(false)
+        - item.rc == 0
 
 - name: Deploy SSH authorized_keys
   when: ssh_bw_sync_result.rc | default(1) == 0
@@ -121,6 +123,7 @@
       loop_control:
         label: "{{ item.item.path }}"
       when:
+        - not item.skipped | default(false)
         - item.rc == 0
         - item.item.authorized_keys | default(false)
       changed_when: false
