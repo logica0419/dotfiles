@@ -42,6 +42,7 @@
           - gh
           - coderabbit
           - htop
+          - ripgrep
           - jq
           - yq
           - imagemagick
