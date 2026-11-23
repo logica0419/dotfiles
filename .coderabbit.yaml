@@ -32,3 +32,5 @@ reviews:
       instructions: "server_base defaults server_base_update_playbook to update-linux.yaml; setup-sdplane.yaml and setup-server-ca.yaml override it to update-sdplane.yaml and update-server-ca.yaml respectively, so updater.service.j2 renders the correct playbook per environment. update-*.yaml never includes server_base, so scheduled updates do not re-render updater.service. setup-*.yaml and setup-wsl.yaml exist for all ENV values; user-systemd is guaranteed on supported hosts. workspace git module preserves branches and uncommitted edits; import.sh passes ENV unchanged. update-*.yaml never includes ssh, so scheduled updates do not access Bitwarden."
     - path: "update-server-ca.yaml"
       instructions: "Scheduled workspace fetches use the gh auth git-credential helper configured during setup; private repos remain accessible non-interactively after initial gh auth login, so no extra credential handling is required."
+    - path: "roles/docker/tasks/darwin.yaml"
+      instructions: "Darwin docker role is Apple Silicon only; krunkit requires arm64 and no Intel fallback is provided."
