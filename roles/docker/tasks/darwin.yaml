@@ -16,33 +16,29 @@
 - name: Deploy Lima instance
   block:
     - name: Check Lima instance
-      ansible.builtin.command: limactl list default --json
+      ansible.builtin.command: limactl list docker --json
       register: docker_lima_instance
       failed_when: false
       changed_when: false
     - name: Create Lima instance
-      ansible.builtin.command: limactl create --name default --vm-type krunkit --mount-type virtiofs --cpus 10 --memory 12 template:docker
+      ansible.builtin.command: limactl create --name docker --vm-type krunkit --mount-type virtiofs --cpus 10 --memory 12 template:docker
       when: docker_lima_instance.rc != 0
       changed_when: true
     - name: Start Lima instance
-      ansible.builtin.command: limactl start default
-      register: docker_lima_start
-      failed_when: false
-      changed_when: docker_lima_start.rc == 0
+      ansible.builtin.command: limactl start docker
+      changed_when: false
     - name: Enable Lima autostart
-      ansible.builtin.command: limactl start-at-login default
-      register: docker_lima_autostart
-      failed_when: false
-      changed_when: docker_lima_autostart.rc == 0
+      ansible.builtin.command: limactl start-at-login docker
+      changed_when: false
 
 - name: Create Lima Docker context
   block:
     - name: Check Lima Docker context
-      ansible.builtin.command: docker context inspect lima-default
+      ansible.builtin.command: docker context inspect lima-docker
       register: docker_lima_docker_context
       failed_when: false
       changed_when: false
     - name: Create Lima Docker context
-      ansible.builtin.command: docker context create lima-default --docker host=unix://{{ ansible_facts.user_dir }}/.lima/default/sock/docker.sock
+      ansible.builtin.command: docker context create lima-docker --docker host=unix://{{ ansible_facts.user_dir }}/.lima/docker/sock/docker.sock
       when: docker_lima_docker_context.rc != 0
       changed_when: true
