@@ -1,104 +1,48 @@
 ---
 - name: Install containerization packages
   block:
-    # - name: Register Homebrew tap
-    #   community.general.homebrew_tap:
-    #     name:
-    #       - socktainer/tap
-    # - name: Trust socktainer tap
-    #   ansible.builtin.command: brew trust socktainer/tap
-    #   changed_when: false
+    - name: Register Homebrew tap
+      community.general.homebrew_tap:
+        name: slp/krun
+    - name: Trust Homebrew tap
+      ansible.builtin.command: brew trust slp/krun
+      changed_when: false
     - name: Install Homebrew packages
       community.general.homebrew:
         name:
-          - qemu
-          - colima
-          # - container
-          # - socktainer
+          - lima
+          - krunkit
 
-- name: Deploy Colima
+- name: Deploy Lima instance
   block:
-    - name: Create Colima directories
-      ansible.builtin.file:
-        path: "{{ ansible_facts.user_dir }}/{{ item }}"
-        state: directory
-        mode: "0755"
-      loop:
-        - ".colima"
-        - ".colima/default"
-    - name: Deploy Colima config file
-      ansible.builtin.copy:
-        src: colima.yaml
-        dest: "{{ ansible_facts.user_dir }}/.colima/default/colima.yaml"
-        mode: "0644"
-    - name: Enable Colima service
-      community.general.homebrew_services:
-        name: colima
-        state: present
-#
-# - name: Configure container launch daemon
-#   become: true
-#   block:
-#     - name: Create root LaunchDaemons directory
-#       ansible.builtin.file:
-#         path: /Library/LaunchDaemons
-#         state: directory
-#         mode: "0755"
-#     - name: Deploy container launchd plist
-#       ansible.builtin.copy:
-#         src: container.plist
-#         dest: /Library/LaunchDaemons/homebrew.mxcl.container.plist
-#         mode: "0644"
-#       register: docker_container_plist
-#     - name: Enable container launch agent
-#       community.general.launchd:
-#         name: homebrew.mxcl.container
-#         enabled: true
-#         state: reloaded
+    - name: Check Lima instance
+      ansible.builtin.command: limactl list default --json
+      register: docker_lima_instance
+      failed_when: false
+      changed_when: false
+    - name: Create Lima instance
+      ansible.builtin.command: limactl create --name default --vm-type krunkit --mount-type virtiofs --cpus 10 --memory 12 template:docker
+      when: docker_lima_instance.rc != 0
+      changed_when: true
+    - name: Start Lima instance
+      ansible.builtin.command: limactl start default
+      register: docker_lima_start
+      failed_when: false
+      changed_when: docker_lima_start.rc == 0
+    - name: Enable Lima autostart
+      ansible.builtin.command: limactl start-at-login default
+      register: docker_lima_autostart
+      failed_when: false
+      changed_when: docker_lima_autostart.rc == 0
 
-# - name: Configure socktainer launch agent
-#   block:
-#     - name: Create user LaunchAgents directory
-#       ansible.builtin.file:
-#         path: "{{ ansible_facts.user_dir }}/Library/LaunchAgents"
-#         state: directory
-#         mode: "0755"
-#     - name: Deploy socktainer launchd plist
-#       ansible.builtin.copy:
-#         src: socktainer.plist
-#         dest: "{{ ansible_facts.user_dir }}/Library/LaunchAgents/homebrew.mxcl.socktainer.plist"
-#         mode: "0644"
-#       register: docker_socktainer_plist
-#     - name: Enable socktainer launch agent
-#       community.general.launchd:
-#         name: homebrew.mxcl.socktainer
-#         enabled: true
-#         state: reloaded
-
-# - name: Create socktainer context
-#   block:
-#     - name: Check socktainer Docker context
-#       ansible.builtin.command: docker context inspect socktainer
-#       register: docker_socktainer_context
-#       failed_when: false
-#       changed_when: false
-#     - name: Create socktainer Docker context
-#       ansible.builtin.command: docker context create --docker host=unix://{{ ansible_facts.user_dir }}/.socktainer/container.sock socktainer
-#       when: docker_socktainer_context.rc != 0
-#       changed_when: true
-
-# - name: Install docker wrapper to local override path
-#   block:
-#     - name: Create local override directories
-#       ansible.builtin.file:
-#         path: "{{ ansible_facts.user_dir }}/{{ item }}"
-#         state: directory
-#         mode: "0755"
-#       loop:
-#         - .local
-#         - .local/bin-override
-#     - name: Deploy docker wrapper to override bin
-#       ansible.builtin.template:
-#         src: docker-wrapper.j2
-#         dest: "{{ ansible_facts.user_dir }}/.local/bin-override/docker"
-#         mode: "0755"
+- name: Create Lima Docker context
+  block:
+    - name: Check Lima Docker context
+      ansible.builtin.command: docker context inspect lima-default
+      register: docker_lima_docker_context
+      failed_when: false
+      changed_when: false
+    - name: Create Lima Docker context
+      ansible.builtin.command: docker context create lima-default --docker host=unix://{{ ansible_facts.user_dir }}/.lima/default/sock/docker.sock
+      when: docker_lima_docker_context.rc != 0
+      changed_when: true
