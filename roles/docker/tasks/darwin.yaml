@@ -28,6 +28,13 @@
     - name: Start Lima instance
       ansible.builtin.command: limactl start docker
       changed_when: false
+    - name: Verify Docker daemon readiness
+      ansible.builtin.command: docker --context lima-docker info
+      register: docker_lima_readiness
+      until: docker_lima_readiness.rc == 0
+      retries: 10
+      delay: 10
+      changed_when: false
     - name: Enable Lima autostart
       ansible.builtin.command: limactl start-at-login docker
       changed_when: false
