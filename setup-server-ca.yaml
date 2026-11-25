@@ -27,10 +27,12 @@
             dest: sdk-go
           - repo: https://github.com/cycloud-io/apis.git
             dest: apis
-          - repo: https://github.com/cycloud-io/cycloud-vpc-cni-k8s.git
-            dest: cycloud-vpc-cni-k8s
           - repo: https://github.com/cycloud-io/cluster-api-provider-compute.git
             dest: cluster-api-provider-compute
+          - repo: https://github.com/cycloud-io/cycloud-vpc-cni-k8s.git
+            dest: cycloud-vpc-cni-k8s
+          - repo: https://github.com/cycloud-io/cycloud-vpc-network-driver.git
+            dest: cycloud-vpc-network-driver
           - repo: https://github.com/logica0419/kubernetes.git
             dest: kubernetes
     - completion
