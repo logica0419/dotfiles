@@ -14,7 +14,7 @@
           - krunkit
         state: latest
 
-- name: Deploy Lima instance
+- name: Create Lima instance
   block:
     - name: Check Lima instance
       ansible.builtin.command: limactl list docker --json
@@ -22,12 +22,22 @@
       failed_when: false
       changed_when: false
     - name: Create Lima instance
-      ansible.builtin.command: limactl create --name docker --vm-type krunkit --mount-type virtiofs --cpus 10 --memory 12 --mount-writable template:docker
+      ansible.builtin.command: >-
+        limactl create --name docker
+        --vm-type krunkit --cpus 10 --memory 12
+        --mount-type reverse-sshfs --mount-writable
+        --set '.mounts[0].sshfs.cache=true'
+        --set '.mounts[0].sshfs.sftpDriver="openssh-sftp-server"'
+        --set '.mounts[0].sshfs.followSymlinks=false'
+        template:docker
       when: docker_lima_instance.rc != 0
       changed_when: true
     - name: Start Lima instance
       ansible.builtin.command: limactl start docker
       changed_when: false
+
+- name: Configure Lima Docker context
+  block:
     - name: Check Lima Docker context
       ansible.builtin.command: docker context inspect lima-docker
       register: docker_lima_docker_context
@@ -44,6 +54,43 @@
       retries: 10
       delay: 10
       changed_when: false
+
+- name: Configure Lima autostart
+  block:
+    - name: Check Lima autostart entry
+      ansible.builtin.stat:
+        path: "{{ ansible_facts.user_dir }}/Library/LaunchAgents/io.lima-vm.autostart.docker.plist"
+      register: docker_lima_autostart_plist
+      changed_when: false
     - name: Enable Lima autostart
       ansible.builtin.command: limactl start-at-login docker
-      changed_when: false
+      when: not docker_lima_autostart_plist.stat.exists
+      changed_when: true
+    - name: Raise Lima autostart file limit
+      ansible.builtin.shell: |
+        set -eu -o pipefail
+        plist="{{ ansible_facts.user_dir }}/Library/LaunchAgents/io.lima-vm.autostart.docker.plist"
+        changed=0
+        for key in SoftResourceLimits HardResourceLimits; do
+          current=$(/usr/bin/plutil -extract "$key.NumberOfFiles" raw "$plist" 2>/dev/null || echo "missing")
+          if [ "$current" != "32768" ]; then
+            /usr/bin/plutil -insert "$key" -dictionary "$plist" >/dev/null 2>&1 || true
+            if [ "$current" = "missing" ]; then
+              /usr/bin/plutil -insert "$key.NumberOfFiles" -integer 32768 "$plist"
+            else
+              /usr/bin/plutil -replace "$key.NumberOfFiles" -integer 32768 "$plist"
+            fi
+            changed=1
+          fi
+        done
+
+        if [ "$changed" = "1" ]; then
+          echo "patched"
+        else
+          echo "ok"
+        fi
+      args:
+        executable: /bin/bash
+      changed_when: docker_lima_fd_limit.stdout is search("patched")
+      register: docker_lima_fd_limit
+      notify: Reload Lima autostart agent

@@ -9,3 +9,9 @@
   ansible.builtin.service:
     name: docker
     state: restarted
+
+- name: Reload Lima autostart agent
+  community.general.launchd:
+    name: io.lima-vm.autostart.docker
+    enabled: true
+    state: reloaded
