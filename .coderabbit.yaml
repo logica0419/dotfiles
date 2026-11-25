@@ -33,4 +33,4 @@ reviews:
     - path: "update-server-ca.yaml"
       instructions: "Scheduled workspace fetches use the gh auth git-credential helper configured during setup; private repos remain accessible non-interactively after initial gh auth login, so no extra credential handling is required."
     - path: "roles/docker/tasks/darwin.yaml"
-      instructions: "Darwin docker role is Apple Silicon only; krunkit requires arm64 and no Intel fallback is provided."
+      instructions: "Darwin docker role is Apple Silicon only; krunkit requires arm64 and no Intel fallback is provided. Keep Lima autostart registration simple: existence check only, no stale binary detection, no service-state check, no plist backup/restore. Registration failures are not retried in-role; rerun the playbook. fd limit 32768 via plutil with handler reload is intentional."
