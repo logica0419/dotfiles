@@ -29,6 +29,8 @@ while :; do
     BW_SESSION="$(bw unlock --raw || true)"
     if [ -n "${BW_SESSION:-}" ]; then
       export BW_SESSION
+    else
+      return 1
     fi
   fi
 
