@@ -9,11 +9,12 @@ Only run on explicit request.
 
 1. Merged branch PR → run `cleanup-merged-branch` first.
 2. On `main` → devise branch from the changes; ask for confirmation only if the current branch cannot be determined from the context. Otherwise confirm current branch.
-3. One commit per focused change (feature/fix/refactor/move/asset/chore), imperative, no prefix. Within a refactor, split by the unit a reviewer would revert (per package or module), keep a cross-cutting rename in its own trailing commit, and verify each commit builds on its own. Commit production code and its tests as separate commits.
+3. One commit per focused change (feature/fix/refactor/move/asset/chore), imperative, no prefix — split the different-meaning changes of one file into their own commits. Within a refactor, split by the unit a reviewer would revert (per package or module), keep a cross-cutting rename in its own trailing commit, and verify each commit builds on its own. Commit production code and its tests as separate commits.
 4. Match VS Code git behavior: `-s` (`git.alwaysSignOff`), `-S` (`commit.enableCommitSigning`, `commit.gpgsign=true`, `gpg.format=ssh`, `user.signingkey`). Stage explicitly; no Smart Commit (`git.enableSmartCommit`).
 5. Commit; stop here without explicit push request. When a file is held back, say so and name what the tree depends on it for.
 6. Push only on explicit request (`git push -u origin <branch>`); on failure or invalid branch → error. If the branch name is invalid, respond with an error message indicating the branch name is not recognized.
 7. PR (only on explicit `create PR` etc.):
    1. Check for existing PR first.
-   2. If no existing PR is found, check for commits. If no commits exist, return an error. If commits exist, proceed to create the PR with `gh pr create --base main --head <branch> --title ... --body ...` (English).
+   2. If no existing PR is found, check for commits. If no commits exist, return an error. If commits exist, proceed to create the PR with `gh pr create --base main --head <branch> --title ... --body ...` (English). Shape the body as `## Summary` (the reason of each change) + `## Test` (the commands run).
+   3. When the work spans several semantic steps, cut one branch per step chained to the previous one and open the PRs as a stack with `gh stack`; merge parents before children.
 8. Only when auto-merge is enabled for the repository, run `gh pr merge <n> --auto --merge` (never squash), even if PR existed. Conflicts → notify and offer resolutions.
