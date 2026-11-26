@@ -15,3 +15,7 @@ description: "File a concise, reproducible upstream issue. Use when reporting a 
 - Order as Title, Environment, Related, Reproduction, Actual, Expected, Cause, Suggestion.
 - Drop Impact; keep Cause and Suggestion to a few lines each.
 - Link sibling issues under Related instead of restating them.
+
+## Proposing
+
+- Before writing to an upstream community, look up how its members propose changes and follow that etiquette.

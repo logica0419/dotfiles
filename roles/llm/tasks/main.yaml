@@ -62,6 +62,7 @@
         mode: "0644"
       loop:
         - comment-style.instructions.md
+        - markdown-style.instructions.md
         - minimal-diff.instructions.md
         - string-yaml-style.instructions.md
         - ansible-style.instructions.md

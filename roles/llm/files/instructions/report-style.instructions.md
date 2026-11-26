@@ -9,3 +9,4 @@ description: "Write one report in a single language, conclusion first, with veri
 - Lead with the conclusion, then the evidence; give the reason before the fact only when it changes what the reader does.
 - Separate what you verified by running something from what you read or inferred, and mark which is which.
 - List each finding with its file and line, so a claim can be checked without re-reading the conversation.
+- Try an item that needs no setup beyond what exists before marking it untried in a verification report; not having tried it is not a reason to leave it out.

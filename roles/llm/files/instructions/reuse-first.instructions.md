@@ -8,6 +8,7 @@ description: "Check for an established library, pattern, or upstream issue befor
 ## Before writing new code
 
 - Look for an established library or pattern before writing new code and say whether it is a de-facto standard; check how comparable projects solved the same problem before designing an interface, a CLI surface, or a CI shape.
+- Keep sibling projects that share a domain aligned with each other: when one of them is established, match its tooling, docs layout, and conventions instead of introducing a new shape.
 - Do not add a dependency that only saves a few lines.
 
 ## Before reporting upstream

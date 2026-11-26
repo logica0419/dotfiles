@@ -22,6 +22,7 @@ description: "Keep module boundaries and function scope tight. Use when splittin
 - Keep the public surface minimal; expose only cross-module callers, and remove pass-through wrappers.
 - Split at a meaningful unit of work: a thin helper several callers share to drop duplication qualifies, a one-caller wrapper does not.
 - Keep a single-purpose helper inline when inlining removes indirection without growing the caller; extract only when the helper names a distinct decision such as quote handling or symlink escape checks.
+- Order the functions of a file in call order: the entry point first, its helpers after it, the leaf helpers last.
 
 ## Refactoring safety
 
@@ -30,4 +31,6 @@ description: "Keep module boundaries and function scope tight. Use when splittin
 
 ## Layout
 
+- Write guards as early returns; keep `else` for the cases that genuinely need it.
+- Declare a variable whose literal holds more than one field one field per line; a literal inside an expression may stay on one line.
 - Put one blank line between the guard clause, setup, main loop, and return.

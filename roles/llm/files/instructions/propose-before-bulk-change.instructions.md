@@ -7,4 +7,5 @@ description: "List candidates and wait for approval before deleting, suppressing
 
 - When a sweep finds things that could go, list each candidate with a one-line reason and wait for a decision; do not delete on your own judgement.
 - Say what evidence backs the suspicion — for a linter rule, whether disabling it actually produces a finding.
+- Present a sweep of the code as grouped sections (responsibility separation, duplicated logic, missing sharing, comments) and give each item a verdict (keep, improve, optional, defer) with code references.
 - Apply only the approved items, so the diff shows the approved change and nothing else.
