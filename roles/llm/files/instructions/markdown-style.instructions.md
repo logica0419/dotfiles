@@ -9,6 +9,7 @@ description: "Write Markdown with one sentence per line in prose and bullets, an
 
 - Write prose one sentence per line as a rule.
 - Separate the groups of meaning, the paragraphs, with a blank line.
+- Put two trailing spaces on every line of a paragraph except the last, so the one-sentence lines keep their breaks when rendered.
 
 ## Bullets
 
