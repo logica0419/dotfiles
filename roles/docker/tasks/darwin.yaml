@@ -3,94 +3,154 @@
   block:
     - name: Register Homebrew tap
       community.general.homebrew_tap:
-        name: slp/krun
-    - name: Trust Homebrew tap
-      ansible.builtin.command: brew trust slp/krun
-      changed_when: false
+        name: wcgomes/tap
     - name: Install Homebrew packages
+      community.general.homebrew:
+        name:
+          - container
+          - socktainer
+          - wcgomes/tap/adevcontainer
+        state: present
+    - name: Remove Lima packages
       community.general.homebrew:
         name:
           - lima
           - krunkit
-        state: latest
+        state: absent
 
-- name: Create Lima instance
+- name: Configure container launch daemon
+  become: true
   block:
-    - name: Check Lima instance
-      ansible.builtin.command: limactl list docker --json
-      register: docker_lima_instance
+    - name: Deploy container launchd plist
+      ansible.builtin.copy:
+        src: container.plist
+        dest: /Library/LaunchDaemons/homebrew.mxcl.container.plist
+        mode: "0644"
+      notify: Reload container launch daemon
+    - name: Flush container handler
+      ansible.builtin.meta: flush_handlers
+    - name: Check recommended kernel
+      ansible.builtin.stat:
+        path: "{{ ansible_facts.user_dir }}/Library/Application Support/com.apple.container/kernels/default.kernel-arm64"
+      register: docker_kernel_link
+      changed_when: false
+    - name: Install recommended kernel
+      ansible.builtin.command: "{{ check_os_brew_base_path }}/bin/container system kernel set --recommended"
+      when: not docker_kernel_link.stat.exists
+      changed_when: true
+      become: false
+    - name: Check apiserver plist file
+      ansible.builtin.stat:
+        path: "{{ ansible_facts.user_dir }}/Library/Application Support/com.apple.container/apiserver/apiserver.plist"
+      register: docker_apiserver_plist
+      changed_when: false
+      become: false
+    - name: Check apiserver launchd job
+      ansible.builtin.command: launchctl print gui/{{ ansible_facts.user_uid }}/com.apple.container.apiserver
+      register: docker_apiserver_job
       failed_when: false
       changed_when: false
-    - name: Create Lima instance
-      ansible.builtin.command: >-
-        limactl create --name docker
-        --vm-type krunkit --cpus 10 --memory 12
-        --mount-type reverse-sshfs --mount-writable
-        --set '.mounts[0].sshfs.cache=true'
-        --set '.mounts[0].sshfs.sftpDriver="openssh-sftp-server"'
-        --set '.mounts[0].sshfs.followSymlinks=false'
-        template:docker
-      when: docker_lima_instance.rc != 0
+      become: false
+    - name: Register apiserver launchd job
+      ansible.builtin.command:
+        argv:
+          - launchctl
+          - bootstrap
+          - gui/{{ ansible_facts.user_uid }}
+          - "{{ ansible_facts.user_dir }}/Library/Application Support/com.apple.container/apiserver/apiserver.plist"
+      when: docker_apiserver_plist.stat.exists and docker_apiserver_job.rc != 0
       changed_when: true
-    - name: Start Lima instance
-      ansible.builtin.command: limactl start docker
-      changed_when: false
-
-- name: Configure Lima Docker context
-  block:
-    - name: Check Lima Docker context
-      ansible.builtin.command: docker context inspect lima-docker
-      register: docker_lima_docker_context
-      failed_when: false
-      changed_when: false
-    - name: Create Lima Docker context
-      ansible.builtin.command: docker context create lima-docker --docker host=unix://{{ ansible_facts.user_dir }}/.lima/docker/sock/docker.sock
-      when: docker_lima_docker_context.rc != 0
-      changed_when: true
-    - name: Verify Docker daemon readiness
-      ansible.builtin.command: docker --context lima-docker info
-      register: docker_lima_readiness
-      until: docker_lima_readiness.rc == 0
+      become: false
+    - name: Verify container API readiness
+      ansible.builtin.command: timeout 15 {{ check_os_brew_base_path }}/bin/container list
+      register: docker_container_readiness
+      until: docker_container_readiness.rc == 0
       retries: 10
       delay: 10
       changed_when: false
+      become: false
 
-- name: Configure Lima autostart
+- name: Configure socktainer launch agent
   block:
-    - name: Check Lima autostart entry
-      ansible.builtin.stat:
-        path: "{{ ansible_facts.user_dir }}/Library/LaunchAgents/io.lima-vm.autostart.docker.plist"
-      register: docker_lima_autostart_plist
-      changed_when: false
-    - name: Enable Lima autostart
-      ansible.builtin.command: limactl start-at-login docker
-      when: not docker_lima_autostart_plist.stat.exists
-      changed_when: true
-    - name: Raise Lima autostart file limit
-      ansible.builtin.shell: |
-        set -eu -o pipefail
-        plist="{{ ansible_facts.user_dir }}/Library/LaunchAgents/io.lima-vm.autostart.docker.plist"
-        changed=0
-        for key in SoftResourceLimits HardResourceLimits; do
-          current=$(/usr/bin/plutil -extract "$key.NumberOfFiles" raw "$plist" 2>/dev/null) || current="missing"
-          if [ "$current" != "32768" ]; then
-            /usr/bin/plutil -insert "$key" -dictionary "$plist" >/dev/null 2>&1 || true
-            if [ "$current" = "missing" ]; then
-              /usr/bin/plutil -insert "$key.NumberOfFiles" -integer 32768 "$plist"
-            else
-              /usr/bin/plutil -replace "$key.NumberOfFiles" -integer 32768 "$plist"
-            fi
-            changed=1
-          fi
-        done
+    - name: Deploy socktainer launchd plist
+      ansible.builtin.copy:
+        src: socktainer.plist
+        dest: "{{ ansible_facts.user_dir }}/Library/LaunchAgents/homebrew.mxcl.socktainer.plist"
+        mode: "0644"
+      notify: Reload socktainer launch agent
+    - name: Flush socktainer handler
+      ansible.builtin.meta: flush_handlers
 
-        if [ "$changed" = "1" ]; then
-          echo "patched"
-        else
-          echo "ok"
-        fi
-      args:
-        executable: /bin/bash
-      changed_when: docker_lima_fd_limit.stdout is search("patched")
-      register: docker_lima_fd_limit
-      notify: Reload Lima autostart agent
+- name: Configure socktainer Docker context
+  block:
+    - name: Check socktainer Docker context
+      ansible.builtin.command: "{{ check_os_brew_base_path }}/bin/docker context inspect socktainer"
+      register: docker_socktainer_context
+      failed_when: false
+      changed_when: false
+    - name: Create socktainer Docker context
+      ansible.builtin.command: >-
+        {{ check_os_brew_base_path }}/bin/docker context create socktainer
+        --docker host=unix://{{ ansible_facts.user_dir }}/.socktainer/container.sock
+      when: docker_socktainer_context.rc != 0
+      changed_when: true
+    - name: Verify Docker daemon readiness
+      ansible.builtin.command: timeout 15 {{ check_os_brew_base_path }}/bin/docker --context socktainer info
+      register: docker_socktainer_readiness
+      until: docker_socktainer_readiness.rc == 0
+      retries: 10
+      delay: 10
+      changed_when: false
+      become: false
+
+- name: Configure adevcontainer plugin
+  block:
+    - name: Check adevcontainer plugin link
+      ansible.builtin.stat:
+        path: "{{ check_os_brew_base_path }}/libexec/container-plugins/dev/bin/dev"
+      register: docker_adev_plugin
+      changed_when: false
+    - name: Install adevcontainer plugin
+      ansible.builtin.command: "{{ check_os_brew_base_path }}/bin/adevcontainer plugin --install"
+      when: not docker_adev_plugin.stat.exists
+      changed_when: true
+    - name: Verify container runtime
+      ansible.builtin.command: "{{ check_os_brew_base_path }}/bin/adevcontainer doctor"
+      changed_when: false
+
+- name: Deploy local docker helpers
+  block:
+    - name: Create local override directories
+      ansible.builtin.file:
+        path: "{{ ansible_facts.user_dir }}/{{ item }}"
+        state: directory
+        mode: "0755"
+      loop:
+        - .local
+        - .local/bin-override
+    - name: Deploy docker wrapper
+      ansible.builtin.template:
+        src: docker-wrapper.j2
+        dest: "{{ ansible_facts.user_dir }}/.local/bin-override/docker"
+        mode: "0755"
+    - name: Deploy adev-dind helper
+      ansible.builtin.template:
+        src: adev-dind.j2
+        dest: "{{ ansible_facts.user_dir }}/.local/bin-override/adev-dind"
+        mode: "0755"
+
+- name: Remove Lima remnants
+  block:
+    - name: Check Lima Docker context
+      ansible.builtin.command: "{{ check_os_brew_base_path }}/bin/docker context inspect lima-docker"
+      register: docker_lima_docker_context
+      failed_when: false
+      changed_when: false
+    - name: Remove Lima Docker context
+      ansible.builtin.command: "{{ check_os_brew_base_path }}/bin/docker context rm lima-docker --force"
+      when: docker_lima_docker_context.rc == 0
+      changed_when: true
+    - name: Remove Lima autostart entry
+      ansible.builtin.file:
+        path: "{{ ansible_facts.user_dir }}/Library/LaunchAgents/io.lima-vm.autostart.docker.plist"
+        state: absent

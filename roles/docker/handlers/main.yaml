@@ -10,8 +10,16 @@
     name: docker
     state: restarted
 
-- name: Reload Lima autostart agent
+- name: Reload container launch daemon
+  become: true
   community.general.launchd:
-    name: io.lima-vm.autostart.docker
+    name: homebrew.mxcl.container
+    enabled: true
+    state: reloaded
+
+- name: Reload socktainer launch agent
+  become: false
+  community.general.launchd:
+    name: homebrew.mxcl.socktainer
     enabled: true
     state: reloaded
