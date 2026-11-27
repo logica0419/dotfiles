@@ -1,0 +1,331 @@
+#!/usr/bin/env bash
+# adev-dind: build a devcontainer image with adevcontainer, then start it as a Docker-in-Docker host via `container run`.
+# adevcontainer itself warn-skips privileged/docker-* features, so DinD needs this split: `up` for the image, `run` for the daemon.
+set -euo pipefail
+
+usage() {
+  cat <<'EOF' >&2
+Usage:
+  adev-dind up [-w <workspace>] [--name <dind-name>] [-- <container-run-args>...]
+  adev-dind run [-w <workspace>] [--name <dind-name>] [-- <container-run-args>...]
+  adev-dind list [--json]
+  adev-dind start [-w <workspace>] [--name <dind-name>]
+  adev-dind stop [-w <workspace>] [--name <dind-name>]
+  adev-dind status [-w <workspace>] [--name <dind-name>]
+  adev-dind logs [-w <workspace>] [--name <dind-name>] [-- <log-args>...]
+  adev-dind exec [-w <workspace>] [--name <dind-name>] [-- <cmd>...]
+  adev-dind shell [-w <workspace>] [--name <dind-name>]
+  adev-dind rm [-w <workspace>] [--name <dind-name>]
+  adev-dind purge [-w <workspace>] [--name <dind-name>] [--volumes]
+
+Commands:
+  up      Build image via `adevcontainer up`, then start DinD host and delete the managed container.
+  run     Start DinD host from managed container image, falling back to existing DinD host image.
+  list    List DinD hosts labeled by `up`/`run`.
+  start   Start a stopped DinD host.
+  stop    Stop the DinD host.
+  status  Show managed container and DinD host state together.
+  logs    Show DinD host logs.
+  exec    Run a command in DinD host.
+  shell   Open a shell in DinD host (bash, fallback sh).
+  rm      Stop and delete DinD host only.
+  purge   Delete DinD host and managed container (`delete`, or `purge` with --volumes).
+
+Options:
+  -w <workspace>   Workspace root (default: cwd).
+                   Only used to locate the managed container for image discovery.
+  --name <name>    DinD host container name (default: <managed-name>-dind).
+  --volumes        With purge: `adevcontainer purge` (volumes + image too).
+  --json           With list: machine-readable JSON array output.
+  --               Extra args are appended to `container run` verbatim.
+
+Examples:
+  adev-dind up -w ~/prj/contrib/youki
+  adev-dind up -w . --name youki-dind -- -m 8G -c 4
+  adev-dind run -w .
+  adev-dind status -w .
+  adev-dind shell -w .
+  adev-dind rm --name youki-dind
+EOF
+}
+
+need() {
+  if ! command -v "$1" >/dev/null 2>&1; then
+    echo "adev-dind: required command '$1' not found" >&2
+    exit 1
+  fi
+}
+
+need adevcontainer
+need container
+need jq
+
+cmd="${1:-}"
+case "$cmd" in
+  up | run | list | start | stop | status | logs | exec | shell | rm | purge) shift ;;
+  -h | --help | help | "") usage; exit 0 ;;
+  *) echo "adev-dind: unknown command '$cmd'" >&2; usage; exit 1 ;;
+esac
+
+workspace="$PWD"
+workspace_explicit=0
+dind_name=""
+purge_volumes=0
+json_output=0
+extra=()
+extra_count=0
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    -w | --workspace) workspace="${2:?missing value for $1}"; workspace_explicit=1; shift 2 ;;
+    --name) dind_name="${2:?missing value for --name}"; shift 2 ;;
+    --volumes) purge_volumes=1; shift ;;
+    --json) json_output=1; shift ;;
+    -h | --help) usage; exit 0 ;;
+    --) shift; extra=("$@"); extra_count=$#; break ;;
+    *) echo "adev-dind: unknown option '$1'" >&2; usage; exit 1 ;;
+  esac
+done
+
+if [ "$json_output" = "1" ] && [ "$cmd" != "list" ]; then
+  echo "adev-dind $cmd: --json is only for list" >&2
+  exit 1
+fi
+if [ "$purge_volumes" = "1" ] && [ "$cmd" != "purge" ]; then
+  echo "adev-dind $cmd: --volumes is only for purge" >&2
+  exit 1
+fi
+
+# Normalize workspace once so label match, bind mount, and basename agree.
+# adevcontainer stores devcontainer.local_folder as an absolute path.
+workspace="$(cd "$workspace" 2>/dev/null && pwd || printf '%s' "$workspace")"
+
+# Find the adevcontainer-managed container for the workspace.
+find_managed() {
+  adevcontainer list --json 2>/dev/null | jq -r --arg ws "$workspace" '.[] | select(.labels["devcontainer.local_folder"] == $ws) | .name // empty' | head -n 1
+}
+
+# Find the DinD host for the workspace via its label.
+find_dind() {
+  container list --all --format json 2>/dev/null | jq -r --arg ws "$workspace" '.[] | select(.configuration.labels["dev.adev-dind.workspace"] == $ws) | (.configuration.id // .id // empty)' | head -n 1
+}
+
+# Print the image reference of a runtime container, or fail when missing.
+dind_image() {
+  container inspect "$1" 2>/dev/null | jq -r 'if type == "array" then .[0] else . end | .configuration.image.reference // empty'
+}
+
+# Print the runtime state of a container, or fail when missing.
+dind_state() {
+  container inspect "$1" 2>/dev/null | jq -r 'if type == "array" then .[0] else . end | .status.state // "unknown"'
+}
+
+# Default the DinD host name with labeled fallback.
+resolve_dind_name() {
+  if [ -n "$dind_name" ]; then
+    return 0
+  fi
+  if [ -n "$1" ]; then
+    dind_name="$1-dind"
+    return 0
+  fi
+
+  dind_name="$(find_dind || true)"
+  if [ -z "$dind_name" ]; then
+    echo "adev-dind $cmd: no managed container for workspace '$workspace'" >&2
+    echo "adev-dind $cmd: pass --name <dind-name> explicitly" >&2
+    exit 1
+  fi
+}
+
+# Reject trailing args for commands that take none.
+# Count is tracked at parse time to keep empty-string args detectable.
+require_no_extra() {
+  if [ "$extra_count" -gt 0 ]; then
+    echo "adev-dind $cmd: extra args need '--' only for up/run/logs/exec" >&2
+    exit 1
+  fi
+}
+
+managed_name="$(find_managed || true)"
+
+case "$cmd" in
+  list)
+    require_no_extra
+    if [ "$json_output" = "1" ]; then
+      container list --all --format json 2>/dev/null | jq -c --arg ws "$workspace" --arg name "$dind_name" --argjson scoped "$workspace_explicit" '[.[] | select(.configuration.labels["dev.adev-dind.workspace"] != null) | {name: (.configuration.id // .id), state: (.status.state // "unknown"), workspace: .configuration.labels["dev.adev-dind.workspace"], image: .configuration.image.reference} | select((($name == "") or (.name == $name)) and (($scoped == 0) or (.workspace == $ws)))]'
+    else
+      rows="$(container list --all --format json 2>/dev/null | jq -r --arg ws "$workspace" --arg name "$dind_name" --argjson scoped "$workspace_explicit" '.[] | select(.configuration.labels["dev.adev-dind.workspace"] != null) | {name: (.configuration.id // .id), state: (.status.state // "unknown"), workspace: .configuration.labels["dev.adev-dind.workspace"]} | select((($name == "") or (.name == $name)) and (($scoped == 0) or (.workspace == $ws))) | "\(.name)\t\(.state)\t\(.workspace)"')"
+      if [ -n "$rows" ]; then
+        printf '%-30s %-10s %s\n' NAME STATE WORKSPACE
+        printf '%s\n' "$rows" | while IFS="$(printf '\t')" read -r list_name list_state list_ws; do
+          printf '%-30s %-10s %s\n' "$list_name" "$list_state" "$list_ws"
+        done
+      fi
+    fi
+    exit 0
+    ;;
+
+  status)
+    require_no_extra
+    if [ -z "$managed_name" ] && [ -z "$dind_name" ]; then
+      dind_name="$(find_dind || true)"
+    fi
+    if [ -z "$managed_name" ] && [ -z "$dind_name" ]; then
+      echo "adev-dind status: no managed container for workspace '$workspace'" >&2
+      exit 1
+    fi
+
+    if [ -z "$dind_name" ] && [ -n "$managed_name" ]; then
+      dind_name="${managed_name}-dind"
+    fi
+    if [ -n "$managed_name" ]; then
+      echo "managed: $managed_name ($(dind_state "$managed_name" || echo missing))"
+    else
+      echo "managed: (none)"
+    fi
+
+    echo "dind: $dind_name ($(dind_state "$dind_name" || echo missing))"
+    exit 0
+    ;;
+
+  start)
+    require_no_extra
+    resolve_dind_name "$managed_name"
+    container start "$dind_name"
+    exit 0
+    ;;
+
+  stop)
+    require_no_extra
+    resolve_dind_name "$managed_name"
+    container stop "$dind_name"
+    exit 0
+    ;;
+
+  logs)
+    resolve_dind_name "$managed_name"
+    container logs "$dind_name" ${extra[@]+"${extra[@]}"}
+    exit 0
+    ;;
+
+  exec)
+    resolve_dind_name "$managed_name"
+    if [ "$extra_count" -eq 0 ]; then
+      echo "adev-dind exec: command is required after '--'" >&2
+      exit 1
+    fi
+
+    if [ -t 0 ]; then
+      container exec -it "$dind_name" ${extra[@]+"${extra[@]}"}
+    else
+      container exec "$dind_name" ${extra[@]+"${extra[@]}"}
+    fi
+
+    exit 0
+    ;;
+
+  shell)
+    require_no_extra
+    resolve_dind_name "$managed_name"
+    if container exec -it "$dind_name" bash; then
+      exit 0
+    else
+      container exec -it "$dind_name" sh
+    fi
+    exit 0
+    ;;
+
+  rm)
+    require_no_extra
+    resolve_dind_name "$managed_name"
+    container stop "$dind_name" >/dev/null 2>&1 || true
+    container delete "$dind_name"
+    exit 0
+    ;;
+
+  purge)
+    require_no_extra
+    resolve_dind_name "$managed_name"
+
+    container stop "$dind_name" >/dev/null 2>&1 || true
+    container delete "$dind_name" >/dev/null 2>&1 || true
+
+    if [ -z "$managed_name" ]; then
+      echo "adev-dind purge: DinD host '$dind_name' removed; no managed container for workspace '$workspace'" >&2
+      exit 0
+    fi
+    if [ "$purge_volumes" = "1" ]; then
+      adevcontainer purge --name "$managed_name"
+    else
+      adevcontainer delete --name "$managed_name"
+    fi
+
+    exit 0
+    ;;
+esac
+
+# Fail fast when the DinD host already exists.
+# This check runs before `adevcontainer up` to avoid a wasted image build.
+if [ "$cmd" = "up" ]; then
+  early_name="$dind_name"
+  if [ -z "$early_name" ] && [ -n "$managed_name" ]; then
+    early_name="${managed_name}-dind"
+  fi
+  if [ -z "$early_name" ]; then
+    early_name="$(find_dind || true)"
+  fi
+
+  if [ -n "$early_name" ] && container inspect "$early_name" >/dev/null 2>&1; then
+    echo "adev-dind: DinD host '$early_name' already exists; remove it first ('adev-dind rm --name $early_name')" >&2
+    exit 1
+  fi
+fi
+
+if [ -z "$managed_name" ] && [ "$cmd" = "up" ]; then
+  adevcontainer up -w "$workspace"
+  managed_name="$(find_managed || true)"
+fi
+
+# Resolve the DinD host name before the image for managed-deleted fallback.
+if [ -z "$dind_name" ] && [ -n "$managed_name" ]; then
+  dind_name="${managed_name}-dind"
+fi
+if [ -z "$dind_name" ]; then
+  dind_name="$(find_dind || true)"
+fi
+if [ -z "$dind_name" ] && [ -z "$managed_name" ]; then
+  echo "adev-dind: no managed container for workspace '$workspace'" >&2
+  echo "adev-dind: run 'adevcontainer up -w <workspace>' first, or use 'adev-dind up'" >&2
+  exit 1
+fi
+
+# Resolve the image from the managed container first with DinD host fallback.
+image=""
+if [ -n "$managed_name" ]; then
+  image="$(adevcontainer inspect --name "$managed_name" 2>/dev/null | jq -r 'if type == "array" then .[0] else . end | .image // empty')"
+fi
+if [ -z "$image" ] && [ -n "$dind_name" ]; then
+  image="$(dind_image "$dind_name" || true)"
+fi
+if [ -z "$image" ]; then
+  echo "adev-dind: failed to resolve image for workspace '$workspace'" >&2
+  exit 1
+fi
+
+if container inspect "$dind_name" >/dev/null 2>&1; then
+  echo "adev-dind: DinD host '$dind_name' already exists; remove it first ('adev-dind rm --name $dind_name')" >&2
+  exit 1
+fi
+
+# DinD host needs dockerd in the image entrypoint.
+# Use a docker:dind-based image or a devcontainer with the docker feature.
+# The managed container is deleted after up, so the image must stand alone.
+container run -d --name "$dind_name" \
+  --cap-add ALL --masked-path NONE --read-only-path NONE \
+  -l "dev.adev-dind.workspace=${workspace}" \
+  -v "${workspace}:/workspaces/$(basename "$workspace")" \
+  ${extra[@]+"${extra[@]}"} "$image"
+
+if [ "$cmd" = "up" ] && [ -n "$managed_name" ]; then
+  adevcontainer delete --name "$managed_name" >/dev/null 2>&1 || true
+fi
