@@ -1,0 +1,146 @@
+#!/usr/bin/env bash
+# docker wrapper: route `build` through `container build`.
+# buildx docker-container driver fails on Apple container (rbind mount: operation not permitted).
+# Everything else passes through to the real docker CLI (socktainer context).
+set -euo pipefail
+
+real_docker="{{ check_os_brew_base_path }}/bin/docker"
+
+# Strip leading global flags (e.g. --context socktainer) before dispatch.
+# An explicit non-socktainer destination is never stripped.
+orig=("$@")
+args=()
+have_args=0
+skip_next=0
+capture_next=0
+explicit_destination=""
+
+# Only leading globals are stripped.
+# Stop at the first subcommand and keep the rest verbatim.
+while [ "$#" -gt 0 ]; do
+  arg="$1"
+  shift
+  if [ "$capture_next" = "1" ]; then
+    explicit_destination="$arg"
+    capture_next=0
+    continue
+  elif [ "$skip_next" = "1" ]; then
+    skip_next=0
+    continue
+  fi
+
+  case "$arg" in
+    --context|-c|--host|-H) capture_next=1 ;;
+    --config|-l|--log-level) skip_next=1 ;;
+    --context=*|-c=*|--host=*|-H=*) explicit_destination="${arg#*=}" ;;
+    --config=*|-l=*|--log-level=*) ;;
+    -D|--debug|--tls|--tlsverify) ;;
+    *) args+=("$arg"); while [ "$#" -gt 0 ]; do args+=("$1"); shift; done; have_args=1; break ;;
+  esac
+done
+
+case "$explicit_destination" in
+  ""|socktainer) ;;
+  *) exec "$real_docker" "${orig[@]}" ;;
+esac
+
+if [ "$have_args" = "1" ]; then
+  set -- "${args[@]}"
+else
+  set --
+fi
+
+rest=()
+if [ "${1:-}" = "build" ]; then
+  rest=("${@:2}")
+elif [ "${1:-}" = "buildx" ] && [ "${2:-}" = "build" ]; then
+  rest=("${@:3}")
+elif { [ "${1:-}" = "image" ] || [ "${1:-}" = "builder" ]; } && [ "${2:-}" = "build" ]; then
+  rest=("${@:3}")
+else
+  exec "$real_docker" "${orig[@]}"
+fi
+
+out=(container build)
+tags=()
+tag_count=0
+context=""
+expect_value=""
+
+for arg in "${rest[@]}"; do
+  if [ -n "$expect_value" ]; then
+    case "$expect_value" in
+      tag) tags+=("$arg"); tag_count=$((tag_count + 1)) ;;
+      builder) ;; # buildx-only; drop value
+      file) out+=(--file "$arg") ;;
+      build-arg) out+=(--build-arg "$arg") ;;
+      target) out+=(--target "$arg") ;;
+      platform) out+=(--platform "$arg") ;;
+      progress) out+=(--progress "$arg") ;;
+      output)
+        case "$arg" in
+          type=docker*) ;; # container build always keeps the image; drop
+          *) echo "docker-wrapper: unsupported --output '$arg'" >&2; exit 1 ;;
+        esac
+        ;;
+    esac
+    expect_value=""
+    continue
+  fi
+
+  case "$arg" in
+    -t|--tag) expect_value="tag" ;;
+    -t=*|--tag=*) tags+=("${arg#*=}"); tag_count=$((tag_count + 1)) ;;
+    -f|--file) expect_value="file" ;;
+    -f=*|--file=*) out+=(--file "${arg#*=}") ;;
+    --build-arg) expect_value="build-arg" ;;
+    --build-arg=*) out+=(--build-arg "${arg#*=}") ;;
+    --target) expect_value="target" ;;
+    --target=*) out+=(--target "${arg#*=}") ;;
+    --platform) expect_value="platform" ;;
+    --platform=*) out+=(--platform "${arg#*=}") ;;
+    --progress) expect_value="progress" ;;
+    --progress=*) out+=(--progress "${arg#*=}") ;;
+    -o|--output) expect_value="output" ;;
+    -o=*|--output=*) out+=(--output "${arg#*=}") ;;
+    --no-cache|--pull|-q|--quiet) out+=("$arg") ;;
+    --load) ;; # container build always keeps the image; drop
+    --builder) expect_value="builder" ;;
+    --builder=*) ;; # buildx-only; drop
+    --push|--secret|--ssh|--cache-from|--cache-to|--attest|--provenance|--sbom|--network|--add-host|--allow|--annotation|--build-context|--call|--check|--cgroup-parent|--iidfile|--metadata-file|--policy|--resource|--shm-size|--ulimit) echo "docker-wrapper: unsupported flag '$arg'" >&2; exit 1 ;;
+    --secret=*|--ssh=*|--cache-from=*|--cache-to=*|--attest=*|--provenance=*|--sbom=*|--network=*|--add-host=*|--allow=*|--annotation=*|--build-context=*|--call=*|--check=*|--cgroup-parent=*|--iidfile=*|--metadata-file=*|--policy=*|--resource=*|--shm-size=*|--ulimit=*) echo "docker-wrapper: unsupported flag '$arg'" >&2; exit 1 ;;
+    --*) echo "docker-wrapper: unsupported flag '$arg'" >&2; exit 1 ;;
+    -*) echo "docker-wrapper: unsupported flag '$arg'" >&2; exit 1 ;;
+    *)
+      if [ -n "$context" ]; then
+        echo "docker-wrapper: multiple contexts" >&2
+        exit 1
+      fi
+      context="$arg"
+      ;;
+  esac
+done
+
+if [ -n "$expect_value" ]; then
+  echo "docker-wrapper: missing value for flag" >&2
+  exit 1
+fi
+
+if [ "$tag_count" -gt 1 ]; then
+  echo "docker-wrapper: multiple -t tags not supported" >&2
+  exit 1
+fi
+if [ "$tag_count" -eq 1 ]; then
+  out+=(--tag "${tags[0]}")
+fi
+
+if [ -z "$context" ]; then
+  echo "docker-wrapper: missing build context" >&2
+  exit 1
+fi
+case "$context" in
+  -|http://*|https://*|github.com/*|*.git) echo "docker-wrapper: unsupported context '$context'" >&2; exit 1 ;;
+esac
+
+exec "${out[@]}" "$context"
+
